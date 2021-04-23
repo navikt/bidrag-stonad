@@ -10,11 +10,11 @@
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
-  <artifactId>bidrag-vedtak</artifactId>
-  <version>0.0.22-SNAPSHOT</version>
+  <artifactId>bidrag-stonad</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
 
-  <name>bidrag-vedtak</name>
-  <description>Behandling av vedtak i Bidrag</description>
+  <name>bidrag-stonad</name>
+  <description>Behandling av stønad i Bidrag</description>
 
   <properties>
     <!-- build -->
