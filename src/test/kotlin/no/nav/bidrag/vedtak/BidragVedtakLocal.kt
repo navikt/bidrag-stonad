@@ -1,6 +1,6 @@
-package no.nav.bidrag.vedtak
+package no.nav.bidrag.stonad
 
-import no.nav.bidrag.vedtak.BidragVedtakLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.boot.SpringApplication
@@ -14,8 +14,8 @@ import org.springframework.test.context.ActiveProfiles
 @EnableJwtTokenValidation(ignore = ["springfox.documentation.swagger.web.ApiResourceController"])
 @ActiveProfiles(TEST_PROFILE)
 @Import(TokenGeneratorConfiguration::class)
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragVedtak::class])])
-class BidragVedtakLocal {
+@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [Bidragstonad::class])])
+class BidragstonadLocal {
 
   companion object {
     const val TEST_PROFILE = "test"
@@ -24,7 +24,7 @@ class BidragVedtakLocal {
 
 fun main(args: Array<String>) {
   val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
-  val app = SpringApplication(BidragVedtakLocal::class.java)
+  val app = SpringApplication(BidragstonadLocal::class.java)
   app.setAdditionalProfiles(profile)
   app.run(*args)
 }

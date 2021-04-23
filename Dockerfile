@@ -2,7 +2,7 @@ FROM navikt/java:15
 LABEL maintainer="Team Bidrag" \
       email="bidrag@nav.no"
 
-COPY ./target/bidrag-vedtak-*.jar app.jar
+COPY ./target/bidrag-stonad-*.jar app.jar
 COPY --from=redboxoss/scuttle:latest /scuttle /bin/scuttle
 
 EXPOSE 8080

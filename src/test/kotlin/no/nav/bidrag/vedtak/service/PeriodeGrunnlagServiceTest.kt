@@ -1,21 +1,21 @@
-package no.nav.bidrag.vedtak.service
+package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.api.NyPeriodeRequest
-import no.nav.bidrag.vedtak.api.NyStonadsendringRequest
-import no.nav.bidrag.vedtak.api.NyttGrunnlagRequest
-import no.nav.bidrag.vedtak.api.NyttPeriodeGrunnlagRequest
-import no.nav.bidrag.vedtak.api.NyttVedtakRequest
-import no.nav.bidrag.vedtak.dto.GrunnlagDto
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeGrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.api.NyPeriodeRequest
+import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyttGrunnlagRequest
+import no.nav.bidrag.stonad.api.NyttPeriodeGrunnlagRequest
+import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.dto.GrunnlagDto
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -29,8 +29,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @DisplayName("PeriodeGrunnlagServiceTest")
-@ActiveProfiles(BidragVedtakLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragstonadLocal.TEST_PROFILE)
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PeriodeGrunnlagServiceTest {
 
   @Autowired
@@ -43,10 +43,10 @@ class PeriodeGrunnlagServiceTest {
   private lateinit var periodeService: PeriodeService
 
   @Autowired
-  private lateinit var stonadsendringService: StonadsendringService
+  private lateinit var stonadsendringService: StonadMottakerIdHistorikkService
 
   @Autowired
-  private lateinit var vedtakService: VedtakService
+  private lateinit var stonadService: StonadService
 
   @Autowired
   private lateinit var periodeGrunnlagRepository: PeriodeGrunnlagRepository
@@ -61,7 +61,7 @@ class PeriodeGrunnlagServiceTest {
   private lateinit var stonadsendringRepository: StonadsendringRepository
 
   @Autowired
-  private lateinit var vedtakRepository: VedtakRepository
+  private lateinit var stonadRepository: stonadRepository
 
   @Autowired
   private lateinit var persistenceService: PersistenceService
@@ -73,19 +73,19 @@ class PeriodeGrunnlagServiceTest {
     grunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal opprette nytt periodeGrunnlag`() {
-    // Oppretter nytt vedtak
-    val nyttVedtakRequest = NyttVedtakRequest("TEST", "1111")
-    val nyttVedtakOpprettet = vedtakService.opprettNyttVedtak(nyttVedtakRequest)
+    // Oppretter nytt stonad
+    val nyttstonadRequest = NyttstonadRequest("TEST", "1111")
+    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
 
     // Oppretter ny stønadsendring
     val nyStonadsendringRequest = NyStonadsendringRequest(
       "BIDRAG",
-      nyttVedtakOpprettet.vedtakId,
+      nyttstonadOpprettet.stonadId,
       "1111",
       "1111",
       "1111",
@@ -96,7 +96,7 @@ class PeriodeGrunnlagServiceTest {
     // Oppretter nytt grunnlag
     val nyttGrunnlagRequest = NyttGrunnlagRequest(
       grunnlagReferanse = "",
-      vedtakId = nyttVedtakOpprettet.vedtakId,
+      stonadId = nyttstonadOpprettet.stonadId,
       grunnlagType = "Beregnet Inntekt",
       grunnlagInnhold = "100")
 
@@ -127,14 +127,14 @@ class PeriodeGrunnlagServiceTest {
 
   @Test
   fun `skal finne data for et periodegrunnlag`() {
-    // Oppretter nytt vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter nytt stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny stønadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
         stonadType = "BIDRAG",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         behandlingId = "1111",
         skyldnerId = "1111",
         kravhaverId = "1111",
@@ -158,7 +158,7 @@ class PeriodeGrunnlagServiceTest {
     val nyttGrunnlagOpprettet = persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Inntekt",
         grunnlagInnhold = "100")
     )
@@ -185,19 +185,19 @@ class PeriodeGrunnlagServiceTest {
     grunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal finne alle periodegrunnlag for en periode`() {
 
-    // Oppretter nytt vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter nytt stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
         stonadType = "BIDRAG",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         behandlingId = "1111",
         skyldnerId = "1111",
         kravhaverId = "1111",
@@ -224,7 +224,7 @@ class PeriodeGrunnlagServiceTest {
       persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Inntekt",
         grunnlagInnhold = "100")
       )
@@ -234,7 +234,7 @@ class PeriodeGrunnlagServiceTest {
       persistenceService.opprettNyttGrunnlag(
         GrunnlagDto(
           grunnlagReferanse = "",
-          vedtakId = nyttVedtakOpprettet.vedtakId,
+          stonadId = nyttstonadOpprettet.stonadId,
           grunnlagType = "Beregnet Skatt",
           grunnlagInnhold = "10")
       )
@@ -283,6 +283,6 @@ class PeriodeGrunnlagServiceTest {
     grunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 }

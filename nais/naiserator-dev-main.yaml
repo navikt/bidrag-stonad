@@ -16,18 +16,18 @@ spec:
         - application: {{ name }}
   image: {{ image }}
   liveness:
-    path: /bidrag-vedtak/actuator/health
+    path: /bidrag-stonad/actuator/health
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /bidrag-vedtak/actuator/health
+    path: /bidrag-stonad/actuator/health
     initialDelay: 20
     timeout: 1
   prometheus:
     enabled: true
-    path: /bidrag-vedtak/actuator/prometheus
+    path: /bidrag-stonad/actuator/prometheus
   resources:
     limits:
       cpu: 1000m
@@ -39,9 +39,9 @@ spec:
     - {{ ingress }}
   gcp:
     sqlInstances:
-      - name: bidrag-vedtak-main
+      - name: bidrag-stonad-main
         type: POSTGRES_12
         cascadingDelete: true
         databases:
-          - name: bidrag-vedtak-main
+          - name: bidrag-stonad-main
             envVarPrefix: DB

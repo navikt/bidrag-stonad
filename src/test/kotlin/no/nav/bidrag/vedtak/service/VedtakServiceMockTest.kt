@@ -1,16 +1,16 @@
-package no.nav.bidrag.vedtak.service
+package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggGrunnlagDto
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggKomplettVedtakRequest
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggPeriodeDto
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggPeriodeGrunnlagDto
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggStonadsendringDto
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggVedtakDto
-import no.nav.bidrag.vedtak.dto.GrunnlagDto
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
+import no.nav.bidrag.stonad.TestUtil.Companion.byggGrunnlagDto
+import no.nav.bidrag.stonad.TestUtil.Companion.byggKomplettstonadRequest
+import no.nav.bidrag.stonad.TestUtil.Companion.byggPeriodeDto
+import no.nav.bidrag.stonad.TestUtil.Companion.byggPeriodeGrunnlagDto
+import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadsendringDto
+import no.nav.bidrag.stonad.TestUtil.Companion.byggstonadDto
+import no.nav.bidrag.stonad.dto.GrunnlagDto
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -26,18 +26,18 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
 
-@DisplayName("VedtakServiceMockTest")
+@DisplayName("stonadServiceMockTest")
 @ExtendWith(MockitoExtension::class)
-class VedtakServiceMockTest {
+class stonadServiceMockTest {
 
   @InjectMocks
-  private lateinit var vedtakService: VedtakService
+  private lateinit var stonadService: StonadService
 
   @Mock
   private lateinit var persistenceServiceMock: PersistenceService
 
   @Captor
-  private lateinit var vedtakDtoCaptor: ArgumentCaptor<VedtakDto>
+  private lateinit var stonadDtoCaptor: ArgumentCaptor<stonadDto>
 
   @Captor
   private lateinit var stonadsendringDtoCaptor: ArgumentCaptor<StonadsendringDto>
@@ -52,10 +52,10 @@ class VedtakServiceMockTest {
   private lateinit var periodeGrunnlagDtoCaptor: ArgumentCaptor<PeriodeGrunnlagDto>
 
   @Test
-  fun `skal opprette nytt komplett vedtak`() {
+  fun `skal opprette nytt komplett stonad`() {
 
-    Mockito.`when`(persistenceServiceMock.opprettNyttVedtak(MockitoHelper.capture(vedtakDtoCaptor)))
-      .thenReturn(byggVedtakDto())
+    Mockito.`when`(persistenceServiceMock.opprettNyttstonad(MockitoHelper.capture(stonadDtoCaptor)))
+      .thenReturn(byggstonadDto())
     Mockito.`when`(persistenceServiceMock.opprettNyStonadsendring(MockitoHelper.capture(stonadsendringDtoCaptor)))
       .thenReturn(byggStonadsendringDto())
     Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeDtoCaptor)))
@@ -65,28 +65,28 @@ class VedtakServiceMockTest {
     Mockito.`when`(persistenceServiceMock.opprettNyttPeriodeGrunnlag(MockitoHelper.capture(periodeGrunnlagDtoCaptor)))
       .thenReturn(byggPeriodeGrunnlagDto())
 
-    val nyttKomplettVedtakOpprettet = vedtakService.opprettKomplettVedtak(byggKomplettVedtakRequest())
+    val nyttKomplettstonadOpprettet = stonadService.opprettKomplettstonad(byggKomplettstonadRequest())
 
-    val vedtakDto = vedtakDtoCaptor.value
+    val stonadDto = stonadDtoCaptor.value
     val stonadsendringDtoListe = stonadsendringDtoCaptor.allValues
     val periodeDtoListe = periodeDtoCaptor.allValues
     val grunnlagDtoListe = grunnlagDtoCaptor.allValues
     val periodeGrunnlagDtoListe = periodeGrunnlagDtoCaptor.allValues
 
-    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyttVedtak(MockitoHelper.any(VedtakDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyttstonad(MockitoHelper.any(stonadDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyStonadsendring(MockitoHelper.any(StonadsendringDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyttGrunnlag(MockitoHelper.any(GrunnlagDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(11)).opprettNyttPeriodeGrunnlag(MockitoHelper.any(PeriodeGrunnlagDto::class.java))
 
     assertAll(
-      Executable { assertThat(nyttKomplettVedtakOpprettet).isNotNull() },
-      Executable { assertThat(nyttKomplettVedtakOpprettet.vedtakId).isNotNull() },
+      Executable { assertThat(nyttKomplettstonadOpprettet).isNotNull() },
+      Executable { assertThat(nyttKomplettstonadOpprettet.stonadId).isNotNull() },
 
-      // Sjekk VedtakDto
-      Executable { assertThat(vedtakDto).isNotNull() },
-      Executable { assertThat(vedtakDto.enhetId).isEqualTo("4812") },
-      Executable { assertThat(vedtakDto.saksbehandlerId).isEqualTo("X123456") },
+      // Sjekk stonadDto
+      Executable { assertThat(stonadDto).isNotNull() },
+      Executable { assertThat(stonadDto.enhetId).isEqualTo("4812") },
+      Executable { assertThat(stonadDto.saksbehandlerId).isEqualTo("X123456") },
 
       // Sjekk StonadsendringDto
       Executable { assertThat(stonadsendringDtoListe).isNotNull() },

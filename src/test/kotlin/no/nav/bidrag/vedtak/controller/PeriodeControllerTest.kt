@@ -1,17 +1,17 @@
-package no.nav.bidrag.vedtak.controller
+package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.BidragVedtakLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.vedtak.api.AllePerioderForStonadsendringResponse
-import no.nav.bidrag.vedtak.api.NyPeriodeRequest
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
-import no.nav.bidrag.vedtak.service.PersistenceService
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse
+import no.nav.bidrag.stonad.api.NyPeriodeRequest
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
+import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -35,14 +35,14 @@ import java.time.LocalDate
 
 @DisplayName("PeriodeControllerTest")
 @ActiveProfiles(TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class PeriodeControllerTest {
 
   @Autowired
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
 
   @Autowired
-  private lateinit var vedtakRepository: VedtakRepository
+  private lateinit var stonadRepository: stonadRepository
 
   @Autowired
   private lateinit var stonadsendringRepository: StonadsendringRepository
@@ -64,25 +64,25 @@ class PeriodeControllerTest {
     // Sletter alle forekomster
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal mappe til context path med random port`() {
-    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-vedtak")
+    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
   }
 
 
   @Test
   fun `skal opprette ny periode`() {
 
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet.vedtakId,
+      stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
       skyldnerId = "1111",
       kravhaverId = "1111",
@@ -110,19 +110,19 @@ class PeriodeControllerTest {
 
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
 
   }
 
   @Test
   fun `skal finne data for en periode`(){
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet.vedtakId,
+      stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
       skyldnerId = "1111",
       kravhaverId = "1111",
@@ -162,20 +162,20 @@ class PeriodeControllerTest {
 
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
 
   }
 
   @Test
   fun `skal finne alle perioder for stonadsendring`(){
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet1 = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttVedtakOpprettet2 = persistenceService.opprettNyttVedtak(VedtakDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter ny forekomst av stonadsendring
     val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet1.vedtakId,
+      stonadId = nyttstonadOpprettet1.stonadId,
       behandlingId = "1111",
       skyldnerId = "1111",
       kravhaverId = "1111",
@@ -185,7 +185,7 @@ class PeriodeControllerTest {
 
     val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet2.vedtakId,
+      stonadId = nyttstonadOpprettet2.stonadId,
       behandlingId = "9999",
       skyldnerId = "9999",
       kravhaverId = "9999",
@@ -233,7 +233,7 @@ class PeriodeControllerTest {
       "${fullUrlForSokPerioderForStonadsendring()}/${nyStonadsendringOpprettet1.stonadsendringId}",
       HttpMethod.GET,
       null,
-      AllePerioderForStonadsendringResponse::class.java)
+      no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse::class.java)
 
 
     assertAll(
@@ -249,7 +249,7 @@ class PeriodeControllerTest {
 
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
 
   }
 

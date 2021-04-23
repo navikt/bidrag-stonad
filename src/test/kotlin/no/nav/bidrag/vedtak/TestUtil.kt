@@ -1,16 +1,16 @@
-package no.nav.bidrag.vedtak
+package no.nav.bidrag.stonad
 
-import no.nav.bidrag.vedtak.api.GrunnlagReferanseRequest
-import no.nav.bidrag.vedtak.api.NyttGrunnlagRequest
-import no.nav.bidrag.vedtak.api.NyPeriodeRequest
-import no.nav.bidrag.vedtak.api.NyStonadsendringRequest
-import no.nav.bidrag.vedtak.api.NyttKomplettVedtakRequest
-import no.nav.bidrag.vedtak.api.NyttVedtakRequest
-import no.nav.bidrag.vedtak.dto.GrunnlagDto
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
+import no.nav.bidrag.stonad.api.GrunnlagReferanseRequest
+import no.nav.bidrag.stonad.api.NyttGrunnlagRequest
+import no.nav.bidrag.stonad.api.NyPeriodeRequest
+import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyttKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.dto.GrunnlagDto
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -19,7 +19,7 @@ class TestUtil {
 
   companion object {
 
-    fun byggKomplettVedtakRequest() = NyttKomplettVedtakRequest(
+    fun byggKomplettstonadRequest() = NyttKomplettstonadRequest(
       saksbehandlerId = "X123456",
       enhetId = "4812",
       grunnlagListe = byggGrunnlagListe(),
@@ -61,15 +61,15 @@ class TestUtil {
             valutakode = "NOK",
             resultatkode = "KOSTNADSBEREGNET_BIDRAG",
             grunnlagReferanseListe = listOf(
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGS-19",
                 grunnlagValgt = true
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGN-19",
                 grunnlagValgt = false
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "SJAB-REF001",
                 grunnlagValgt = true
               )
@@ -82,19 +82,19 @@ class TestUtil {
             valutakode = "NOK",
             resultatkode = "KOSTNADSBEREGNET_BIDRAG",
             grunnlagReferanseListe = listOf(
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGS-19",
                 grunnlagValgt = false
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGN-19",
                 grunnlagValgt = true
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BP-SKATTEKLASSE-19",
                 grunnlagValgt = true
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "SJAB-REF001",
                 grunnlagValgt = true
               ),
@@ -117,11 +117,11 @@ class TestUtil {
             valutakode = "NOK",
             resultatkode = "SAERTILSKUDD_INNVILGET",
             grunnlagReferanseListe = listOf(
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGS-19",
                 grunnlagValgt = true
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "SJAB-REF001",
                 grunnlagValgt = true
               )
@@ -134,11 +134,11 @@ class TestUtil {
             valutakode = "NOK",
             resultatkode = "SAERTILSKUDD_INNVILGET",
             grunnlagReferanseListe = listOf(
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "BM-LIGS-19",
                 grunnlagValgt = false
               ),
-              GrunnlagReferanseRequest(
+              no.nav.bidrag.stonad.api.GrunnlagReferanseRequest(
                 grunnlagReferanse = "SJAB-REF001",
                 grunnlagValgt = true
               ),
@@ -149,8 +149,8 @@ class TestUtil {
     )
 
 
-    fun byggVedtakDto() = VedtakDto(
-      vedtakId = (1..100).random(),
+    fun byggstonadDto() = stonadDto(
+      stonadId = (1..100).random(),
       enhetId = "4812",
       saksbehandlerId = "X123456",
       opprettetTimestamp = LocalDateTime.now()
@@ -159,7 +159,7 @@ class TestUtil {
     fun byggStonadsendringDto() = StonadsendringDto(
       stonadsendringId = (1..100).random(),
       stonadType = "BIDRAG",
-      vedtakId = (1..100).random(),
+      stonadId = (1..100).random(),
       sakId = "SAK-001",
       behandlingId = "Fritekst",
       skyldnerId = "01018011111",
@@ -180,7 +180,7 @@ class TestUtil {
     fun byggGrunnlagDto() = GrunnlagDto(
       grunnlagId = (1..100).random(),
       grunnlagReferanse = "BM-LIGN-19",
-      vedtakId = (1..100).random(),
+      stonadId = (1..100).random(),
       grunnlagType = "INNTEKT",
       grunnlagInnhold = "Innhold"
     )

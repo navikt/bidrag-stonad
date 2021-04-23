@@ -1,20 +1,20 @@
-package no.nav.bidrag.vedtak.controller
+package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.BidragVedtakLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.vedtak.TestUtil
-import no.nav.bidrag.vedtak.api.AlleVedtakResponse
-import no.nav.bidrag.vedtak.api.NyttVedtakRequest
-import no.nav.bidrag.vedtak.api.NyttKomplettVedtakRequest
-import no.nav.bidrag.vedtak.api.NyttVedtakResponse
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeGrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
-import no.nav.bidrag.vedtak.service.PersistenceService
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.TestUtil
+import no.nav.bidrag.stonad.api.AllestonadResponse
+import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.api.NyttKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyttstonadResponse
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
+import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -34,10 +34,10 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.util.UriComponentsBuilder
 
-@DisplayName("VedtakControllerTest")
+@DisplayName("stonadControllerTest")
 @ActiveProfiles(TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
-class VedtakControllerTest {
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
+class stonadControllerTest {
 
   @Autowired
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
@@ -55,7 +55,7 @@ class VedtakControllerTest {
   private lateinit var stonadsendringRepository: StonadsendringRepository
 
   @Autowired
-  private lateinit var vedtakRepository: VedtakRepository
+  private lateinit var stonadRepository: stonadRepository
 
   @Autowired
   private lateinit var persistenceService: PersistenceService
@@ -73,22 +73,22 @@ class VedtakControllerTest {
     grunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal mappe til context path med random port`() {
-    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-vedtak")
+    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
   }
 
   @Test
-  fun `skal opprette nytt vedtak`() {
+  fun `skal opprette nytt stonad`() {
     // Oppretter ny forekomst
     val response = securedTestRestTemplate.exchange(
-      fullUrlForNyttVedtak(),
+      fullUrlForNyttstonad(),
       HttpMethod.POST,
       byggRequest(),
-      VedtakDto::class.java
+      stonadDto::class.java
     )
 
     assertAll(
@@ -101,65 +101,65 @@ class VedtakControllerTest {
   }
 
   @Test
-  fun `skal finne data for ett vedtak`() {
+  fun `skal finne data for ett stonad`() {
     // Oppretter ny forekomst
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(enhetId = "1111", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(enhetId = "1111", saksbehandlerId = "TEST"))
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "${fullUrlForSokVedtak()}/${nyttVedtakOpprettet.vedtakId}",
+      "${fullUrlForSokstonad()}/${nyttstonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      VedtakDto::class.java
+      stonadDto::class.java
     )
 
     assertAll(
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
-      Executable { assertThat(response?.body?.vedtakId).isEqualTo(nyttVedtakOpprettet.vedtakId) },
-      Executable { assertThat(response?.body?.enhetId).isEqualTo(nyttVedtakOpprettet.enhetId) },
-      Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo(nyttVedtakOpprettet.saksbehandlerId) }
+      Executable { assertThat(response?.body?.stonadId).isEqualTo(nyttstonadOpprettet.stonadId) },
+      Executable { assertThat(response?.body?.enhetId).isEqualTo(nyttstonadOpprettet.enhetId) },
+      Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo(nyttstonadOpprettet.saksbehandlerId) }
     )
   }
 
   @Test
-  fun `skal finne data for alle vedtak`() {
+  fun `skal finne data for alle stonad`() {
     // Oppretter nye forekomster
-    val nyttVedtakOpprettet1 = persistenceService.opprettNyttVedtak(VedtakDto(enhetId = "1111", saksbehandlerId = "TEST"))
-    val nyttVedtakOpprettet2 = persistenceService.opprettNyttVedtak(VedtakDto(enhetId = "2222", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(enhetId = "1111", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(enhetId = "2222", saksbehandlerId = "TEST"))
 
     // Henter forekomster
     val response = securedTestRestTemplate.exchange(
-      fullUrlForSokVedtak(),
+      fullUrlForSokstonad(),
       HttpMethod.GET,
       null,
-      AlleVedtakResponse::class.java
+      no.nav.bidrag.stonad.api.AllestonadResponse::class.java
     )
 
     assertAll(
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
-      Executable { assertThat(response?.body?.alleVedtak).isNotNull },
-      Executable { assertThat(response?.body?.alleVedtak!!.size).isEqualTo(2) },
-      Executable { assertThat(response?.body?.alleVedtak!![0].vedtakId).isEqualTo(nyttVedtakOpprettet1.vedtakId) },
-      Executable { assertThat(response?.body?.alleVedtak!![0].enhetId).isEqualTo(nyttVedtakOpprettet1.enhetId) },
-      Executable { assertThat(response?.body?.alleVedtak!![0].saksbehandlerId).isEqualTo(nyttVedtakOpprettet1.saksbehandlerId) },
-      Executable { assertThat(response?.body?.alleVedtak!![1].vedtakId).isEqualTo(nyttVedtakOpprettet2.vedtakId) },
-      Executable { assertThat(response?.body?.alleVedtak!![1].enhetId).isEqualTo(nyttVedtakOpprettet2.enhetId) },
-      Executable { assertThat(response?.body?.alleVedtak!![1].saksbehandlerId).isEqualTo(nyttVedtakOpprettet2.saksbehandlerId) }
+      Executable { assertThat(response?.body?.allestonad).isNotNull },
+      Executable { assertThat(response?.body?.allestonad!!.size).isEqualTo(2) },
+      Executable { assertThat(response?.body?.allestonad!![0].stonadId).isEqualTo(nyttstonadOpprettet1.stonadId) },
+      Executable { assertThat(response?.body?.allestonad!![0].enhetId).isEqualTo(nyttstonadOpprettet1.enhetId) },
+      Executable { assertThat(response?.body?.allestonad!![0].saksbehandlerId).isEqualTo(nyttstonadOpprettet1.saksbehandlerId) },
+      Executable { assertThat(response?.body?.allestonad!![1].stonadId).isEqualTo(nyttstonadOpprettet2.stonadId) },
+      Executable { assertThat(response?.body?.allestonad!![1].enhetId).isEqualTo(nyttstonadOpprettet2.enhetId) },
+      Executable { assertThat(response?.body?.allestonad!![1].saksbehandlerId).isEqualTo(nyttstonadOpprettet2.saksbehandlerId) }
     )
   }
 
   @Test
-  fun `skal opprette nytt komplett vedtak`() {
+  fun `skal opprette nytt komplett stonad`() {
     // Oppretter ny forekomst
     val response = securedTestRestTemplate.exchange(
-      fullUrlForNyttKomplettVedtak(),
+      fullUrlForNyttKomplettstonad(),
       HttpMethod.POST,
-      byggKomplettVedtakRequest(),
-      NyttVedtakResponse::class.java
+      byggKomplettstonadRequest(),
+      NyttstonadResponse::class.java
     )
 
     assertAll(
@@ -169,28 +169,28 @@ class VedtakControllerTest {
     )
   }
 
-  private fun fullUrlForNyttVedtak(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + VedtakController.VEDTAK_NY).toUriString()
+  private fun fullUrlForNyttstonad(): String {
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_NY).toUriString()
   }
 
-  private fun fullUrlForNyttKomplettVedtak(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + VedtakController.VEDTAK_NY_KOMPLETT).toUriString()
+  private fun fullUrlForNyttKomplettstonad(): String {
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_NY_KOMPLETT).toUriString()
   }
 
-  private fun fullUrlForSokVedtak(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + VedtakController.VEDTAK_SOK).toUriString()
+  private fun fullUrlForSokstonad(): String {
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_SOK).toUriString()
   }
 
   private fun makeFullContextPath(): String {
     return "http://localhost:$port$contextPath"
   }
 
-  private fun byggRequest(): HttpEntity<NyttVedtakRequest> {
-    return initHttpEntity(NyttVedtakRequest(saksbehandlerId = "TEST", enhetId = "1111"))
+  private fun byggRequest(): HttpEntity<NyttstonadRequest> {
+    return initHttpEntity(NyttstonadRequest(saksbehandlerId = "TEST", enhetId = "1111"))
   }
 
-  private fun byggKomplettVedtakRequest(): HttpEntity<NyttKomplettVedtakRequest> {
-    return initHttpEntity(TestUtil.byggKomplettVedtakRequest())
+  private fun byggKomplettstonadRequest(): HttpEntity<NyttKomplettstonadRequest> {
+    return initHttpEntity(TestUtil.byggKomplettstonadRequest())
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

@@ -1,23 +1,23 @@
-package no.nav.bidrag.vedtak.controller
+package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.BidragVedtakLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.vedtak.api.AlleGrunnlagForPeriodeResponse
-import no.nav.bidrag.vedtak.api.AlleStonadsendringerForVedtakResponse
-import no.nav.bidrag.vedtak.api.NyStonadsendringRequest
-import no.nav.bidrag.vedtak.api.NyttPeriodeGrunnlagRequest
-import no.nav.bidrag.vedtak.dto.GrunnlagDto
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeGrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
-import no.nav.bidrag.vedtak.service.PersistenceService
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.api.AlleGrunnlagForPeriodeResponse
+import no.nav.bidrag.stonad.api.AlleStonadsendringerForstonadResponse
+import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyttPeriodeGrunnlagRequest
+import no.nav.bidrag.stonad.dto.GrunnlagDto
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
+import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -41,7 +41,7 @@ import java.time.LocalDate
 
 @DisplayName("PeriodeGrunnlagControllerTest")
 @ActiveProfiles(TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class PeriodeGrunnlagControllerTest {
 
   @Autowired
@@ -72,20 +72,20 @@ class PeriodeGrunnlagControllerTest {
     periodeRepository.deleteAll()
     grunnlagRepository.deleteAll()
 /*    stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()*/
+    stonadRepository.deleteAll()*/
   }
 
 
   @Test
   fun `skal opprette nytt periodegrunnlag`() {
 
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet.vedtakId,
+      stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
       skyldnerId = "1111",
       kravhaverId = "1111",
@@ -95,7 +95,7 @@ class PeriodeGrunnlagControllerTest {
     val nyttGrunnlagOpprettet = persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Inntekt",
         grunnlagInnhold = "100")
     )
@@ -136,13 +136,13 @@ class PeriodeGrunnlagControllerTest {
   @Test
   fun `skal finne data for et periodegrunnlag`() {
 
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
       stonadType = "BIDRAG",
-      vedtakId = nyttVedtakOpprettet.vedtakId,
+      stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
       skyldnerId = "1111",
       kravhaverId = "1111",
@@ -163,7 +163,7 @@ class PeriodeGrunnlagControllerTest {
     val nyttGrunnlagOpprettet = persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Inntekt",
         grunnlagInnhold = "100")
     )
@@ -172,7 +172,7 @@ class PeriodeGrunnlagControllerTest {
     val nyttPeriodeGrunnlagOpprettet = persistenceService.opprettNyttPeriodeGrunnlag(
       PeriodeGrunnlagDto(
         periodeId = nyPeriodeOpprettet.periodeId,
-        grunnlagId = nyttGrunnlagOpprettet.vedtakId,
+        grunnlagId = nyttGrunnlagOpprettet.stonadId,
         grunnlagValgt = true)
     )
 
@@ -200,14 +200,14 @@ class PeriodeGrunnlagControllerTest {
 
   @Test
   fun `skal finne alle grunnlag for en periode`() {
-    // Oppretter ny forekomst av vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter ny forekomst av stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter nye forekomster av stønadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
         stonadType = "BIDRAG",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         behandlingId = "1111",
         skyldnerId = "1111",
         kravhaverId = "1111",
@@ -229,14 +229,14 @@ class PeriodeGrunnlagControllerTest {
     val nyttGrunnlagOpprettet1 = persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Inntekt",
         grunnlagInnhold = "100")
     )
     val nyttGrunnlagOpprettet2 = persistenceService.opprettNyttGrunnlag(
       GrunnlagDto(
         grunnlagReferanse = "",
-        vedtakId = nyttVedtakOpprettet.vedtakId,
+        stonadId = nyttstonadOpprettet.stonadId,
         grunnlagType = "Beregnet Skatt",
         grunnlagInnhold = "10")
     )
@@ -261,7 +261,7 @@ class PeriodeGrunnlagControllerTest {
       "${fullUrlForSokAllePeriodeGrunnlagForPeriode()}/${nyPeriodeOpprettet.periodeId}",
       HttpMethod.GET,
       null,
-      AlleGrunnlagForPeriodeResponse::class.java
+      no.nav.bidrag.stonad.api.AlleGrunnlagForPeriodeResponse::class.java
     )
 
     assertAll(

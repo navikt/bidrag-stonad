@@ -1,17 +1,17 @@
-package no.nav.bidrag.vedtak.service
+package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.api.NyPeriodeRequest
-import no.nav.bidrag.vedtak.api.NyStonadsendringRequest
-import no.nav.bidrag.vedtak.api.NyttVedtakRequest
-import no.nav.bidrag.vedtak.dto.PeriodeDto
-import no.nav.bidrag.vedtak.dto.StonadsendringDto
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeGrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.api.NyPeriodeRequest
+import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -25,21 +25,21 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @DisplayName("PeriodeServiceTest")
-@ActiveProfiles(BidragVedtakLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragstonadLocal.TEST_PROFILE)
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PeriodeServiceTest {
 
   @Autowired
   private lateinit var periodeService: PeriodeService
 
   @Autowired
-  private lateinit var stonadsendringService: StonadsendringService
+  private lateinit var stonadsendringService: StonadMottakerIdHistorikkService
 
   @Autowired
-  private lateinit var vedtakService: VedtakService
+  private lateinit var stonadService: StonadService
 
   @Autowired
-  private lateinit var vedtakRepository: VedtakRepository
+  private lateinit var stonadRepository: stonadRepository
 
   @Autowired
   private lateinit var stonadsendringRepository: StonadsendringRepository
@@ -63,19 +63,19 @@ class PeriodeServiceTest {
     grunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal opprette ny periode`() {
 
-    // Oppretter nytt vedtak
-    val nyttVedtakRequest = NyttVedtakRequest(saksbehandlerId = "1111", enhetId = "TEST")
-    val nyttVedtakOpprettet = vedtakService.opprettNyttVedtak(nyttVedtakRequest)
+    // Oppretter nytt stonad
+    val nyttstonadRequest = NyttstonadRequest(saksbehandlerId = "1111", enhetId = "TEST")
+    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
 
     // Oppretter ny stonad
     val nyStonadsendringRequest = NyStonadsendringRequest(
-      "BIDRAG", nyttVedtakOpprettet.vedtakId,
+      "BIDRAG", nyttstonadOpprettet.stonadId,
       "1111", "1111", "1111", "1111"
     )
     val nyStonadsendringOpprettet = stonadsendringService.opprettNyStonadsendring(nyStonadsendringRequest)
@@ -93,25 +93,25 @@ class PeriodeServiceTest {
       Executable { assertThat(nyPeriodeOpprettet.valutakode).isEqualTo("NOK") },
       Executable { assertThat(nyPeriodeOpprettet.resultatkode).isEqualTo("RESULTATKODE_TEST") },
       Executable { assertThat(nyStonadsendringOpprettet.stonadType).isEqualTo("BIDRAG") },
-      Executable { assertThat(nyttVedtakOpprettet.enhetId).isEqualTo("TEST") }
+      Executable { assertThat(nyttstonadOpprettet.enhetId).isEqualTo("TEST") }
 
     )
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
   fun `skal finne data for en periode`() {
     // Finner data for én periode
 
-    // Oppretter nytt vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    // Oppretter nytt stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
-        stonadType = "BIDRAG", vedtakId = nyttVedtakOpprettet.vedtakId, behandlingId = "1111",
+        stonadType = "BIDRAG", stonadId = nyttstonadOpprettet.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
       ))
 
@@ -138,7 +138,7 @@ class PeriodeServiceTest {
     )
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
 
@@ -146,21 +146,21 @@ class PeriodeServiceTest {
   fun `skal finne alle perioder for en stonadsendring`() {
     // Finner alle perioder
 
-    // Oppretter nytt vedtak
-    val nyttVedtakOpprettet1 = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttVedtakOpprettet2 = persistenceService.opprettNyttVedtak(VedtakDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
+    // Oppretter nytt stonad
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
-        stonadType = "BIDRAG", vedtakId = nyttVedtakOpprettet1.vedtakId, behandlingId = "1111",
+        stonadType = "BIDRAG", stonadId = nyttstonadOpprettet1.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
       ))
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(
       StonadsendringDto(
-        stonadType = "BIDRAG", vedtakId = nyttVedtakOpprettet2.vedtakId, behandlingId = "9999",
+        stonadType = "BIDRAG", stonadId = nyttstonadOpprettet2.stonadId, behandlingId = "9999",
         skyldnerId = "9999", kravhaverId = "9999", mottakerId = "9999"
       ))
 
@@ -230,6 +230,6 @@ class PeriodeServiceTest {
     )
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
   }

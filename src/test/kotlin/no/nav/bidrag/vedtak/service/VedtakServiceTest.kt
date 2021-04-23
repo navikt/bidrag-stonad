@@ -1,14 +1,14 @@
-package no.nav.bidrag.vedtak.service
+package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.vedtak.BidragVedtakLocal
-import no.nav.bidrag.vedtak.TestUtil.Companion.byggKomplettVedtakRequest
-import no.nav.bidrag.vedtak.api.NyttVedtakRequest
-import no.nav.bidrag.vedtak.dto.VedtakDto
-import no.nav.bidrag.vedtak.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeGrunnlagRepository
-import no.nav.bidrag.vedtak.persistence.repository.PeriodeRepository
-import no.nav.bidrag.vedtak.persistence.repository.StonadsendringRepository
-import no.nav.bidrag.vedtak.persistence.repository.VedtakRepository
+import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.TestUtil.Companion.byggKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
-@DisplayName("VedtakServiceTest")
-@ActiveProfiles(BidragVedtakLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragVedtakLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class VedtakServiceTest {
+@DisplayName("stonadServiceTest")
+@ActiveProfiles(BidragstonadLocal.TEST_PROFILE)
+@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class stonadServiceTest {
 
   @Autowired
   private lateinit var periodeGrunnlagRepository: PeriodeGrunnlagRepository
@@ -37,10 +37,10 @@ class VedtakServiceTest {
   private lateinit var stonadsendringRepository: StonadsendringRepository
 
   @Autowired
-  private lateinit var vedtakService: VedtakService
+  private lateinit var stonadService: StonadService
 
   @Autowired
-  private lateinit var vedtakRepository: VedtakRepository
+  private lateinit var stonadRepository: stonadRepository
 
   @Autowired
   private lateinit var persistenceService: PersistenceService
@@ -52,72 +52,72 @@ class VedtakServiceTest {
     periodeRepository.deleteAll()
     grunnlagRepository.deleteAll()
     stonadsendringRepository.deleteAll()
-    vedtakRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
-  fun `skal opprette nytt vedtak`() {
-    // Oppretter nytt vedtak
-    val nyttVedtakRequest = NyttVedtakRequest("TEST", "1111")
-    val nyttVedtakOpprettet = vedtakService.opprettNyttVedtak(nyttVedtakRequest)
+  fun `skal opprette nytt stonad`() {
+    // Oppretter nytt stonad
+    val nyttstonadRequest = NyttstonadRequest("TEST", "1111")
+    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
 
     assertAll(
-      Executable { assertThat(nyttVedtakOpprettet).isNotNull() },
-      Executable { assertThat(nyttVedtakOpprettet.saksbehandlerId).isEqualTo(nyttVedtakRequest.saksbehandlerId) },
-      Executable { assertThat(nyttVedtakOpprettet.enhetId).isEqualTo(nyttVedtakRequest.enhetId) }
+      Executable { assertThat(nyttstonadOpprettet).isNotNull() },
+      Executable { assertThat(nyttstonadOpprettet.saksbehandlerId).isEqualTo(nyttstonadRequest.saksbehandlerId) },
+      Executable { assertThat(nyttstonadOpprettet.enhetId).isEqualTo(nyttstonadRequest.enhetId) }
     )
   }
 
   @Test
-  fun `skal finne data for ett vedtak`() {
-    // Oppretter nytt vedtak
-    val nyttVedtakOpprettet = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
+  fun `skal finne data for ett stonad`() {
+    // Oppretter nytt stonad
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
-    // Finner vedtaket som akkurat ble opprettet
-    val vedtakFunnet = vedtakService.finnEttVedtak(nyttVedtakOpprettet.vedtakId)
+    // Finner stonadet som akkurat ble opprettet
+    val stonadFunnet = stonadService.finnEttstonad(nyttstonadOpprettet.stonadId)
 
     assertAll(
-      Executable { assertThat(vedtakFunnet).isNotNull() },
-      Executable { assertThat(vedtakFunnet.vedtakId).isEqualTo(nyttVedtakOpprettet.vedtakId) },
-      Executable { assertThat(vedtakFunnet.saksbehandlerId).isEqualTo(nyttVedtakOpprettet.saksbehandlerId) },
-      Executable { assertThat(vedtakFunnet.enhetId).isEqualTo(nyttVedtakOpprettet.enhetId) }
+      Executable { assertThat(stonadFunnet).isNotNull() },
+      Executable { assertThat(stonadFunnet.stonadId).isEqualTo(nyttstonadOpprettet.stonadId) },
+      Executable { assertThat(stonadFunnet.saksbehandlerId).isEqualTo(nyttstonadOpprettet.saksbehandlerId) },
+      Executable { assertThat(stonadFunnet.enhetId).isEqualTo(nyttstonadOpprettet.enhetId) }
     )
   }
 
   @Test
-  fun `skal finne data for alle vedtak`() {
-    // Oppretter nye vedtak
-    val nyttVedtakOpprettet1 = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttVedtakOpprettet2 = persistenceService.opprettNyttVedtak(VedtakDto(saksbehandlerId = "TEST", enhetId = "2222"))
+  fun `skal finne data for alle stonad`() {
+    // Oppretter nye stonad
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "2222"))
 
-    // Finner begge vedtakene som akkurat ble opprettet
-    val vedtakFunnet = vedtakService.finnAlleVedtak()
+    // Finner begge stonadene som akkurat ble opprettet
+    val stonadFunnet = stonadService.finnAllestonad()
 
     assertAll(
-      Executable { assertThat(vedtakFunnet).isNotNull() },
-      Executable { assertThat(vedtakFunnet.alleVedtak).isNotNull() },
-      Executable { assertThat(vedtakFunnet.alleVedtak.size).isEqualTo(2) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[0]).isNotNull() },
-      Executable { assertThat(vedtakFunnet.alleVedtak[0].vedtakId).isEqualTo(nyttVedtakOpprettet1.vedtakId) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[0].saksbehandlerId).isEqualTo(nyttVedtakOpprettet1.saksbehandlerId) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[0].enhetId).isEqualTo(nyttVedtakOpprettet1.enhetId) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[1]).isNotNull() },
-      Executable { assertThat(vedtakFunnet.alleVedtak[1].vedtakId).isEqualTo(nyttVedtakOpprettet2.vedtakId) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[1].saksbehandlerId).isEqualTo(nyttVedtakOpprettet2.saksbehandlerId) },
-      Executable { assertThat(vedtakFunnet.alleVedtak[1].enhetId).isEqualTo(nyttVedtakOpprettet2.enhetId) }
+      Executable { assertThat(stonadFunnet).isNotNull() },
+      Executable { assertThat(stonadFunnet.allestonad).isNotNull() },
+      Executable { assertThat(stonadFunnet.allestonad.size).isEqualTo(2) },
+      Executable { assertThat(stonadFunnet.allestonad[0]).isNotNull() },
+      Executable { assertThat(stonadFunnet.allestonad[0].stonadId).isEqualTo(nyttstonadOpprettet1.stonadId) },
+      Executable { assertThat(stonadFunnet.allestonad[0].saksbehandlerId).isEqualTo(nyttstonadOpprettet1.saksbehandlerId) },
+      Executable { assertThat(stonadFunnet.allestonad[0].enhetId).isEqualTo(nyttstonadOpprettet1.enhetId) },
+      Executable { assertThat(stonadFunnet.allestonad[1]).isNotNull() },
+      Executable { assertThat(stonadFunnet.allestonad[1].stonadId).isEqualTo(nyttstonadOpprettet2.stonadId) },
+      Executable { assertThat(stonadFunnet.allestonad[1].saksbehandlerId).isEqualTo(nyttstonadOpprettet2.saksbehandlerId) },
+      Executable { assertThat(stonadFunnet.allestonad[1].enhetId).isEqualTo(nyttstonadOpprettet2.enhetId) }
     )
   }
 
 
   @Test
-  fun `skal opprette nytt komplett vedtak`() {
-    // Oppretter nytt komplett vedtak
-    val nyttKomplettVedtakRequest = byggKomplettVedtakRequest()
-    val nyttKomplettVedtakOpprettet = vedtakService.opprettKomplettVedtak(nyttKomplettVedtakRequest)
+  fun `skal opprette nytt komplett stonad`() {
+    // Oppretter nytt komplett stonad
+    val nyttKomplettstonadRequest = byggKomplettstonadRequest()
+    val nyttKomplettstonadOpprettet = stonadService.opprettKomplettstonad(nyttKomplettstonadRequest)
 
     assertAll(
-      Executable { assertThat(nyttKomplettVedtakOpprettet).isNotNull() },
-      Executable { assertThat(nyttKomplettVedtakOpprettet.vedtakId).isNotNull() }
+      Executable { assertThat(nyttKomplettstonadOpprettet).isNotNull() },
+      Executable { assertThat(nyttKomplettstonadOpprettet.stonadId).isNotNull() }
     )
   }
 }
