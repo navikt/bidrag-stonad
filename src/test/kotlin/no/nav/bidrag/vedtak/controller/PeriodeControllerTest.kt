@@ -1,9 +1,8 @@
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.stonad.BidragstonadLocal
-import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse
+import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadsendringDto
@@ -35,7 +34,7 @@ import java.time.LocalDate
 
 @DisplayName("PeriodeControllerTest")
 @ActiveProfiles(TEST_PROFILE)
-@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class PeriodeControllerTest {
 
   @Autowired

@@ -1,9 +1,8 @@
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.stonad.BidragstonadLocal
-import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.api.AlleStonadsendringerForstonadResponse
+import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.NyStonadsendringRequest
 import no.nav.bidrag.stonad.dto.StonadsendringDto
 import no.nav.bidrag.stonad.dto.stonadDto
@@ -31,7 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @DisplayName("StonadsendringControllerTest")
 @ActiveProfiles(TEST_PROFILE)
-@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class StonadsendringControllerTest {
 
   @Autowired

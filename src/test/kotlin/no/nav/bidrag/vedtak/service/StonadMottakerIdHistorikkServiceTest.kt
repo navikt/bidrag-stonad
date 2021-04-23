@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.NyStonadsendringRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
 import no.nav.bidrag.stonad.dto.StonadsendringDto
@@ -20,8 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
 @DisplayName("StonadsendringServiceTest")
-@ActiveProfiles(BidragstonadLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
+@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StonadMottakerIdHistorikkServiceTest {
 
   @Autowired

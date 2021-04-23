@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.BidragstonadLocal
+import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadsendringRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
@@ -25,8 +25,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @DisplayName("PeriodeServiceTest")
-@ActiveProfiles(BidragstonadLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragstonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
+@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PeriodeServiceTest {
 
   @Autowired

@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.stonad.BidragstonadLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.security.token.support.test.jersey.TestTokenGeneratorResource
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.context.annotation.Bean
@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders
 
 @Configuration
 @Profile(TEST_PROFILE)
-class BidragstonadTestConfig {
+class BidragStonadTestConfig {
 
   @Bean
   fun securedTestRestTemplate(testRestTemplate: TestRestTemplate?): HttpHeaderTestRestTemplate? {
