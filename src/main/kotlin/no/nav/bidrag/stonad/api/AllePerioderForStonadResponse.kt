@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.dto.PeriodeDto
 
 @ApiModel
-data class AllePerioderForStonadsendringResponse(
+data class AllePerioderForStonadResponse(
 
   @ApiModelProperty(value = "Alle perioder for en stonadsendring")
   val allePerioderForStonadsendring: List<PeriodeDto> = emptyList()

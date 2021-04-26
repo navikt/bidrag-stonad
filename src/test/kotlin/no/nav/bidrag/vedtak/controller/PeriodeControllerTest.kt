@@ -5,7 +5,7 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
@@ -79,7 +79,7 @@ class PeriodeControllerTest {
     val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
@@ -93,7 +93,7 @@ class PeriodeControllerTest {
     val response = securedTestRestTemplate.exchange(
       fullUrlForNyPeriode(),
       HttpMethod.POST,
-      byggRequest(nyStonadsendringOpprettet.stonadsendringId),
+      byggRequest(nyStonadsendringOpprettet.stonadId),
       PeriodeDto::class.java
     )
 
@@ -101,7 +101,7 @@ class PeriodeControllerTest {
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull() },
-      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyStonadsendringOpprettet.stonadsendringId) },
+      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(response?.body?.belop).isEqualTo(BigDecimal.valueOf(17.01)) },
       Executable { assertThat(response?.body?.resultatkode).isEqualTo("RESULTATKODE_TEST") }
 
@@ -119,7 +119,7 @@ class PeriodeControllerTest {
     val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadsendringDto(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
@@ -134,7 +134,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet.stonadsendringId,
+        stonadsendringId = nyStonadsendringOpprettet.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -172,7 +172,7 @@ class PeriodeControllerTest {
     val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(StonadsendringDto(
+    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet1.stonadId,
       behandlingId = "1111",
@@ -182,7 +182,7 @@ class PeriodeControllerTest {
     )
     )
 
-    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(StonadsendringDto(
+    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet2.stonadId,
       behandlingId = "9999",
@@ -197,7 +197,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet1.stonadsendringId,
+        stonadsendringId = nyStonadsendringOpprettet1.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -208,7 +208,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet1.stonadsendringId,
+        stonadsendringId = nyStonadsendringOpprettet1.stonadId,
         belop = BigDecimal.valueOf(2000.02),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -220,7 +220,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet2.stonadsendringId,
+        stonadsendringId = nyStonadsendringOpprettet2.stonadId,
         belop = BigDecimal.valueOf(9999.99),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -229,10 +229,10 @@ class PeriodeControllerTest {
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "${fullUrlForSokPerioderForStonadsendring()}/${nyStonadsendringOpprettet1.stonadsendringId}",
+      "${fullUrlForSokPerioderForStonadsendring()}/${nyStonadsendringOpprettet1.stonadId}",
       HttpMethod.GET,
       null,
-      no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse::class.java)
+      no.nav.bidrag.stonad.api.AllePerioderForStonadResponse::class.java)
 
 
     assertAll(

@@ -3,8 +3,8 @@ package no.nav.bidrag.stonad.controller
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.api.NyStonadsendringRequest
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.api.NyStonadRequest
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
@@ -31,7 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @DisplayName("StonadsendringControllerTest")
 @ActiveProfiles(TEST_PROFILE)
 @SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
-class StonadsendringControllerTest {
+class StonadControllerTest {
 
   @Autowired
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
@@ -73,7 +73,7 @@ class StonadsendringControllerTest {
       fullUrlForNyStonadsendring(),
       HttpMethod.POST,
       byggRequest(nyttstonadOpprettet.stonadId),
-      StonadsendringDto::class.java
+      StonadDto::class.java
     )
 
     assertAll(
@@ -95,7 +95,7 @@ class StonadsendringControllerTest {
 
     // Oppretter ny forekomst av stønadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet.stonadId,
         behandlingId = "1111",
@@ -107,17 +107,17 @@ class StonadsendringControllerTest {
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "${fullUrlForSokStonadsendring()}/${nyStonadsendringOpprettet.stonadsendringId}",
+      "${fullUrlForSokStonadsendring()}/${nyStonadsendringOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      StonadsendringDto::class.java
+      StonadDto::class.java
     )
 
     assertAll(
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
-      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyStonadsendringOpprettet.stonadsendringId) },
+      Executable { assertThat(response?.body?.stonadId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(response?.body?.stonadType).isEqualTo(nyStonadsendringOpprettet.stonadType) },
       Executable { assertThat(response?.body?.stonadId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(response?.body?.behandlingId).isEqualTo(nyStonadsendringOpprettet.behandlingId) }
@@ -134,7 +134,7 @@ class StonadsendringControllerTest {
 
     // Oppretter nye forekomster av stønadsendring
     val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet1.stonadId,
         behandlingId = "1111",
@@ -145,7 +145,7 @@ class StonadsendringControllerTest {
     )
 
     val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet1.stonadId,
         behandlingId = "2222",
@@ -157,7 +157,7 @@ class StonadsendringControllerTest {
 
     // Stonadsendring som ikke skal legges med i resultatet
     persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet2.stonadId,
         behandlingId = "9999",
@@ -181,11 +181,11 @@ class StonadsendringControllerTest {
       Executable { assertThat(response?.body).isNotNull },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad).isNotNull },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!!.size).isEqualTo(2) },
-      Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![0].stonadsendringId).isEqualTo(nyStonadsendringOpprettet1.stonadsendringId) },
+      Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![0].stonadId).isEqualTo(nyStonadsendringOpprettet1.stonadId) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![0].stonadType).isEqualTo(nyStonadsendringOpprettet1.stonadType) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![0].stonadId).isEqualTo(nyStonadsendringOpprettet1.stonadId) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![0].behandlingId).isEqualTo(nyStonadsendringOpprettet1.behandlingId) },
-      Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![1].stonadsendringId).isEqualTo(nyStonadsendringOpprettet2.stonadsendringId) },
+      Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![1].stonadId).isEqualTo(nyStonadsendringOpprettet2.stonadId) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![1].stonadType).isEqualTo(nyStonadsendringOpprettet2.stonadType) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![1].stonadId).isEqualTo(nyStonadsendringOpprettet2.stonadId) },
       Executable { assertThat(response?.body?.alleStonadsendringerForstonad!![1].behandlingId).isEqualTo(nyStonadsendringOpprettet2.behandlingId) }
@@ -210,8 +210,8 @@ class StonadsendringControllerTest {
     return "http://localhost:$port$contextPath"
   }
 
-  private fun byggRequest(stonadId: Int): HttpEntity<NyStonadsendringRequest> {
-    return initHttpEntity(NyStonadsendringRequest(
+  private fun byggRequest(stonadId: Int): HttpEntity<NyStonadRequest> {
+    return initHttpEntity(NyStonadRequest(
       "BIDRAG",
       stonadId,
       "1111",

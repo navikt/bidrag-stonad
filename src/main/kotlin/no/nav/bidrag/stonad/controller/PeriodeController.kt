@@ -3,7 +3,6 @@ package no.nav.bidrag.stonad.controller
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.service.PeriodeService
@@ -70,8 +69,8 @@ class PeriodeController(private val periodeService: PeriodeService) {
     ]
   )
   fun finnAllePerioderForStonadsendring(@PathVariable stonadsendringId: Int):
-      ResponseEntity<no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse> {
-    val allePerioderFunnet = periodeService.finnAllePerioderForStonadsendring(stonadsendringId)
+      ResponseEntity<no.nav.bidrag.stonad.api.AllePerioderForStonadResponse> {
+    val allePerioderFunnet = periodeService.finnAllePerioderForStonad(stonadsendringId)
     LOGGER.info("Følgende perioder ble funnet: $allePerioderFunnet")
     return ResponseEntity(allePerioderFunnet, HttpStatus.OK)
   }

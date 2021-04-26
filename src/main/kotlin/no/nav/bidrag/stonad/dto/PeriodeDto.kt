@@ -2,7 +2,7 @@ package no.nav.bidrag.stonad.dto
 
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.persistence.entity.Periode
-import no.nav.bidrag.stonad.persistence.entity.Stonadsendring
+import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.full.memberProperties
@@ -31,11 +31,11 @@ data class PeriodeDto(
   val resultatkode: String = ""
 )
 
-fun PeriodeDto.toPeriodeEntity(eksisterendeStonadsendring: Stonadsendring) = with(::Periode) {
+fun PeriodeDto.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
   val propertiesByName = PeriodeDto::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      Periode::stonadsendring.name -> eksisterendeStonadsendring
+      Periode::stonad.name -> eksisterendeStonad
       else -> propertiesByName[parameter.name]?.get(this@toPeriodeEntity)
     }
   })

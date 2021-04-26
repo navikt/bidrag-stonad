@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.api.NyttKomplettstonadRequest
-import no.nav.bidrag.stonad.api.NyttstonadResponse
+import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.Protected
@@ -35,7 +35,7 @@ class stonadController(private val stonadService: StonadService) {
   )
 
   fun opprettNyttstonad(@RequestBody request: NyttstonadRequest): ResponseEntity<stonadDto>? {
-    val stonadOpprettet = stonadService.opprettNyttstonad(request)
+    val stonadOpprettet = stonadService.opprettNystonad(request)
     LOGGER.info("Følgende stonad er opprettet: $stonadOpprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)
   }
@@ -88,7 +88,7 @@ class stonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettKomplettstonad(@RequestBody request: NyttKomplettstonadRequest): ResponseEntity<NyttstonadResponse>? {
+  fun opprettKomplettstonad(@RequestBody request: NyKomplettstonadRequest): ResponseEntity<NyStonadResponse>? {
     val stonadOpprettet = stonadService.opprettKomplettstonad(request)
     LOGGER.info("stonad med id ${stonadOpprettet.stonadId} er opprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)

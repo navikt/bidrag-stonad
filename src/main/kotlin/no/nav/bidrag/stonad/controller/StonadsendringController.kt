@@ -3,9 +3,9 @@ package no.nav.bidrag.stonad.controller
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import no.nav.bidrag.stonad.api.NyStonadsendringRequest
-import no.nav.bidrag.stonad.dto.StonadsendringDto
-import no.nav.bidrag.stonad.service.StonadMottakerIdHistorikkService
+import no.nav.bidrag.stonad.api.NyStonadRequest
+import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.service.MottakerIdHistorikkService
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Protected
-class StonadsendringController(private val stonadsendringService: StonadMottakerIdHistorikkService) {
+class StonadsendringController(private val stonadsendringService: MottakerIdHistorikkService) {
 
   @PostMapping(STONADSENDRING_NY)
   @ApiOperation("Opprett ny stønadsendring")
@@ -32,7 +32,7 @@ class StonadsendringController(private val stonadsendringService: StonadMottaker
     ]
   )
 
-  fun opprettNyStonadsendring(@RequestBody request: NyStonadsendringRequest): ResponseEntity<StonadsendringDto>? {
+  fun opprettNyStonadsendring(@RequestBody request: NyStonadRequest): ResponseEntity<StonadDto>? {
     val stonadsendringOpprettet = stonadsendringService.opprettNyStonadsendring(request)
     LOGGER.info("Følgende stønadsendring er opprettet: $stonadsendringOpprettet")
     return ResponseEntity(stonadsendringOpprettet, HttpStatus.OK)
@@ -51,7 +51,7 @@ class StonadsendringController(private val stonadsendringService: StonadMottaker
     ]
   )
 
-  fun finnEnStonadsendring(@PathVariable stonadsendringId: Int): ResponseEntity<StonadsendringDto> {
+  fun finnEnStonadsendring(@PathVariable stonadsendringId: Int): ResponseEntity<StonadDto> {
     val stonadsendringFunnet = stonadsendringService.finnEnStonadsendring(stonadsendringId)
     LOGGER.info("Følgende stønadsendring ble funnet: $stonadsendringFunnet")
     return ResponseEntity(stonadsendringFunnet, HttpStatus.OK)

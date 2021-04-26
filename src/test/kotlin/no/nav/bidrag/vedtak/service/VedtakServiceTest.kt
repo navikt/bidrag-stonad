@@ -59,7 +59,7 @@ class stonadServiceTest {
   fun `skal opprette nytt stonad`() {
     // Oppretter nytt stonad
     val nyttstonadRequest = NyttstonadRequest("TEST", "1111")
-    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
+    val nyttstonadOpprettet = stonadService.opprettNystonad(nyttstonadRequest)
 
     assertAll(
       Executable { assertThat(nyttstonadOpprettet).isNotNull() },

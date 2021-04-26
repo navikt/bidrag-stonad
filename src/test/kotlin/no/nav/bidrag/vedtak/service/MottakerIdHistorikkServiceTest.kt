@@ -1,9 +1,9 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
@@ -22,10 +22,10 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("StonadsendringServiceTest")
 @ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
 @SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StonadMottakerIdHistorikkServiceTest {
+class MottakerIdHistorikkServiceTest {
 
   @Autowired
-  private lateinit var stonadsendringService: StonadMottakerIdHistorikkService
+  private lateinit var stonadsendringService: MottakerIdHistorikkService
 
   @Autowired
   private lateinit var stonadService: StonadService
@@ -58,10 +58,10 @@ class StonadMottakerIdHistorikkServiceTest {
   fun `skal opprette ny stonadsendring`() {
     // Oppretter nytt stonad
     val nyttstonadRequest = NyttstonadRequest("TEST", "1111")
-    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
+    val nyttstonadOpprettet = stonadService.opprettNystonad(nyttstonadRequest)
 
     // Oppretter ny stønadsendring
-    val nyStonadsendringRequest = NyStonadsendringRequest(
+    val nyStonadsendringRequest = NyStonadRequest(
       "BIDRAG",
       nyttstonadOpprettet.stonadId,
       "1111",
@@ -86,7 +86,7 @@ class StonadMottakerIdHistorikkServiceTest {
 
     // Oppretter ny stønadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet.stonadId,
         behandlingId = "1111",
@@ -97,11 +97,11 @@ class StonadMottakerIdHistorikkServiceTest {
     )
 
     // Finner stønadsendringen som akkurat ble opprettet
-    val stonadsendringFunnet = stonadsendringService.finnEnStonadsendring(nyStonadsendringOpprettet.stonadsendringId)
+    val stonadsendringFunnet = stonadsendringService.finnEnStonadsendring(nyStonadsendringOpprettet.stonadId)
 
     assertAll(
       Executable { assertThat(stonadsendringFunnet).isNotNull() },
-      Executable { assertThat(stonadsendringFunnet.stonadsendringId).isEqualTo(nyStonadsendringOpprettet.stonadsendringId) },
+      Executable { assertThat(stonadsendringFunnet.stonadId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(stonadsendringFunnet.stonadType).isEqualTo(nyStonadsendringOpprettet.stonadType) },
       Executable { assertThat(stonadsendringFunnet.stonadId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(stonadsendringFunnet.behandlingId).isEqualTo(nyStonadsendringOpprettet.behandlingId) }
@@ -118,11 +118,11 @@ class StonadMottakerIdHistorikkServiceTest {
     val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter nye stønadsendringer
-    val nyStonadsendringDtoListe = mutableListOf<StonadsendringDto>()
+    val nyStonadsendringDtoListe = mutableListOf<StonadDto>()
 
     nyStonadsendringDtoListe.add(
       persistenceService.opprettNyStonadsendring(
-        StonadsendringDto(
+        StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet1.stonadId,
           behandlingId = "1111",
@@ -135,7 +135,7 @@ class StonadMottakerIdHistorikkServiceTest {
 
     nyStonadsendringDtoListe.add(
       persistenceService.opprettNyStonadsendring(
-        StonadsendringDto(
+        StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet1.stonadId,
           behandlingId = "2222",
@@ -149,7 +149,7 @@ class StonadMottakerIdHistorikkServiceTest {
     // Legger til en ekstra stonadsendring som ikke skal bli funnet pga annen stonadId
     nyStonadsendringDtoListe.add(
       persistenceService.opprettNyStonadsendring(
-        StonadsendringDto(
+        StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet2.stonadId,
           behandlingId = "9999",
@@ -171,7 +171,7 @@ class StonadMottakerIdHistorikkServiceTest {
       Executable {
         stonadsendringFunnet.alleStonadsendringerForstonad.forEachIndexed { index, stonadsendring ->
           assertAll(
-            Executable { assertThat(stonadsendring.stonadsendringId).isEqualTo(nyStonadsendringDtoListe[index].stonadsendringId) },
+            Executable { assertThat(stonadsendring.stonadId).isEqualTo(nyStonadsendringDtoListe[index].stonadId) },
             Executable { assertThat(stonadsendring.stonadType).isEqualTo(nyStonadsendringDtoListe[index].stonadType) },
             Executable { assertThat(stonadsendring.stonadId).isEqualTo(nyStonadsendringDtoListe[index].stonadId) },
             Executable { assertThat(stonadsendring.behandlingId).isEqualTo(nyStonadsendringDtoListe[index].behandlingId) }

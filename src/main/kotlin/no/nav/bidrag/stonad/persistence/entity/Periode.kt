@@ -28,7 +28,7 @@ data class Periode(
 
   @ManyToOne
   @JoinColumn(name = "stonadsendring_id")
-  val stonadsendring: Stonadsendring = Stonadsendring(),
+  val stonad: Stonad = Stonad(),
 
   @Column(nullable = false, name = "belop")
   val belop: BigDecimal = BigDecimal.ZERO,
@@ -44,7 +44,7 @@ data class Periode(
     val propertiesByName = Periode::class.memberProperties.associateBy { it.name }
     callBy(parameters.associateWith { parameter ->
       when (parameter.name) {
-        PeriodeDto::stonadsendringId.name -> stonadsendring.stonadsendringId
+        PeriodeDto::stonadsendringId.name -> stonad.stonadId
         else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
       }
     })

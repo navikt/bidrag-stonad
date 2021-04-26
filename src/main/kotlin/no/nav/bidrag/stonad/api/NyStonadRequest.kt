@@ -2,11 +2,11 @@ package no.nav.bidrag.stonad.api
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import kotlin.reflect.full.memberProperties
 
 @ApiModel(value = "Egenskaper ved en stønadsendring")
-data class NyStonadsendringRequest(
+data class NyStonadRequest(
 
   @ApiModelProperty(value = "Stønadstype")
   val stonadType: String = "",
@@ -33,23 +33,23 @@ data class NyStonadsendringRequest(
   val periodeListe: List<NyPeriodeRequest> = emptyList()
 )
 
-fun NyStonadsendringRequest.toStonadsendringDto(stonadId: Int) = with(::StonadsendringDto) {
-  val propertiesByName = NyStonadsendringRequest::class.memberProperties.associateBy { it.name }
+fun NyStonadRequest.toStonadDto(stonadId: Int) = with(::StonadDto) {
+  val propertiesByName = NyStonadRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      StonadsendringDto::stonadId.name -> stonadId
-      StonadsendringDto::stonadsendringId.name -> 0
-      else -> propertiesByName[parameter.name]?.get(this@toStonadsendringDto)
+      StonadDto::stonadId.name -> stonadId
+      StonadDto::stonadId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })
 }
 
-fun NyStonadsendringRequest.toStonadsendringDto() = with(::StonadsendringDto) {
-  val propertiesByName = NyStonadsendringRequest::class.memberProperties.associateBy { it.name }
+fun NyStonadRequest.toStonadDto() = with(::StonadDto) {
+  val propertiesByName = NyStonadRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      StonadsendringDto::stonadsendringId.name -> 0
-      else -> propertiesByName[parameter.name]?.get(this@toStonadsendringDto)
+      StonadDto::stonadId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })
 }

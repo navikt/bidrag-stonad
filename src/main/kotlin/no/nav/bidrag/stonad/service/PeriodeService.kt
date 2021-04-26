@@ -1,6 +1,5 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.toPeriodeDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
@@ -19,10 +18,10 @@ class PeriodeService (val persistenceService: PersistenceService) {
     return persistenceService.finnPeriode(periodeId)
   }
 
-  fun finnAllePerioderForStonadsendring(stonadsendringId: Int): no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse {
-    return no.nav.bidrag.stonad.api.AllePerioderForStonadsendringResponse(
+  fun finnAllePerioderForStonad(stonadId: Int): no.nav.bidrag.stonad.api.AllePerioderForStonadResponse {
+    return no.nav.bidrag.stonad.api.AllePerioderForStonadResponse(
       persistenceService.finnAllePerioderForStonadsendring(
-        stonadsendringId
+        stonadId
       )
     )
   }

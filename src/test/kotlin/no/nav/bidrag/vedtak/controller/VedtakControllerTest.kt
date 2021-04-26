@@ -5,8 +5,8 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.api.NyttKomplettstonadRequest
-import no.nav.bidrag.stonad.api.NyttstonadResponse
+import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
@@ -158,7 +158,7 @@ class stonadControllerTest {
       fullUrlForNyttKomplettstonad(),
       HttpMethod.POST,
       byggKomplettstonadRequest(),
-      NyttstonadResponse::class.java
+      NyStonadResponse::class.java
     )
 
     assertAll(
@@ -188,7 +188,7 @@ class stonadControllerTest {
     return initHttpEntity(NyttstonadRequest(saksbehandlerId = "TEST", enhetId = "1111"))
   }
 
-  private fun byggKomplettstonadRequest(): HttpEntity<NyttKomplettstonadRequest> {
+  private fun byggKomplettstonadRequest(): HttpEntity<NyKomplettstonadRequest> {
     return initHttpEntity(TestUtil.byggKomplettstonadRequest())
   }
 

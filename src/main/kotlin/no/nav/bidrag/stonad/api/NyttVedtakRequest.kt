@@ -16,5 +16,5 @@ data class NyttstonadRequest(
   val grunnlagListe: List<NyttGrunnlagRequest> = emptyList(),
 
   @ApiModelProperty(value = "Liste over alle stønadsendringer som inngår i stonadet")
-  val stonadsendringListe: List<NyStonadsendringRequest> = emptyList()
+  val stonadListe: List<NyStonadRequest> = emptyList()
 )

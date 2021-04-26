@@ -1,15 +1,13 @@
 package no.nav.bidrag.stonad
 
-import no.nav.bidrag.stonad.api.GrunnlagReferanseRequest
 import no.nav.bidrag.stonad.api.NyttGrunnlagRequest
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
-import no.nav.bidrag.stonad.api.NyStonadsendringRequest
-import no.nav.bidrag.stonad.api.NyttKomplettstonadRequest
-import no.nav.bidrag.stonad.api.NyttstonadRequest
+import no.nav.bidrag.stonad.api.NyStonadRequest
+import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
 import no.nav.bidrag.stonad.dto.GrunnlagDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -19,7 +17,7 @@ class TestUtil {
 
   companion object {
 
-    fun byggKomplettstonadRequest() = NyttKomplettstonadRequest(
+    fun byggKomplettstonadRequest() = NyKomplettstonadRequest(
       saksbehandlerId = "X123456",
       enhetId = "4812",
       grunnlagListe = byggGrunnlagListe(),
@@ -46,7 +44,7 @@ class TestUtil {
     )
 
     private fun byggStonadsendringListe() = listOf(
-      NyStonadsendringRequest(
+      NyStonadRequest(
         stonadType = "BIDRAG",
         sakId = "SAK-001",
         behandlingId = "Fritekst",
@@ -102,7 +100,7 @@ class TestUtil {
           )
         )
       ),
-      NyStonadsendringRequest(
+      NyStonadRequest(
         stonadType = "SAERTILSKUDD",
         sakId = "SAK-001",
         behandlingId = "Fritekst",
@@ -156,8 +154,8 @@ class TestUtil {
       opprettetTimestamp = LocalDateTime.now()
     )
 
-    fun byggStonadsendringDto() = StonadsendringDto(
-      stonadsendringId = (1..100).random(),
+    fun byggStonadsendringDto() = StonadDto(
+      stonadId = (1..100).random(),
       stonadType = "BIDRAG",
       stonadId = (1..100).random(),
       sakId = "SAK-001",

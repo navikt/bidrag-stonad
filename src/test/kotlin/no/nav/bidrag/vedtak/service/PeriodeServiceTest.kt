@@ -2,10 +2,10 @@ package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
-import no.nav.bidrag.stonad.api.NyStonadsendringRequest
+import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
@@ -33,7 +33,7 @@ class PeriodeServiceTest {
   private lateinit var periodeService: PeriodeService
 
   @Autowired
-  private lateinit var stonadsendringService: StonadMottakerIdHistorikkService
+  private lateinit var stonadsendringService: MottakerIdHistorikkService
 
   @Autowired
   private lateinit var stonadService: StonadService
@@ -71,10 +71,10 @@ class PeriodeServiceTest {
 
     // Oppretter nytt stonad
     val nyttstonadRequest = NyttstonadRequest(saksbehandlerId = "1111", enhetId = "TEST")
-    val nyttstonadOpprettet = stonadService.opprettNyttstonad(nyttstonadRequest)
+    val nyttstonadOpprettet = stonadService.opprettNystonad(nyttstonadRequest)
 
     // Oppretter ny stonad
-    val nyStonadsendringRequest = NyStonadsendringRequest(
+    val nyStonadsendringRequest = NyStonadRequest(
       "BIDRAG", nyttstonadOpprettet.stonadId,
       "1111", "1111", "1111", "1111"
     )
@@ -82,7 +82,7 @@ class PeriodeServiceTest {
 
     // Oppretter ny periode
     val nyPeriodeRequest = NyPeriodeRequest(
-      LocalDate.now(), LocalDate.now(), nyStonadsendringOpprettet.stonadsendringId,
+      LocalDate.now(), LocalDate.now(), nyStonadsendringOpprettet.stonadId,
       BigDecimal.valueOf(17), "NOK", "RESULTATKODE_TEST"
     )
     val nyPeriodeOpprettet = periodeService.opprettNyPeriode(nyPeriodeRequest)
@@ -110,7 +110,7 @@ class PeriodeServiceTest {
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
       ))
@@ -120,7 +120,7 @@ class PeriodeServiceTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet.stonadsendringId,
+        stonadsendringId = nyStonadsendringOpprettet.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST"
@@ -152,14 +152,14 @@ class PeriodeServiceTest {
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet1.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
       ))
 
     // Oppretter ny stonadsendring
     val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(
-      StonadsendringDto(
+      StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet2.stonadId, behandlingId = "9999",
         skyldnerId = "9999", kravhaverId = "9999", mottakerId = "9999"
       ))
@@ -172,7 +172,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet1.stonadsendringId,
+          stonadsendringId = nyStonadsendringOpprettet1.stonadId,
           belop = BigDecimal.valueOf(17.02),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -186,7 +186,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet1.stonadsendringId,
+          stonadsendringId = nyStonadsendringOpprettet1.stonadId,
           belop = BigDecimal.valueOf(2000.01),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -200,7 +200,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet2.stonadsendringId,
+          stonadsendringId = nyStonadsendringOpprettet2.stonadId,
           belop = BigDecimal.valueOf(9999.99),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -208,8 +208,8 @@ class PeriodeServiceTest {
       )
     )
 
-    val stonadsendringId = nyStonadsendringOpprettet1.stonadsendringId
-    val periodeFunnet = periodeService.finnAllePerioderForStonadsendring(stonadsendringId)
+    val stonadsendringId = nyStonadsendringOpprettet1.stonadId
+    val periodeFunnet = periodeService.finnAllePerioderForStonad(stonadsendringId)
 
     assertAll(
       Executable { assertThat(periodeFunnet).isNotNull() },

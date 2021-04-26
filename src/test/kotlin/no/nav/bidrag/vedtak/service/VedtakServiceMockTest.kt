@@ -9,7 +9,7 @@ import no.nav.bidrag.stonad.TestUtil.Companion.byggstonadDto
 import no.nav.bidrag.stonad.dto.GrunnlagDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.stonadDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -40,7 +40,7 @@ class stonadServiceMockTest {
   private lateinit var stonadDtoCaptor: ArgumentCaptor<stonadDto>
 
   @Captor
-  private lateinit var stonadsendringDtoCaptor: ArgumentCaptor<StonadsendringDto>
+  private lateinit var stonadsendringDtoCaptor: ArgumentCaptor<StonadDto>
 
   @Captor
   private lateinit var periodeDtoCaptor: ArgumentCaptor<PeriodeDto>
@@ -74,7 +74,7 @@ class stonadServiceMockTest {
     val periodeGrunnlagDtoListe = periodeGrunnlagDtoCaptor.allValues
 
     Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyttstonad(MockitoHelper.any(stonadDto::class.java))
-    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyStonadsendring(MockitoHelper.any(StonadsendringDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyStonadsendring(MockitoHelper.any(StonadDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyttGrunnlag(MockitoHelper.any(GrunnlagDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(11)).opprettNyttPeriodeGrunnlag(MockitoHelper.any(PeriodeGrunnlagDto::class.java))

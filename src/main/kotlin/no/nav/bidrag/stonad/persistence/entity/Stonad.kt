@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.dto.StonadsendringDto
+import no.nav.bidrag.stonad.dto.StonadDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -11,12 +11,12 @@ import javax.persistence.ManyToOne
 import kotlin.reflect.full.memberProperties
 
 @Entity
-data class Stonadsendring(
+data class Stonad(
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "stonadsendring_id")
-  val stonadsendringId: Int = 0,
+  @Column(name = "stonad_id")
+  val stonadId: Int = 0,
 
   @Column(nullable = false, name = "stonad_type")
   val stonadType: String = "",
@@ -41,12 +41,12 @@ data class Stonadsendring(
   val mottakerId: String = ""
 )
 
-fun Stonadsendring.toStonadsendringDto() = with(::StonadsendringDto) {
-  val propertiesByName = Stonadsendring::class.memberProperties.associateBy { it.name }
+fun Stonad.toStonadDto() = with(::StonadDto) {
+  val propertiesByName = Stonad::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      StonadsendringDto::stonadId.name -> stonad.stonadId
-      else -> propertiesByName[parameter.name]?.get(this@toStonadsendringDto)
+      StonadDto::stonadId.name -> stonad.stonadId
+      else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })
 }
