@@ -6,9 +6,9 @@ import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
@@ -44,7 +44,7 @@ class PeriodeControllerTest {
   private lateinit var stonadRepository: stonadRepository
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
   private lateinit var periodeRepository: PeriodeRepository
@@ -76,10 +76,10 @@ class PeriodeControllerTest {
   fun `skal opprette ny periode`() {
 
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadDto(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
@@ -101,7 +101,7 @@ class PeriodeControllerTest {
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull() },
-      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
+      Executable { assertThat(response?.body?.stonadId).isEqualTo(nyStonadsendringOpprettet.stonadId) },
       Executable { assertThat(response?.body?.belop).isEqualTo(BigDecimal.valueOf(17.01)) },
       Executable { assertThat(response?.body?.resultatkode).isEqualTo("RESULTATKODE_TEST") }
 
@@ -116,10 +116,10 @@ class PeriodeControllerTest {
   @Test
   fun `skal finne data for en periode`(){
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(StonadDto(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet.stonadId,
       behandlingId = "1111",
@@ -134,7 +134,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet.stonadId,
+        stonadId = nyStonadsendringOpprettet.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -154,9 +154,9 @@ class PeriodeControllerTest {
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
       Executable { assertThat(response?.body?.periodeId).isEqualTo(nyPeriodeOpprettet.periodeId) },
-      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyPeriodeOpprettet.stonadsendringId) },
+      Executable { assertThat(response?.body?.stonadId).isEqualTo(nyPeriodeOpprettet.stonadId) },
       Executable { assertThat(response?.body?.belop).isEqualTo(nyPeriodeOpprettet.belop) },
-      Executable { assertThat(response?.body?.stonadsendringId).isEqualTo(nyPeriodeOpprettet.stonadsendringId) }
+      Executable { assertThat(response?.body?.stonadId).isEqualTo(nyPeriodeOpprettet.stonadId) }
     )
 
     periodeRepository.deleteAll()
@@ -168,11 +168,11 @@ class PeriodeControllerTest {
   @Test
   fun `skal finne alle perioder for stonadsendring`(){
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter ny forekomst av stonadsendring
-    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(StonadDto(
+    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet1.stonadId,
       behandlingId = "1111",
@@ -182,7 +182,7 @@ class PeriodeControllerTest {
     )
     )
 
-    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(StonadDto(
+    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG",
       stonadId = nyttstonadOpprettet2.stonadId,
       behandlingId = "9999",
@@ -197,7 +197,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet1.stonadId,
+        stonadId = nyStonadsendringOpprettet1.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -208,7 +208,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet1.stonadId,
+        stonadId = nyStonadsendringOpprettet1.stonadId,
         belop = BigDecimal.valueOf(2000.02),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -220,7 +220,7 @@ class PeriodeControllerTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet2.stonadId,
+        stonadId = nyStonadsendringOpprettet2.stonadId,
         belop = BigDecimal.valueOf(9999.99),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -232,7 +232,7 @@ class PeriodeControllerTest {
       "${fullUrlForSokPerioderForStonadsendring()}/${nyStonadsendringOpprettet1.stonadId}",
       HttpMethod.GET,
       null,
-      no.nav.bidrag.stonad.api.AllePerioderForStonadResponse::class.java)
+      no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse::class.java)
 
 
     assertAll(
@@ -241,9 +241,9 @@ class PeriodeControllerTest {
       Executable { assertThat(response?.body).isNotNull },
       Executable { assertThat(response?.body?.allePerioderForStonadsendring!!.size).isEqualTo(2) },
       Executable { assertThat(response?.body?.allePerioderForStonadsendring!![0].periodeId).isEqualTo(nyPeriodeOpprettet1.periodeId) },
-      Executable { assertThat(response?.body?.allePerioderForStonadsendring!![0].stonadsendringId).isEqualTo(nyPeriodeOpprettet1.stonadsendringId) },
+      Executable { assertThat(response?.body?.allePerioderForStonadsendring!![0].stonadsendringId).isEqualTo(nyPeriodeOpprettet1.stonadId) },
       Executable { assertThat(response?.body?.allePerioderForStonadsendring!![1].belop).isEqualTo(nyPeriodeOpprettet2.belop) },
-      Executable { assertThat(response?.body?.allePerioderForStonadsendring!![1].stonadsendringId).isEqualTo(nyPeriodeOpprettet2.stonadsendringId) }
+      Executable { assertThat(response?.body?.allePerioderForStonadsendring!![1].stonadsendringId).isEqualTo(nyPeriodeOpprettet2.stonadId) }
     )
 
     periodeRepository.deleteAll()

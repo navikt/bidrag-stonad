@@ -69,7 +69,7 @@ class PeriodeController(private val periodeService: PeriodeService) {
     ]
   )
   fun finnAllePerioderForStonadsendring(@PathVariable stonadsendringId: Int):
-      ResponseEntity<no.nav.bidrag.stonad.api.AllePerioderForStonadResponse> {
+      ResponseEntity<no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse> {
     val allePerioderFunnet = periodeService.finnAllePerioderForStonad(stonadsendringId)
     LOGGER.info("Følgende perioder ble funnet: $allePerioderFunnet")
     return ResponseEntity(allePerioderFunnet, HttpStatus.OK)

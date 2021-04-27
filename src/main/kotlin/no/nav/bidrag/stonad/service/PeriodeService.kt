@@ -18,12 +18,8 @@ class PeriodeService (val persistenceService: PersistenceService) {
     return persistenceService.finnPeriode(periodeId)
   }
 
-  fun finnAllePerioderForStonad(stonadId: Int): no.nav.bidrag.stonad.api.AllePerioderForStonadResponse {
-    return no.nav.bidrag.stonad.api.AllePerioderForStonadResponse(
-      persistenceService.finnAllePerioderForStonadsendring(
-        stonadId
-      )
-    )
+  fun finnAllePerioderForStonad(stonadId: Int): List<PeriodeDto> {
+    return persistenceService.finnAllePerioderForStonad(stonadId)
   }
 
 }

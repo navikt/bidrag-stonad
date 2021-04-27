@@ -1,21 +1,22 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.ManyToOne
 import kotlin.reflect.full.memberProperties
 
 @Entity
-data class stonad (
+data class MottakerIdHistorikk (
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @ManyToOne
   @Column(name = "stonad_id")
-  val stonadId: Int = 0,
+  val stonad: Stonad = Stonad(),
 
   @Column(nullable = false, name = "enhet_id")
   val enhetId: String = "",
@@ -23,15 +24,16 @@ data class stonad (
   @Column(nullable = false, name = "opprettet_av")
   val saksbehandlerId: String = "",
 
+  @Id
   @Column(nullable = false, name = "opprettet_timestamp")
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
-fun stonad.tostonadDto() = with(::stonadDto) {
-  val propertiesByName = stonad::class.memberProperties.associateBy { it.name }
+fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
+  val propertiesByName = MottakerIdHistorikk::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      else -> propertiesByName[parameter.name]?.get(this@tostonadDto)
+      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)
     }
   })
 }

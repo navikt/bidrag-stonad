@@ -23,7 +23,7 @@ data class Stonad(
 
   @ManyToOne
   @JoinColumn(name = "stonad_id")
-  val stonad: stonad = stonad(),
+  val stonad: MottakerIdHistorikk = MottakerIdHistorikk(),
 
   @Column(nullable = true, name = "sak_id")
   val sakId: String? = null,
@@ -45,7 +45,6 @@ fun Stonad.toStonadDto() = with(::StonadDto) {
   val propertiesByName = Stonad::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      StonadDto::stonadId.name -> stonad.stonadId
       else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })

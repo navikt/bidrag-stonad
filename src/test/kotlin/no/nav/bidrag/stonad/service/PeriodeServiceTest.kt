@@ -6,11 +6,10 @@ import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
-import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -42,10 +41,10 @@ class PeriodeServiceTest {
   private lateinit var stonadRepository: stonadRepository
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
-  private lateinit var grunnlagRepository: GrunnlagRepository
+  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
   private lateinit var periodeGrunnlagRepository: PeriodeGrunnlagRepository
@@ -60,7 +59,7 @@ class PeriodeServiceTest {
   fun `init`() {
     // Sletter alle forekomster
     periodeGrunnlagRepository.deleteAll()
-    grunnlagRepository.deleteAll()
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
     stonadRepository.deleteAll()
@@ -106,10 +105,10 @@ class PeriodeServiceTest {
     // Finner data for én periode
 
     // Oppretter nytt stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny stonadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
@@ -120,7 +119,7 @@ class PeriodeServiceTest {
       PeriodeDto(
         periodeFomDato = LocalDate.now(),
         periodeTilDato = LocalDate.now(),
-        stonadsendringId = nyStonadsendringOpprettet.stonadId,
+        stonadId = nyStonadsendringOpprettet.stonadId,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "RESULTATKODE_TEST"
@@ -147,18 +146,18 @@ class PeriodeServiceTest {
     // Finner alle perioder
 
     // Oppretter nytt stonad
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter ny stonadsendring
-    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet1.stonadId, behandlingId = "1111",
         skyldnerId = "1111", kravhaverId = "1111", mottakerId = "1111"
       ))
 
     // Oppretter ny stonadsendring
-    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG", stonadId = nyttstonadOpprettet2.stonadId, behandlingId = "9999",
         skyldnerId = "9999", kravhaverId = "9999", mottakerId = "9999"
@@ -172,7 +171,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet1.stonadId,
+          stonadId = nyStonadsendringOpprettet1.stonadId,
           belop = BigDecimal.valueOf(17.02),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -186,7 +185,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet1.stonadId,
+          stonadId = nyStonadsendringOpprettet1.stonadId,
           belop = BigDecimal.valueOf(2000.01),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -200,7 +199,7 @@ class PeriodeServiceTest {
         PeriodeDto(
           periodeFomDato = LocalDate.now(),
           periodeTilDato = LocalDate.now(),
-          stonadsendringId = nyStonadsendringOpprettet2.stonadId,
+          stonadId = nyStonadsendringOpprettet2.stonadId,
           belop = BigDecimal.valueOf(9999.99),
           valutakode = "NOK",
           resultatkode = "RESULTATKODE_TEST_FLERE_PERIODER"
@@ -221,7 +220,7 @@ class PeriodeServiceTest {
       Executable {
       periodeFunnet.allePerioderForStonadsendring.forEachIndexed{ index, periode ->
         assertAll(
-          Executable { assertThat(periode.stonadsendringId).isEqualTo(nyPeriodeDtoListe[index].stonadsendringId)},
+          Executable { assertThat(periode.stonadsendringId).isEqualTo(nyPeriodeDtoListe[index].stonadId)},
           Executable { assertThat(periode.periodeId).isEqualTo(nyPeriodeDtoListe[index].periodeId)},
           Executable { assertThat(periode.belop).isEqualTo(nyPeriodeDtoListe[index].belop)}
         )

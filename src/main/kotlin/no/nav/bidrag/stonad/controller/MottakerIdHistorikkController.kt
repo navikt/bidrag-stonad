@@ -4,9 +4,9 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyKomplettStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
-import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Protected
-class stonadController(private val stonadService: StonadService) {
+class MottakerIdHistorikkController(private val stonadService: StonadService) {
 
   @PostMapping(stonad_NY)
   @ApiOperation("Opprett nytt stonad")
@@ -34,7 +34,7 @@ class stonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettNyttstonad(@RequestBody request: NyttstonadRequest): ResponseEntity<stonadDto>? {
+  fun opprettNyttstonad(@RequestBody request: NyttstonadRequest): ResponseEntity<MottakerIdHistorikkDto>? {
     val stonadOpprettet = stonadService.opprettNystonad(request)
     LOGGER.info("Følgende stonad er opprettet: $stonadOpprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)
@@ -53,7 +53,7 @@ class stonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun finnEttstonad(@PathVariable stonadId: Int): ResponseEntity<stonadDto> {
+  fun finnEttstonad(@PathVariable stonadId: Int): ResponseEntity<MottakerIdHistorikkDto> {
     val stonadFunnet = stonadService.finnEttstonad(stonadId)
     LOGGER.info("Følgende stonad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
@@ -88,7 +88,7 @@ class stonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettKomplettstonad(@RequestBody request: NyKomplettstonadRequest): ResponseEntity<NyStonadResponse>? {
+  fun opprettKomplettstonad(@RequestBody request: NyKomplettStonadRequest): ResponseEntity<NyStonadResponse>? {
     val stonadOpprettet = stonadService.opprettKomplettstonad(request)
     LOGGER.info("stonad med id ${stonadOpprettet.stonadId} er opprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)
@@ -98,6 +98,6 @@ class stonadController(private val stonadService: StonadService) {
     const val stonad_SOK = "/stonad"
     const val stonad_NY = "/stonad/ny"
     const val stonad_NY_KOMPLETT = "/stonad/ny/komplett"
-    private val LOGGER = LoggerFactory.getLogger(stonadController::class.java)
+    private val LOGGER = LoggerFactory.getLogger(MottakerIdHistorikkController::class.java)
   }
 }

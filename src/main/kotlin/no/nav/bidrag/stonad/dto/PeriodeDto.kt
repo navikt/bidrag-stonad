@@ -19,7 +19,7 @@ data class PeriodeDto(
   val periodeTilDato: LocalDate? = null,
 
   @ApiModelProperty(value = "Stonadsendring-id")
-  val stonadsendringId: Int = 0,
+  val stonadId: Int = 0,
 
   @ApiModelProperty(value = "Beregnet stønadsbeløp")
   val belop: BigDecimal = BigDecimal.ZERO,

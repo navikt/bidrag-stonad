@@ -11,13 +11,10 @@ data class NyStonadRequest(
   @ApiModelProperty(value = "Stønadstype")
   val stonadType: String = "",
 
-  @ApiModelProperty(value = "stonad-id")
-  val stonadId: Int = 0,
-
   @ApiModelProperty(value = "Referanse til sak")
   val sakId: String? = null,
 
-  @ApiModelProperty(value = "Søknadsid, referanse til batchkjøring, fritekst")
+  @ApiModelProperty(value = "behandlingId, referanse til batchkjøring, fritekst")
   val behandlingId: String? = null,
 
   @ApiModelProperty(value = "Id til den som skal betale bidraget")
@@ -29,7 +26,7 @@ data class NyStonadRequest(
   @ApiModelProperty(value = "Id til den som mottar bidraget")
   val mottakerId: String = "",
 
-  @ApiModelProperty(value = "Liste over alle perioder som inngår i stønadsendringen")
+  @ApiModelProperty(value = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest> = emptyList()
 )
 
@@ -38,7 +35,6 @@ fun NyStonadRequest.toStonadDto(stonadId: Int) = with(::StonadDto) {
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       StonadDto::stonadId.name -> stonadId
-      StonadDto::stonadId.name -> 0
       else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })

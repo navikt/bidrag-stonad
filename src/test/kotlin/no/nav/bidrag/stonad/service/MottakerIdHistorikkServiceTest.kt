@@ -4,10 +4,10 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
-import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -31,13 +31,13 @@ class MottakerIdHistorikkServiceTest {
   private lateinit var stonadService: StonadService
 
   @Autowired
-  private lateinit var grunnlagRepository: GrunnlagRepository
+  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
   private lateinit var periodeRepository: PeriodeRepository
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
   private lateinit var stonadRepository: stonadRepository
@@ -48,7 +48,7 @@ class MottakerIdHistorikkServiceTest {
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
-    grunnlagRepository.deleteAll()
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
     stonadRepository.deleteAll()
@@ -82,10 +82,10 @@ class MottakerIdHistorikkServiceTest {
   @Test
   fun `skal finne data for en stonadsendring`() {
     // Oppretter nytt stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny stønadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet.stonadId,
@@ -114,14 +114,14 @@ class MottakerIdHistorikkServiceTest {
   fun `skal finne alle stonadsendringer for et stonad`() {
 
     // Oppretter nytt stonad
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(17, saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter nye stønadsendringer
     val nyStonadsendringDtoListe = mutableListOf<StonadDto>()
 
     nyStonadsendringDtoListe.add(
-      persistenceService.opprettNyStonadsendring(
+      persistenceService.opprettNyStonad(
         StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet1.stonadId,
@@ -134,7 +134,7 @@ class MottakerIdHistorikkServiceTest {
     )
 
     nyStonadsendringDtoListe.add(
-      persistenceService.opprettNyStonadsendring(
+      persistenceService.opprettNyStonad(
         StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet1.stonadId,
@@ -148,7 +148,7 @@ class MottakerIdHistorikkServiceTest {
 
     // Legger til en ekstra stonadsendring som ikke skal bli funnet pga annen stonadId
     nyStonadsendringDtoListe.add(
-      persistenceService.opprettNyStonadsendring(
+      persistenceService.opprettNyStonad(
         StonadDto(
           stonadType = "BIDRAG",
           stonadId = nyttstonadOpprettet2.stonadId,

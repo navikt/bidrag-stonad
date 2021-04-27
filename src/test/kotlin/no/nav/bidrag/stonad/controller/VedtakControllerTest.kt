@@ -5,13 +5,12 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyKomplettStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
-import no.nav.bidrag.stonad.dto.stonadDto
-import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
@@ -36,7 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @DisplayName("stonadControllerTest")
 @ActiveProfiles(TEST_PROFILE)
 @SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = WebEnvironment.RANDOM_PORT)
-class stonadControllerTest {
+class mottakerIdHistorikkControllerTest {
 
   @Autowired
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
@@ -45,13 +44,13 @@ class stonadControllerTest {
   private lateinit var periodeGrunnlagRepository: PeriodeGrunnlagRepository
 
   @Autowired
-  private lateinit var grunnlagRepository: GrunnlagRepository
+  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
   private lateinit var periodeRepository: PeriodeRepository
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
   private lateinit var stonadRepository: stonadRepository
@@ -69,7 +68,7 @@ class stonadControllerTest {
   fun `init`() {
     // Sletter alle forekomster
     periodeGrunnlagRepository.deleteAll()
-    grunnlagRepository.deleteAll()
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadsendringRepository.deleteAll()
     stonadRepository.deleteAll()
@@ -87,7 +86,7 @@ class stonadControllerTest {
       fullUrlForNyttstonad(),
       HttpMethod.POST,
       byggRequest(),
-      stonadDto::class.java
+      MottakerIdHistorikkDto::class.java
     )
 
     assertAll(
@@ -102,14 +101,14 @@ class stonadControllerTest {
   @Test
   fun `skal finne data for ett stonad`() {
     // Oppretter ny forekomst
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(enhetId = "1111", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(enhetId = "1111", saksbehandlerId = "TEST"))
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
       "${fullUrlForSokstonad()}/${nyttstonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      stonadDto::class.java
+      MottakerIdHistorikkDto::class.java
     )
 
     assertAll(
@@ -125,8 +124,8 @@ class stonadControllerTest {
   @Test
   fun `skal finne data for alle stonad`() {
     // Oppretter nye forekomster
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(enhetId = "1111", saksbehandlerId = "TEST"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(enhetId = "2222", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(enhetId = "1111", saksbehandlerId = "TEST"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(enhetId = "2222", saksbehandlerId = "TEST"))
 
     // Henter forekomster
     val response = securedTestRestTemplate.exchange(
@@ -169,15 +168,15 @@ class stonadControllerTest {
   }
 
   private fun fullUrlForNyttstonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_NY).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + MottakerIdHistorikkController.stonad_NY).toUriString()
   }
 
   private fun fullUrlForNyttKomplettstonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_NY_KOMPLETT).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + MottakerIdHistorikkController.stonad_NY_KOMPLETT).toUriString()
   }
 
   private fun fullUrlForSokstonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + stonadController.stonad_SOK).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + MottakerIdHistorikkController.stonad_SOK).toUriString()
   }
 
   private fun makeFullContextPath(): String {
@@ -188,7 +187,7 @@ class stonadControllerTest {
     return initHttpEntity(NyttstonadRequest(saksbehandlerId = "TEST", enhetId = "1111"))
   }
 
-  private fun byggKomplettstonadRequest(): HttpEntity<NyKomplettstonadRequest> {
+  private fun byggKomplettstonadRequest(): HttpEntity<NyKomplettStonadRequest> {
     return initHttpEntity(TestUtil.byggKomplettstonadRequest())
   }
 

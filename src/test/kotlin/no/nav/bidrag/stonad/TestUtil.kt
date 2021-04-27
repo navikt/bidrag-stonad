@@ -1,14 +1,15 @@
+/*
 package no.nav.bidrag.stonad
 
-import no.nav.bidrag.stonad.api.NyttGrunnlagRequest
+import no.nav.bidrag.stonad.api.NyEndreMottakerIdRequest
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
-import no.nav.bidrag.stonad.api.NyKomplettstonadRequest
+import no.nav.bidrag.stonad.api.NyKomplettStonadRequest
 import no.nav.bidrag.stonad.dto.GrunnlagDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ class TestUtil {
 
   companion object {
 
-    fun byggKomplettstonadRequest() = NyKomplettstonadRequest(
+    fun byggKomplettstonadRequest() = NyKomplettStonadRequest(
       saksbehandlerId = "X123456",
       enhetId = "4812",
       grunnlagListe = byggGrunnlagListe(),
@@ -25,19 +26,19 @@ class TestUtil {
     )
 
     private fun byggGrunnlagListe() = listOf(
-      NyttGrunnlagRequest(
+      NyEndreMottakerIdRequest(
         grunnlagReferanse = "BM-LIGS-19",
         grunnlagType = "INNTEKT"
       ),
-      NyttGrunnlagRequest(
+      NyEndreMottakerIdRequest(
         grunnlagReferanse = "BM-LIGN-19",
         grunnlagType = "INNTEKT"
       ),
-      NyttGrunnlagRequest(
+      NyEndreMottakerIdRequest(
         grunnlagReferanse = "BP-SKATTEKLASSE-19",
         grunnlagType = "SKATTEKLASSE"
       ),
-      NyttGrunnlagRequest(
+      NyEndreMottakerIdRequest(
         grunnlagReferanse = "SJAB-REF001",
         grunnlagType = "SJABLON"
       )
@@ -147,7 +148,7 @@ class TestUtil {
     )
 
 
-    fun byggstonadDto() = stonadDto(
+    fun byggstonadDto() = MottakerIdHistorikkDto(
       stonadId = (1..100).random(),
       enhetId = "4812",
       saksbehandlerId = "X123456",
@@ -169,7 +170,7 @@ class TestUtil {
       periodeId = (1..100).random(),
       periodeFomDato = LocalDate.parse("2019-07-01"),
       periodeTilDato = LocalDate.parse("2020-01-01"),
-      stonadsendringId = (1..100).random(),
+      stonadId = (1..100).random(),
       belop = BigDecimal.valueOf(3520),
       valutakode = "NOK",
       resultatkode = "KOSTNADSBEREGNET_BIDRAG"
@@ -189,4 +190,4 @@ class TestUtil {
       grunnlagValgt = true
     )
   }
-}
+}*/

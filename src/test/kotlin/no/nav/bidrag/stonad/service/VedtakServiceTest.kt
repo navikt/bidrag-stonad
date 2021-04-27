@@ -3,11 +3,10 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.TestUtil.Companion.byggKomplettstonadRequest
 import no.nav.bidrag.stonad.api.NyttstonadRequest
-import no.nav.bidrag.stonad.dto.stonadDto
-import no.nav.bidrag.stonad.persistence.repository.GrunnlagRepository
-import no.nav.bidrag.stonad.persistence.repository.PeriodeGrunnlagRepository
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -22,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("stonadServiceTest")
 @ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
 @SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class stonadServiceTest {
+class mottakerIdHistorikkServiceTest {
 
   @Autowired
   private lateinit var periodeGrunnlagRepository: PeriodeGrunnlagRepository
@@ -31,10 +30,10 @@ class stonadServiceTest {
   private lateinit var periodeRepository: PeriodeRepository
 
   @Autowired
-  private lateinit var grunnlagRepository: GrunnlagRepository
+  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
   private lateinit var stonadService: StonadService
@@ -50,7 +49,7 @@ class stonadServiceTest {
     // Sletter alle forekomster
     periodeGrunnlagRepository.deleteAll()
     periodeRepository.deleteAll()
-    grunnlagRepository.deleteAll()
+    mottakerIdHistorikkRepository.deleteAll()
     stonadsendringRepository.deleteAll()
     stonadRepository.deleteAll()
   }
@@ -71,7 +70,7 @@ class stonadServiceTest {
   @Test
   fun `skal finne data for ett stonad`() {
     // Oppretter nytt stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Finner stonadet som akkurat ble opprettet
     val stonadFunnet = stonadService.finnEttstonad(nyttstonadOpprettet.stonadId)
@@ -87,8 +86,8 @@ class stonadServiceTest {
   @Test
   fun `skal finne data for alle stonad`() {
     // Oppretter nye stonad
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "2222"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "2222"))
 
     // Finner begge stonadene som akkurat ble opprettet
     val stonadFunnet = stonadService.finnAllestonad()

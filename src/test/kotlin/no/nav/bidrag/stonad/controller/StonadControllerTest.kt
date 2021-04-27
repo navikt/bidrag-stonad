@@ -5,8 +5,8 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
-import no.nav.bidrag.stonad.persistence.repository.StonadsendringRepository
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.persistence.repository.stonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
 import org.assertj.core.api.Assertions.assertThat
@@ -37,7 +37,7 @@ class StonadControllerTest {
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
 
   @Autowired
-  private lateinit var stonadsendringRepository: StonadsendringRepository
+  private lateinit var stonadsendringRepository: StonadRepository
 
   @Autowired
   private lateinit var stonadRepository: stonadRepository
@@ -66,7 +66,7 @@ class StonadControllerTest {
   @Test
   fun `skal opprette ny stonadsendring`() {
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stønadsendring
     val response = securedTestRestTemplate.exchange(
@@ -91,10 +91,10 @@ class StonadControllerTest {
   @Test
   fun `skal finne data for en stonadsendring`() {
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
 
     // Oppretter ny forekomst av stønadsendring
-    val nyStonadsendringOpprettet = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet.stonadId,
@@ -129,11 +129,11 @@ class StonadControllerTest {
   @Test
   fun `skal finne alle stonadsendringer for et stonad`() {
     // Oppretter ny forekomst av stonad
-    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(stonadDto(saksbehandlerId = "TEST", enhetId = "1111"))
-    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(stonadDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
+    val nyttstonadOpprettet1 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(saksbehandlerId = "TEST", enhetId = "1111"))
+    val nyttstonadOpprettet2 = persistenceService.opprettNyttstonad(MottakerIdHistorikkDto(17, saksbehandlerId = "TEST", enhetId = "9999"))
 
     // Oppretter nye forekomster av stønadsendring
-    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet1 = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet1.stonadId,
@@ -144,7 +144,7 @@ class StonadControllerTest {
       )
     )
 
-    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonadsendring(
+    val nyStonadsendringOpprettet2 = persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet1.stonadId,
@@ -156,7 +156,7 @@ class StonadControllerTest {
     )
 
     // Stonadsendring som ikke skal legges med i resultatet
-    persistenceService.opprettNyStonadsendring(
+    persistenceService.opprettNyStonad(
       StonadDto(
         stonadType = "BIDRAG",
         stonadId = nyttstonadOpprettet2.stonadId,
@@ -195,15 +195,15 @@ class StonadControllerTest {
   }
 
   private fun fullUrlForNyStonadsendring(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadsendringController.STONADSENDRING_NY).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_ENDRE_MOTTAKER_ID).toUriString()
   }
 
   private fun fullUrlForSokStonadsendring(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadsendringController.STONADSENDRING_SOK).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_SOK).toUriString()
   }
 
   private fun fullUrlForSokStonadsendringForstonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadsendringController.STONADSENDRING_SOK_stonad).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONADSENDRING_SOK_stonad).toUriString()
   }
 
   private fun makeFullContextPath(): String {

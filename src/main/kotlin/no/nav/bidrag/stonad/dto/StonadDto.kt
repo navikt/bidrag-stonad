@@ -2,7 +2,7 @@ package no.nav.bidrag.stonad.dto
 
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.persistence.entity.Stonad
-import no.nav.bidrag.stonad.persistence.entity.stonad
+import no.nav.bidrag.stonad.persistence.entity.MottakerIdHistorikk
 import kotlin.reflect.full.memberProperties
 
 data class StonadDto(
@@ -29,11 +29,10 @@ data class StonadDto(
   val mottakerId: String = ""
 )
 
-fun StonadDto.toStonadEntity(eksisterendestonad: stonad) = with(::Stonad) {
+fun StonadDto.toStonadEntity() = with(::Stonad) {
   val propertiesByName = StonadDto::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      Stonad::stonad.name -> eksisterendestonad
       else -> propertiesByName[parameter.name]?.get(this@toStonadEntity)
     }
   })

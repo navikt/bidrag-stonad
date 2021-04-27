@@ -44,7 +44,7 @@ data class Periode(
     val propertiesByName = Periode::class.memberProperties.associateBy { it.name }
     callBy(parameters.associateWith { parameter ->
       when (parameter.name) {
-        PeriodeDto::stonadsendringId.name -> stonad.stonadId
+        PeriodeDto::stonadId.name -> stonad.stonadId
         else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
       }
     })

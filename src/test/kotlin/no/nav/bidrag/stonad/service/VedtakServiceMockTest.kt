@@ -10,7 +10,7 @@ import no.nav.bidrag.stonad.dto.GrunnlagDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.PeriodeGrunnlagDto
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.stonadDto
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -28,7 +28,7 @@ import java.time.LocalDate
 
 @DisplayName("stonadServiceMockTest")
 @ExtendWith(MockitoExtension::class)
-class stonadServiceMockTest {
+class mottakerIdHistorikkServiceMockTest {
 
   @InjectMocks
   private lateinit var stonadService: StonadService
@@ -37,7 +37,7 @@ class stonadServiceMockTest {
   private lateinit var persistenceServiceMock: PersistenceService
 
   @Captor
-  private lateinit var stonadDtoCaptor: ArgumentCaptor<stonadDto>
+  private lateinit var mottakerIdHistorikkDtoCaptor: ArgumentCaptor<MottakerIdHistorikkDto>
 
   @Captor
   private lateinit var stonadsendringDtoCaptor: ArgumentCaptor<StonadDto>
@@ -54,9 +54,9 @@ class stonadServiceMockTest {
   @Test
   fun `skal opprette nytt komplett stonad`() {
 
-    Mockito.`when`(persistenceServiceMock.opprettNyttstonad(MockitoHelper.capture(stonadDtoCaptor)))
+    Mockito.`when`(persistenceServiceMock.opprettNyttstonad(MockitoHelper.capture(mottakerIdHistorikkDtoCaptor)))
       .thenReturn(byggstonadDto())
-    Mockito.`when`(persistenceServiceMock.opprettNyStonadsendring(MockitoHelper.capture(stonadsendringDtoCaptor)))
+    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(stonadsendringDtoCaptor)))
       .thenReturn(byggStonadsendringDto())
     Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeDtoCaptor)))
       .thenReturn(byggPeriodeDto())
@@ -67,14 +67,14 @@ class stonadServiceMockTest {
 
     val nyttKomplettstonadOpprettet = stonadService.opprettKomplettstonad(byggKomplettstonadRequest())
 
-    val stonadDto = stonadDtoCaptor.value
+    val stonadDto = mottakerIdHistorikkDtoCaptor.value
     val stonadsendringDtoListe = stonadsendringDtoCaptor.allValues
     val periodeDtoListe = periodeDtoCaptor.allValues
     val grunnlagDtoListe = grunnlagDtoCaptor.allValues
     val periodeGrunnlagDtoListe = periodeGrunnlagDtoCaptor.allValues
 
     Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyttstonad(MockitoHelper.any(stonadDto::class.java))
-    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyStonadsendring(MockitoHelper.any(StonadDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyStonad(MockitoHelper.any(StonadDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyttGrunnlag(MockitoHelper.any(GrunnlagDto::class.java))
     Mockito.verify(persistenceServiceMock, Mockito.times(11)).opprettNyttPeriodeGrunnlag(MockitoHelper.any(PeriodeGrunnlagDto::class.java))
