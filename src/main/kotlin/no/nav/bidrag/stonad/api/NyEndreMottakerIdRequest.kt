@@ -2,7 +2,6 @@ package no.nav.bidrag.stonad.api
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.stonad.dto.GrunnlagDto
 
 @ApiModel(value = "Endrer mottaker-id på en stønad")
 data class NyEndreMottakerIdRequest(
@@ -18,7 +17,7 @@ data class NyEndreMottakerIdRequest(
 
 )
 
-fun NyEndreMottakerIdRequest.toGrunnlagDto(stonadId: Int) = with(::GrunnlagDto) {
+/*fun NyEndreMottakerIdRequest.toGrunnlagDto(stonadId: Int) = with(::GrunnlagDto) {
   val propertiesByName = EndreMottakerIdRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
@@ -37,3 +36,4 @@ fun NyEndreMottakerIdRequest.toGrunnlagDto() = with(::GrunnlagDto) {
     }
   })
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
@@ -197,3 +198,4 @@ class mottakerIdHistorikkControllerTest {
     return HttpEntity(body, httpHeaders)
   }
 }
+*/

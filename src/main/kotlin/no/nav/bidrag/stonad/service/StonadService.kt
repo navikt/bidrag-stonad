@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
+import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.toPeriodeDto
 import no.nav.bidrag.stonad.controller.PeriodeController
 import no.nav.bidrag.stonad.dto.PeriodeDto
@@ -37,9 +38,16 @@ class StonadService (val persistenceService: PersistenceService) {
 
   }
 
-  fun finnStonad(stonad_id: Int): StonadDto {
-    return persistenceService.finnStonad(stonad_id)
-  }
-
+  fun finnStonad(stonadId: Int): FinnStonadResponse {
+    val stonadDto = persistenceService.finnStonad(stonadId)
+    val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadId)
+/*    val periodeListe = ArrayList<PeriodeResponse>()
+    periodeDtoListe.forEach {
+      periodeListe.add(PeriodeResponse(it.periodeFomDato, it.periodeTilDato, it.belop, it.valutakode, it.resultatkode))
+    }*/
+    return FinnStonadResponse(stonadDto.stonadType, stonadDto.sakId, stonadDto.behandlingId,
+      stonadDto.skyldnerId, stonadDto.kravhaverId, stonadDto.mottakerId, stonadDto.opprettetAvSaksbehandlerId,
+      stonadDto.opprettetTimestamp, stonadDto.endretAvSaksbehandlerId, stonadDto.endretTimestamp, periodeDtoListe)
+    }
 
 }

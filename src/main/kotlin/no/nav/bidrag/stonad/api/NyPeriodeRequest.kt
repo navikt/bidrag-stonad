@@ -23,7 +23,7 @@ data class NyPeriodeRequest(
   val vedtakId: Int = 0,
 
   @ApiModelProperty(value = "Periode gjort ugyldig av vedtak-id")
-  val periodeGjortUgyldigAvVedtakId: Int = 0,
+  val periodeGjortUgyldigAvVedtakId: Int? = 0,
 
   @ApiModelProperty(value = "Beregnet stønadsbeløp")
   val belop: BigDecimal = BigDecimal.ZERO,

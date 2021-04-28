@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.controller
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.StonadDto
@@ -41,7 +42,7 @@ class StonadController(private val stonadService: StonadService) {
 
 
   @GetMapping("$STONAD_SOK/{stonadId}")
-  @ApiOperation("Finn data for en stønad")
+  @ApiOperation("Finn alle data for en stønad")
   @ApiResponses(
     value = [
       ApiResponse(code = 200, message = "Stønadsendring funnet"),
@@ -53,13 +54,13 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun finnStonad(@PathVariable stonadId: Int): ResponseEntity<StonadDto> {
+  fun finnStonad(@PathVariable stonadId: Int): ResponseEntity<FinnStonadResponse> {
     val stonadFunnet = stonadService.finnStonad(stonadId)
     LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
-  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
+/*  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
   @ApiOperation("Endrer mottaker-id på en eksisterende stønad")
   @ApiResponses(
     value = [
@@ -75,45 +76,9 @@ class StonadController(private val stonadService: StonadService) {
     val stonadsendringOpprettet = stonadService.opprettNyStonadsendring(request)
     LOGGER.info("Følgende stønadsendring er opprettet: $stonadsendringOpprettet")
     return ResponseEntity(stonadsendringOpprettet, HttpStatus.OK)
-  }
+  }*/
 
-  @GetMapping("$STONAD_SOK/{stonadsendringId}")
-  @ApiOperation("Finn data for en stønadsendring")
-  @ApiResponses(
-    value = [
-      ApiResponse(code = 200, message = "Stønadsendring funnet"),
-      ApiResponse(code = 401, message = "Manglende eller utløpt id-token"),
-      ApiResponse(code = 403, message = "Saksbehandler mangler tilgang til å lese data for aktuell stønadsendring"),
-      ApiResponse(code = 404, message = "Stønadsendring ikke funnet"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
-    ]
-  )
 
-  fun finnEnStonadsendring(@PathVariable stonadsendringId: Int): ResponseEntity<StonadDto> {
-    val stonadsendringFunnet = stonadService.finnEnStonadsendring(stonadsendringId)
-    LOGGER.info("Følgende stønadsendring ble funnet: $stonadsendringFunnet")
-    return ResponseEntity(stonadsendringFunnet, HttpStatus.OK)
-  }
-
-  @GetMapping("$STONADSENDRING_SOK_stonad/{stonadId}")
-  @ApiOperation("finner alle stønadsendringer for et stonad")
-  @ApiResponses(
-    value = [
-      ApiResponse(code = 200, message = "Alle stønadsendringer funnet"),
-      ApiResponse(code = 401, message = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
-      ApiResponse(code = 403, message = "Saksbehandler mangler tilgang til å lese data for aktuell stønadsendring"),
-      ApiResponse(code = 404, message = "Stonadsendringer ikke funnet for stonad"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
-    ]
-  )
-  fun finnAlleStonadsendringerForstonad(@PathVariable stonadId: Int):
-      ResponseEntity<no.nav.bidrag.stonad.api.AlleStonadsendringerForstonadResponse> {
-    val alleStonadsendringerFunnet = stonadService.finnAlleStonadsendringerForstonad(stonadId)
-    LOGGER.info("Følgende stønadsendringer ble funnet: $alleStonadsendringerFunnet")
-    return ResponseEntity(alleStonadsendringerFunnet, HttpStatus.OK)
-  }
 
   companion object {
     const val STONAD_NY = "/stonad/ny"

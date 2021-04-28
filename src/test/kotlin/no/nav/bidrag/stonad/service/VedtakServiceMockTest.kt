@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.TestUtil.Companion.byggGrunnlagDto
@@ -163,3 +164,4 @@ class mottakerIdHistorikkServiceMockTest {
     fun <T> any(type: Class<T>): T = Mockito.any(type)
   }
 }
+*/

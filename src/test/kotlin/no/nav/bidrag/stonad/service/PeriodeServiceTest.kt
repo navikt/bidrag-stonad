@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
@@ -231,4 +232,4 @@ class PeriodeServiceTest {
     stonadsendringRepository.deleteAll()
     stonadRepository.deleteAll()
   }
-  }
+  }*/

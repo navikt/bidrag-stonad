@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.persistence.entity
 
 import no.nav.bidrag.stonad.dto.StonadDto
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -21,10 +22,6 @@ data class Stonad(
   @Column(nullable = false, name = "stonad_type")
   val stonadType: String = "",
 
-  @ManyToOne
-  @JoinColumn(name = "stonad_id")
-  val stonad: MottakerIdHistorikk = MottakerIdHistorikk(),
-
   @Column(nullable = true, name = "sak_id")
   val sakId: String? = null,
 
@@ -38,7 +35,19 @@ data class Stonad(
   val kravhaverId: String = "",
 
   @Column(nullable = false, name = "mottaker_id")
-  val mottakerId: String = ""
+  val mottakerId: String = "",
+
+  @Column(nullable = false, name = "opprettet_av")
+  val opprettetAvSaksbehandlerId: String = "",
+
+  @Column(nullable = false, name = "opprettet_timestamp")
+  val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
+
+  @Column(nullable = false, name = "endret_av")
+  val endretAvSaksbehandlerId: String = "",
+
+  @Column(nullable = false, name = "når_sist_endret_timestamp")
+  val endretTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
 fun Stonad.toStonadDto() = with(::StonadDto) {

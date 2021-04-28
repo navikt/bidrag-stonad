@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.dto
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import no.nav.bidrag.stonad.persistence.entity.MottakerIdHistorikk
+import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
 data class StonadDto(
@@ -26,7 +27,20 @@ data class StonadDto(
   val kravhaverId: String = "",
 
   @ApiModelProperty(value = "Id til den som mottar bidraget")
-  val mottakerId: String = ""
+  val mottakerId: String = "",
+
+  @ApiModelProperty(value = "Id til saksbehandler som oppretter stønaden")
+  val opprettetAvSaksbehandlerId: String = "",
+
+  @ApiModelProperty(value = "Opprettet timestamp")
+  val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
+
+  @ApiModelProperty(value = "Id til saksbehandler som sist endret stønaden")
+  val endretAvSaksbehandlerId: String = "",
+
+  @ApiModelProperty(value = "Opprettet timestamp")
+  val endretTimestamp: LocalDateTime = LocalDateTime.now()
+
 )
 
 fun StonadDto.toStonadEntity() = with(::Stonad) {

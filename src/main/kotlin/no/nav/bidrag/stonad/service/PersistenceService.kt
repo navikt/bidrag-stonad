@@ -1,6 +1,5 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.api.StonadResponse
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
@@ -30,11 +29,10 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
-  fun finnStonad(stonadId: Int): StonadResponse {
+  fun finnStonad(stonadId: Int): StonadDto {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)) }
-    return StonadResponse(stonad.stonadType, stonad.sakId, stonad.behandlingId, stonad.skyldnerId,
-      stonad.kravhaverId, stonad.mottakerId, finnAllePerioderForStonad(stonad.stonadId))
+    return stonad.toStonadDto()
   }
 
   fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto> {
@@ -45,9 +43,9 @@ class PersistenceService(
   }
 
   fun opprettNyPeriode(dto: PeriodeDto): PeriodeDto {
-    val eksisterendeStonadsendring = stonadRepository.findById(dto.stonadId)
-      .orElseThrow { IllegalArgumentException(String.format("Fant ikke stonadsendring med id %d i databasen", dto.stonadId)) }
-    val nyPeriode = dto.toPeriodeEntity(eksisterendeStonadsendring)
+    val eksisterendeStonad = stonadRepository.findById(dto.stonadId)
+      .orElseThrow { IllegalArgumentException(String.format("Fant ikke stonad med id %d i databasen", dto.stonadId)) }
+    val nyPeriode = dto.toPeriodeEntity(eksisterendeStonad)
     val periode = periodeRepository.save(nyPeriode)
     return periode.toPeriodeDto()
   }

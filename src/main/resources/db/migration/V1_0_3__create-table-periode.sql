@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS periode
     periode_til_dato date,
     stonad_id integer NOT NULL,
     vedtak_id integer NOT NULL,
-    periode_gjort_ugyldig_av_vedtak_id integer NOT NULL,
+    periode_gjort_ugyldig_av_vedtak_id integer,
     belop float NOT NULL,
     valutakode character(10) NOT NULL,
     resultatkode varchar(255) NOT NULL,

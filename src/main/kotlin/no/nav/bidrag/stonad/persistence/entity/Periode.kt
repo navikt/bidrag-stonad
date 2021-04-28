@@ -30,6 +30,12 @@ data class Periode(
   @JoinColumn(name = "stonadsendring_id")
   val stonad: Stonad = Stonad(),
 
+  @Column(name = "vedtak_id")
+  val vedtakeId: Int = 0,
+
+  @Column(name = "Periode-gjort-ugyldig-av-Vedtak-id")
+  val periodeGjortUgyldigAvVedtakId: Int? = null,
+
   @Column(nullable = false, name = "belop")
   val belop: BigDecimal = BigDecimal.ZERO,
 

@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
@@ -183,3 +184,4 @@ class MottakerIdHistorikkServiceTest {
     stonadRepository.deleteAll()
   }
 }
+*/

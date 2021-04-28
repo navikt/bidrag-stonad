@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.controller
 
 import io.swagger.annotations.ApiOperation
@@ -101,3 +102,4 @@ class MottakerIdHistorikkController(private val stonadService: StonadService) {
     private val LOGGER = LoggerFactory.getLogger(MottakerIdHistorikkController::class.java)
   }
 }
+*/

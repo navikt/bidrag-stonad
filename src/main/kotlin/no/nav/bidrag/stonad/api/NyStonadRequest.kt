@@ -3,6 +3,8 @@ package no.nav.bidrag.stonad.api
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.dto.StonadDto
+import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
 @ApiModel(value = "Egenskaper ved en stønadsendring")
@@ -25,6 +27,12 @@ data class NyStonadRequest(
 
   @ApiModelProperty(value = "Id til den som mottar bidraget")
   val mottakerId: String = "",
+
+  @ApiModelProperty(value = "opprettet_av")
+  val opprettetAvSaksbehandlerId: String = "",
+
+  @ApiModelProperty(value = "endret_av")
+  val endretAvSaksbehandlerId: String? = "",
 
   @ApiModelProperty(value = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest> = emptyList()

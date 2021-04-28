@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.api
 
 import io.swagger.annotations.ApiModel
@@ -23,4 +24,4 @@ data class PeriodeResponse(
   @ApiModelProperty(value = "Resultatkoden tilhørende  stønadsbeløpet")
   val resultatkode: String = "",
 
-)
+)*/

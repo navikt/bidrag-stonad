@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
@@ -263,7 +264,7 @@ class PeriodeControllerTest {
   }
 
   private fun fullUrlForSokPerioderForStonadsendring(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + PeriodeController.PERIODE_SOK_STONADSENDRING).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + PeriodeController.PERIODE_SOK_STONAD).toUriString()
   }
 
   private fun makeFullContextPath(): String {
@@ -282,3 +283,4 @@ class PeriodeControllerTest {
     return HttpEntity(body, httpHeaders)
   }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
@@ -227,3 +228,4 @@ class StonadControllerTest {
     return HttpEntity(body, httpHeaders)
   }
 }
+*/

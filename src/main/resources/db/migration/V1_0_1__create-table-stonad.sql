@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS stonad
     mottaker_id varchar(20) NOT NULL,
     opprettet_av character(7) NOT NULL,
     opprettet_timestamp timestamp DEFAULT now() NOT NULL,
+    endret_av character(7),
+    endret_timestamp timestamp,
     CONSTRAINT stonad_pkey PRIMARY KEY (stonad_id)
 )
 
