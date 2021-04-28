@@ -1,19 +1,23 @@
 package no.nav.bidrag.stonad.persistence.entity
 
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.IdClass
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import kotlin.reflect.full.memberProperties
 
+@IdClass(MottakerIdHistorikkPK::class)
 @Entity
 data class MottakerIdHistorikk (
 
   @Id
   @ManyToOne
-  @Column(name = "stonad_id")
+  @JoinColumn(name = "stonad_id")
   val stonad: Stonad = Stonad(),
 
   @Column(nullable = false, name = "enhet_id")
@@ -35,3 +39,5 @@ fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkD
     }
   })
 }
+
+class MottakerIdHistorikkPK(val stonad: Int = 0, val opprettetTimestamp: LocalDateTime = LocalDateTime.now()) : Serializable

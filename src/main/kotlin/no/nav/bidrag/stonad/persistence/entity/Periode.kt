@@ -27,7 +27,7 @@ data class Periode(
   val periodeTilDato: LocalDate? = null,
 
   @ManyToOne
-  @JoinColumn(name = "stonadsendring_id")
+  @JoinColumn(name = "stonad_id")
   val stonad: Stonad = Stonad(),
 
   @Column(name = "vedtak_id")
