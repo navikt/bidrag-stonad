@@ -10,7 +10,7 @@ data class MottakerIdHistorikkDto(
   @ApiModelProperty(value = "stonad-id")
   val stonadId: Int = 0,
 
-  @ApiModelProperty(value = "Id til saksbehandler som oppretter stonadet")
+  @ApiModelProperty(value = "Id til saksbehandler som oppretter stonaden")
   val saksbehandlerId: String = "",
 
   @ApiModelProperty(value = "Id til enheten som er ansvarlig for stonadet")

@@ -12,9 +12,6 @@ data class FinnStonadResponse(
   @ApiModelProperty(value = "Referanse til sak")
   val sakId: String? = null,
 
-  @ApiModelProperty(value = "Søknadsid, referanse til batchkjøring, fritekst")
-  val behandlingId: String? = null,
-
   @ApiModelProperty(value = "Id til den som skal betale bidraget")
   val skyldnerId: String = "",
 
