@@ -1,4 +1,3 @@
-/*
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
@@ -189,7 +188,7 @@ class mottakerIdHistorikkControllerTest {
   }
 
   private fun byggKomplettstonadRequest(): HttpEntity<NyKomplettStonadRequest> {
-    return initHttpEntity(TestUtil.byggKomplettstonadRequest())
+    return initHttpEntity(TestUtil.byggStonadRequest())
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {
@@ -198,4 +197,3 @@ class mottakerIdHistorikkControllerTest {
     return HttpEntity(body, httpHeaders)
   }
 }
-*/

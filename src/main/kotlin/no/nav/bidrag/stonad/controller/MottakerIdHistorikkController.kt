@@ -39,8 +39,6 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
     return ResponseEntity(endringerFunnet, HttpStatus.OK)
   }
 
-
-
   companion object {
     const val MOTTAKER_ID_HISTORIKK_SOK = "/mottakeridhistorikk/sok"
     private val LOGGER = LoggerFactory.getLogger(MottakerIdHistorikkController::class.java)

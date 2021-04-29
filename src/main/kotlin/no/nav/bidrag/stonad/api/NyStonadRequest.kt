@@ -27,7 +27,7 @@ data class NyStonadRequest(
   val opprettetAvSaksbehandlerId: String = "",
 
   @ApiModelProperty(value = "endret_av")
-  val endretAvSaksbehandlerId: String? = "",
+  val endretAvSaksbehandlerId: String = "",
 
   @ApiModelProperty(value = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest> = emptyList()

@@ -21,10 +21,10 @@ data class Periode(
   val periodeId: Int = 0,
 
   @Column(nullable = false, name = "periode_fom")
-  val periodeFomDato: LocalDate = LocalDate.now(),
+  val periodeFom: LocalDate = LocalDate.now(),
 
   @Column(nullable = true, name = "periode_til_dato")
-  val periodeTilDato: LocalDate? = null,
+  val periodeTil: LocalDate? = null,
 
   @ManyToOne
   @JoinColumn(name = "stonad_id")

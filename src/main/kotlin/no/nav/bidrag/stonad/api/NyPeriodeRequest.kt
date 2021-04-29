@@ -11,10 +11,10 @@ import kotlin.reflect.full.memberProperties
 data class NyPeriodeRequest(
 
   @ApiModelProperty(value = "Periode fra-og-med-dato")
-  val periodeFomDato: LocalDate = LocalDate.now(),
+  val periodeFom: LocalDate = LocalDate.now(),
 
   @ApiModelProperty(value = "Periode til-dato")
-  val periodeTilDato: LocalDate? = null,
+  val periodeTil: LocalDate? = null,
 
   @ApiModelProperty(value = "Stonad-id")
   val stonadId: Int = 0,

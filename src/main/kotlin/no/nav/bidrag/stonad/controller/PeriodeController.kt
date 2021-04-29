@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @Protected
 class PeriodeController(private val periodeService: PeriodeService) {
 
-  @PostMapping(PERIODE_NY)
+/*  @PostMapping(PERIODE_NY)
   @ApiOperation("Opprette ny periode")
   @ApiResponses(
     value = [
@@ -36,7 +36,7 @@ class PeriodeController(private val periodeService: PeriodeService) {
     LOGGER.info("Følgende periode er opprettet: $periodeOpprettet")
     periodeService.opprettNyPeriode(request)
     return ResponseEntity(periodeOpprettet, HttpStatus.OK)
-  }
+  }*/
 
   @GetMapping("$PERIODE_SOK/{periodeId}")
   @ApiOperation("Finn data for en periode")

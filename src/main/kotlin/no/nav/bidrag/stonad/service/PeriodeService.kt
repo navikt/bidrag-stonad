@@ -10,16 +10,16 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class PeriodeService (val persistenceService: PersistenceService) {
 
-  fun opprettNyPeriode(request: NyPeriodeRequest): PeriodeDto {
+/*  fun opprettNyPeriode(request: NyPeriodeRequest): PeriodeDto {
     return persistenceService.opprettNyPeriode(request.toPeriodeDto())
-  }
+  }*/
 
   fun finnPeriode(periodeId: Int): PeriodeDto {
     return persistenceService.finnPeriode(periodeId)
   }
 
-  fun finnAllePerioderForStonad(stonadId: Int): List<PeriodeDto> {
+/*  fun finnAllePerioderForStonad(stonadId: Int): List<PeriodeDto> {
     return persistenceService.finnAllePerioderForStonad(stonadId)
-  }
+  }*/
 
 }
