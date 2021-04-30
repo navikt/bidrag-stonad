@@ -10,14 +10,17 @@ data class MottakerIdHistorikkDto(
   @ApiModelProperty(value = "stonad-id")
   val stonadId: Int = 0,
 
-  @ApiModelProperty(value = "Id til saksbehandler som oppretter stonaden")
+  @ApiModelProperty(value = "Utgått Mottaker-Id")
+  val mottakerIdEndretFra: String = "",
+
+  @ApiModelProperty(value = "Ny Mottaker-Id")
+  val mottakerIdEndretTil: String = "",
+
+  @ApiModelProperty(value = "Saksbehandler som har oppdatert mottaker-id")
   val saksbehandlerId: String = "",
 
-  @ApiModelProperty(value = "Id til enheten som er ansvarlig for stonadet")
-  val enhetId: String = "",
-
-  @ApiModelProperty(value = "Opprettet timestamp")
-  val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
+  @ApiModelProperty(value = "Endret timestamp")
+  val endretTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
 fun MottakerIdHistorikkDto.toMottakerIdHistorikkEntity() = with(::MottakerIdHistorikk) {

@@ -8,5 +8,5 @@ import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 data class AlleMottakerIdHistorikkForStonadResponse(
 
   @ApiModelProperty(value = "Alle forekomster på mottaker-id-historikk for en stønad")
-  val alleMottakerIdHistorikkForStonad: List<MottakerIdHistorikkDto> = emptyList()
+  val alleMottakerIdHistorikkForStonad: List<MottakerIdHistorikkDto>? = emptyList()
 )

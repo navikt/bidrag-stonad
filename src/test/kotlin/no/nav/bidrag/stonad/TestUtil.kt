@@ -33,6 +33,9 @@ class TestUtil {
         NyPeriodeRequest(
           periodeFom = LocalDate.parse("2019-07-01"),
           periodeTil = LocalDate.parse("2020-01-01"),
+          stonadId = 111,
+          vedtakId = 323,
+          periodeGjortUgyldigAvVedtakId = 22,
           belop = BigDecimal.valueOf(3520),
           valutakode = "NOK",
           resultatkode = "KOSTNADSBEREGNET_BIDRAG")

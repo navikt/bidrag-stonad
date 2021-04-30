@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.dto.toMottakerIdHistorikkEntity
 import no.nav.bidrag.stonad.dto.toPeriodeEntity
 import no.nav.bidrag.stonad.dto.toStonadEntity
 import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkDto
@@ -34,6 +35,13 @@ class PersistenceService(
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)) }
     return stonad.toStonadDto()
   }
+
+  fun opprettNyMottakerIdHistorikk(dto: MottakerIdHistorikkDto): MottakerIdHistorikkDto {
+    val nyMottakerIdHistorikk = dto.toMottakerIdHistorikkEntity()
+    val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
+    return mottakerIdHistorikk.toMottakerIdHistorikkDto()
+  }
+
 
   fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto> {
     val mottakerIdHistorikkDtoListe = mutableListOf<MottakerIdHistorikkDto>()
