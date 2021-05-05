@@ -2,6 +2,7 @@ package no.nav.bidrag.stonad.dto
 
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.stonad.persistence.entity.MottakerIdHistorikk
+import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
@@ -19,14 +20,15 @@ data class MottakerIdHistorikkDto(
   @ApiModelProperty(value = "Saksbehandler som har oppdatert mottaker-id")
   val saksbehandlerId: String = "",
 
-  @ApiModelProperty(value = "Endret timestamp")
-  val endretTimestamp: LocalDateTime = LocalDateTime.now()
+  @ApiModelProperty(value = "Opprettet timestamp")
+  val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
-fun MottakerIdHistorikkDto.toMottakerIdHistorikkEntity() = with(::MottakerIdHistorikk) {
+fun MottakerIdHistorikkDto.toMottakerIdHistorikkEntity(stonad: Stonad) = with(::MottakerIdHistorikk) {
   val propertiesByName = MottakerIdHistorikkDto::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
+      MottakerIdHistorikk::stonad.name -> stonad
       else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkEntity)
     }
   })

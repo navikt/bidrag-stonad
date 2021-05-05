@@ -24,7 +24,7 @@ data class PeriodeDto(
   @ApiModelProperty(value = "Vedtak-id")
   val vedtakId: Int = 0,
 
-  @ApiModelProperty(value = "Periode-gjort-ugyldig-av-Vedtak-id")
+  @ApiModelProperty(value = "Periode-gjort-ugyldig-av-vedtak-id")
   val periodeGjortUgyldigAvVedtakId: Int? = 0,
 
   @ApiModelProperty(value = "Beregnet stønadsbeløp")

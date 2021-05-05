@@ -37,11 +37,12 @@ class PersistenceService(
   }
 
   fun opprettNyMottakerIdHistorikk(dto: MottakerIdHistorikkDto): MottakerIdHistorikkDto {
-    val nyMottakerIdHistorikk = dto.toMottakerIdHistorikkEntity()
+    val eksisterendeStonad = stonadRepository.findById(dto.stonadId)
+      .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", dto.stonadId)) }
+    val nyMottakerIdHistorikk = dto.toMottakerIdHistorikkEntity(eksisterendeStonad)
     val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
     return mottakerIdHistorikk.toMottakerIdHistorikkDto()
   }
-
 
   fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto> {
     val mottakerIdHistorikkDtoListe = mutableListOf<MottakerIdHistorikkDto>()

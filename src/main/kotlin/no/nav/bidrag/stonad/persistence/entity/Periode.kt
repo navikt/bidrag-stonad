@@ -23,7 +23,7 @@ data class Periode(
   @Column(nullable = false, name = "periode_fom")
   val periodeFom: LocalDate = LocalDate.now(),
 
-  @Column(nullable = true, name = "periode_til_dato")
+  @Column(nullable = true, name = "periode_til")
   val periodeTil: LocalDate? = null,
 
   @ManyToOne
@@ -31,9 +31,9 @@ data class Periode(
   val stonad: Stonad = Stonad(),
 
   @Column(name = "vedtak_id")
-  val vedtakeId: Int = 0,
+  val vedtakId: Int = 0,
 
-  @Column(name = "Periode-gjort-ugyldig-av-Vedtak-id")
+  @Column(nullable = true, name = "periode_gjort_ugyldig_av_vedtak_id")
   val periodeGjortUgyldigAvVedtakId: Int? = null,
 
   @Column(nullable = false, name = "belop")

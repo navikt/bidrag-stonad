@@ -20,8 +20,11 @@ data class MottakerIdHistorikk (
   @JoinColumn(name = "stonad_id")
   val stonad: Stonad = Stonad(),
 
-  @Column(nullable = false, name = "enhet_id")
-  val enhetId: String = "",
+  @Column(nullable = false, name = "mottaker_id_endret_fra")
+  val mottakerIdEndretFra: String = "",
+
+  @Column(nullable = false, name = "mottaker_id_endret_til")
+  val mottakerIdEndretTil: String = "",
 
   @Column(nullable = false, name = "opprettet_av")
   val saksbehandlerId: String = "",
@@ -35,6 +38,8 @@ fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkD
   val propertiesByName = MottakerIdHistorikk::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
+      MottakerIdHistorikkDto::stonadId.name -> stonad.stonadId
+//      MottakerIdHistorikkDto::opprettetTimestamp.name -> opprettetTimestamp
       else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)
     }
   })

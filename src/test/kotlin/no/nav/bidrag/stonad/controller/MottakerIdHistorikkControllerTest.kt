@@ -57,8 +57,8 @@ class MottakerIdHistorikkControllerTest {
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
-    stonadRepository.deleteAll()
     mottakerIdHistorikkRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
@@ -78,12 +78,6 @@ class MottakerIdHistorikkControllerTest {
       opprettetAvSaksbehandlerId = "X123456",
       endretAvSaksbehandlerId =  "X654321"))
 
-/*    val nyMottakerIdHistorikkOpprettet = persistenceService.opprettNyMottakerIdHistorikk(
-      MottakerIdHistorikkDto(
-        nyStonadOpprettet.stonadId, "123", "654",
-        "X123456"))
-    */
-
     // Oppretter ny forekomst
     val response = securedTestRestTemplate.exchange(
       fullUrlForNyMottakerIdHistorikk(),
@@ -100,10 +94,12 @@ class MottakerIdHistorikkControllerTest {
       Executable { assertThat(response?.body?.mottakerIdEndretTil).isEqualTo("321") },
       Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo("Test") }
     )
+    mottakerIdHistorikkRepository.deleteAll()
+    stonadRepository.deleteAll()
   }
 
   @Test
-  fun `skal finne alle endringer på mottaker-id for en stønad`() {
+  fun `skal finne alle endringer av mottaker-id for en stonad`() {
     // Oppretter nye forekomster
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG", sakId = "SAK-001", skyldnerId = "01018011111", kravhaverId = "01010511111",
@@ -132,10 +128,11 @@ class MottakerIdHistorikkControllerTest {
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretFra) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretTil) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet1.saksbehandlerId) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].stonadId).isEqualTo(nyMottakerIdHistorikkOpprettet1.stonadId) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretFra) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretTil) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet1.saksbehandlerId) }
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].stonadId).isEqualTo(nyMottakerIdHistorikkOpprettet2.stonadId) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkOpprettet2.mottakerIdEndretFra) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkOpprettet2.mottakerIdEndretTil) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet2.saksbehandlerId) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet2.saksbehandlerId) }
     )
   }
 

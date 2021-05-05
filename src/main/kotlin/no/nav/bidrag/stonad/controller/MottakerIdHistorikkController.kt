@@ -29,6 +29,7 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
       ApiResponse(code = 400, message = "Feil opplysinger oppgitt"),
       ApiResponse(code = 401, message = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
       ApiResponse(code = 500, message = "Serverfeil"),
+      ApiResponse(code = 501, message = "Serverfeil"),
       ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
     ]
   )
@@ -60,7 +61,7 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
   }
 
   companion object {
-    const val MOTTAKER_ID_HISTORIKK_NY = "/mottakeridhistorikk/ny"
+    const val MOTTAKER_ID_HISTORIKK_NY  = "/mottakeridhistorikk/ny"
     const val MOTTAKER_ID_HISTORIKK_SOK = "/mottakeridhistorikk/sok"
     private val LOGGER = LoggerFactory.getLogger(MottakerIdHistorikkController::class.java)
   }

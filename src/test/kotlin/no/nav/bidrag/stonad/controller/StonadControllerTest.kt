@@ -8,7 +8,6 @@ import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -56,7 +55,6 @@ class StonadControllerTest {
 
   @Value("\${server.servlet.context-path}")
   private val contextPath: String? = null
-
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
@@ -106,7 +104,7 @@ class StonadControllerTest {
       PeriodeDto(
         periodeFom = LocalDate.parse("2019-01-01"),
         periodeTil = LocalDate.parse("2019-07-01"),
-        stonadId = 123,
+        stonadId = nyStonadOpprettet.stonadId,
         vedtakId = 321,
         periodeGjortUgyldigAvVedtakId = 246,
         belop = BigDecimal.valueOf(3490),
@@ -115,7 +113,7 @@ class StonadControllerTest {
       PeriodeDto(
         periodeFom = LocalDate.parse("2019-07-01"),
         periodeTil = LocalDate.parse("2020-01-01"),
-        stonadId = 111,
+        stonadId = nyStonadOpprettet.stonadId,
         vedtakId = 323,
         periodeGjortUgyldigAvVedtakId = 22,
         belop = BigDecimal.valueOf(3520),
@@ -152,7 +150,7 @@ class StonadControllerTest {
 
 
   private fun fullUrlForNyStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_ENDRE_MOTTAKER_ID).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_NY).toUriString()
   }
 
   private fun fullUrlForSokStonad(): String {
