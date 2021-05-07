@@ -23,7 +23,8 @@ class StonadService (val persistenceService: PersistenceService) {
     val stonadDto = StonadDto(
       stonadType = stonadRequest.stonadType, sakId = stonadRequest.sakId,
       skyldnerId = stonadRequest.skyldnerId, kravhaverId = stonadRequest.kravhaverId,
-      mottakerId = stonadRequest.mottakerId
+      mottakerId = stonadRequest.mottakerId, opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId,
+      endretAvSaksbehandlerId = stonadRequest.endretAvSaksbehandlerId
     )
 
     val opprettetStonad = persistenceService.opprettNyStonad(stonadDto)
