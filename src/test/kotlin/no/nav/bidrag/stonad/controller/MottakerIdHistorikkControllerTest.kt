@@ -66,7 +66,7 @@ class MottakerIdHistorikkControllerTest {
     assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
   }
 
-  @Test
+/*  @Test
   fun `skal opprette ny MottakerIdHistorikk`() {
 
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
@@ -96,7 +96,7 @@ class MottakerIdHistorikkControllerTest {
     )
     mottakerIdHistorikkRepository.deleteAll()
     stonadRepository.deleteAll()
-  }
+  }*/
 
   @Test
   fun `skal finne alle endringer av mottaker-id for en stonad`() {

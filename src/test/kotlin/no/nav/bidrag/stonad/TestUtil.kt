@@ -24,18 +24,16 @@ class TestUtil {
         NyPeriodeRequest(
           periodeFom = LocalDate.parse("2019-01-01"),
           periodeTil = LocalDate.parse("2019-07-01"),
-          stonadId = 123,
+          stonadId = 0,
           vedtakId = 321,
-          periodeGjortUgyldigAvVedtakId = 246,
           belop = BigDecimal.valueOf(3490),
           valutakode = "NOK",
           resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
         NyPeriodeRequest(
           periodeFom = LocalDate.parse("2019-07-01"),
           periodeTil = LocalDate.parse("2020-01-01"),
-          stonadId = 111,
+          stonadId = 0,
           vedtakId = 323,
-          periodeGjortUgyldigAvVedtakId = 22,
           belop = BigDecimal.valueOf(3520),
           valutakode = "NOK",
           resultatkode = "KOSTNADSBEREGNET_BIDRAG")

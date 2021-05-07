@@ -49,8 +49,8 @@ class StonadServiceMockTest {
     val stonadDto = stonadDtoCaptor.value
     val periodeDtoListe = periodeDtoCaptor.allValues
 
-    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyStonad(MockitoHelper.any(stonadDto::class.java))
-    Mockito.verify(persistenceServiceMock, Mockito.times(4)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyStonad(MockitoHelper.any(StonadDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
 
     assertAll(
       Executable { assertThat(nyStonadOpprettet).isNotNull() },
@@ -59,7 +59,7 @@ class StonadServiceMockTest {
       // Sjekk stonadDto
       Executable { assertThat(stonadDto).isNotNull() },
       Executable { assertThat(stonadDto.stonadType).isEqualTo("BIDRAG") },
-      Executable { assertThat(stonadDto.sakId).isEqualTo("001") },
+      Executable { assertThat(stonadDto.sakId).isEqualTo("SAK-001") },
       Executable { assertThat(stonadDto.skyldnerId).isEqualTo("01018011111") },
       Executable { assertThat(stonadDto.kravhaverId).isEqualTo("01010511111") },
       Executable { assertThat(stonadDto.mottakerId).isEqualTo("01018211111") },
@@ -69,15 +69,17 @@ class StonadServiceMockTest {
 
       // Sjekk PeriodeDto
       Executable { assertThat(periodeDtoListe).isNotNull() },
-      Executable { assertThat(periodeDtoListe.size).isEqualTo(4) },
+      Executable { assertThat(periodeDtoListe.size).isEqualTo(2) },
       Executable { assertThat(periodeDtoListe[0].periodeFom).isEqualTo(LocalDate.parse("2019-01-01")) },
       Executable { assertThat(periodeDtoListe[0].periodeTil).isEqualTo(LocalDate.parse("2019-07-01")) },
+      Executable { assertThat(periodeDtoListe[0].vedtakId).isEqualTo(321) },
       Executable { assertThat(periodeDtoListe[0].belop).isEqualTo(BigDecimal.valueOf(3490)) },
       Executable { assertThat(periodeDtoListe[0].valutakode).isEqualTo("NOK") },
       Executable { assertThat(periodeDtoListe[0].resultatkode).isEqualTo("KOSTNADSBEREGNET_BIDRAG") },
 
       Executable { assertThat(periodeDtoListe[1].periodeFom).isEqualTo(LocalDate.parse("2019-07-01")) },
       Executable { assertThat(periodeDtoListe[1].periodeTil).isEqualTo(LocalDate.parse("2020-01-01")) },
+      Executable { assertThat(periodeDtoListe[1].vedtakId).isEqualTo(323) },
       Executable { assertThat(periodeDtoListe[1].belop).isEqualTo(BigDecimal.valueOf(3520)) },
       Executable { assertThat(periodeDtoListe[1].valutakode).isEqualTo("NOK") },
       Executable { assertThat(periodeDtoListe[1].resultatkode).isEqualTo("KOSTNADSBEREGNET_BIDRAG") }
