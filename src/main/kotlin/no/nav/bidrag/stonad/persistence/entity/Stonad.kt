@@ -43,7 +43,7 @@ data class Stonad(
   @Column(nullable = false, name = "endret_av")
   val endretAvSaksbehandlerId: String = "",
 
-  @Column(nullable = false, name = "når_sist_endret_timestamp")
+  @Column(nullable = false, name = "endret_timestamp")
   val endretTimestamp: LocalDateTime = LocalDateTime.now()
 )
 

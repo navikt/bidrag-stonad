@@ -35,7 +35,7 @@ data class StonadDto(
   @ApiModelProperty(value = "Id til saksbehandler som sist endret stønaden")
   val endretAvSaksbehandlerId: String = "",
 
-  @ApiModelProperty(value = "Opprettet timestamp")
+  @ApiModelProperty(value = "Endret timestamp")
   val endretTimestamp: LocalDateTime = LocalDateTime.now()
 
 )
