@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 class MottakerIdHistorikkService (val persistenceService: PersistenceService) {
 
   fun opprettNyMottakerIdHistorikk(request: NyMottakerIdHistorikkRequest): MottakerIdHistorikkDto {
-    return persistenceService.opprettNyMottakerIdHistorikk(request.toMottakerIdHistorikkDto())
+    val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId, mottakerIdEndretFra = request.mottakerIdEndretFra,
+    mottakerIdEndretTil = request.mottakerIdEndretTil, saksbehandlerId = request.saksbehandlerId)
+    return persistenceService.opprettNyMottakerIdHistorikk(mottakerIdHistorikkDto)
   }
 
   fun finnAlleEndringerMottakerIdForStonad(stonadId: Int): AlleMottakerIdHistorikkForStonadResponse {

@@ -39,7 +39,6 @@ fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkD
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       MottakerIdHistorikkDto::stonadId.name -> stonad.stonadId
-//      MottakerIdHistorikkDto::opprettetTimestamp.name -> opprettetTimestamp
       else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)
     }
   })
