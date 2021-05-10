@@ -9,6 +9,7 @@ import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
@@ -42,10 +43,13 @@ class StonadControllerTest {
   private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
 
   @Autowired
-  private lateinit var stonadRepository: StonadRepository
+  private lateinit var periodeRepository: PeriodeRepository
 
   @Autowired
-  private lateinit var periodeRepository: PeriodeRepository
+  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
+
+  @Autowired
+  private lateinit var stonadRepository: StonadRepository
 
   @Autowired
   private lateinit var persistenceService: PersistenceService
@@ -58,6 +62,7 @@ class StonadControllerTest {
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
@@ -83,6 +88,7 @@ class StonadControllerTest {
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull() },
     )
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
@@ -144,6 +150,7 @@ class StonadControllerTest {
       Executable { assertThat(response?.body?.mottakerId).isEqualTo(nyStonadOpprettet.mottakerId) },
       Executable { assertThat(response?.body?.opprettetAvSaksbehandlerId).isEqualTo(nyStonadOpprettet.opprettetAvSaksbehandlerId) },
     )
+    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
