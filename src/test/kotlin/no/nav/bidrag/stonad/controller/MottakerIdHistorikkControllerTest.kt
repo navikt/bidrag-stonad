@@ -3,10 +3,8 @@ package no.nav.bidrag.stonad.controller
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.TestUtil
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.api.NyMottakerIdHistorikkRequest
-import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -66,7 +64,7 @@ class MottakerIdHistorikkControllerTest {
     assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
   }
 
-/*  @Test
+  @Test
   fun `skal opprette ny MottakerIdHistorikk`() {
 
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
@@ -96,7 +94,7 @@ class MottakerIdHistorikkControllerTest {
     )
     mottakerIdHistorikkRepository.deleteAll()
     stonadRepository.deleteAll()
-  }*/
+  }
 
   @Test
   fun `skal finne alle endringer av mottaker-id for en stonad`() {
