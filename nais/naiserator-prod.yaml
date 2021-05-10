@@ -34,8 +34,8 @@ spec:
     - {{ ingress }}
   gcp:
     sqlInstances:
-      - name: bidrag-vedtak
+      - name: bidrag-stonad
         type: POSTGRES_12
         databases:
-          - name: bidrag-vedtak-db
+          - name: bidrag-stonad-db
             envVarPrefix: DB
