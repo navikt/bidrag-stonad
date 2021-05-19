@@ -1,6 +1,8 @@
 package no.nav.bidrag.stonad.hendelse
 
+import no.nav.bidrag.stonad.service.BehandleHendelseService
 import no.nav.bidrag.stonad.service.JsonMapperService
+import org.springframework.kafka.annotation.KafkaListener
 
 interface VedtakHendelseListener {
   fun lesHendelse(hendelse: String)
@@ -10,7 +12,7 @@ class KafkaVedtakHendelseListener(
   jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
 ) : PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService) {
 
-  @KafkaListener(groupId = "bidrag-arbeidsflyt", topics = ["\${TOPIC_JOURNALPOST}"], errorHandler = "hendelseErrorHandler")
+  @KafkaListener(groupId = "bidrag-stonad", topics = ["\${TOPIC_VEDTAK}"], errorHandler = "hendelseErrorHandler")
   override fun lesHendelse(hendelse: String) {
     super.lesHendelse(hendelse)
   }

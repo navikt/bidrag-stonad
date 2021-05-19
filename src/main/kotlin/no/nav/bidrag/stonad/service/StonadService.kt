@@ -21,9 +21,12 @@ class StonadService (val persistenceService: PersistenceService) {
   // Opprett komplett stonad (alle tabeller)
   fun opprettStonad(stonadRequest: NyStonadRequest): NyStonadResponse {
     val stonadDto = StonadDto(
-      stonadType = stonadRequest.stonadType, sakId = stonadRequest.sakId,
-      skyldnerId = stonadRequest.skyldnerId, kravhaverId = stonadRequest.kravhaverId,
-      mottakerId = stonadRequest.mottakerId, opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId,
+      stonadType = stonadRequest.stonadType,
+      sakId = stonadRequest.sakId,
+      skyldnerId = stonadRequest.skyldnerId,
+      kravhaverId = stonadRequest.kravhaverId,
+      mottakerId = stonadRequest.mottakerId,
+      opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId,
       endretAvSaksbehandlerId = stonadRequest.endretAvSaksbehandlerId
     )
 

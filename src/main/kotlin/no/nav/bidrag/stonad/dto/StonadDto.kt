@@ -8,7 +8,7 @@ import kotlin.reflect.full.memberProperties
 
 data class StonadDto(
 
-  @ApiModelProperty(value = "Stønadsendring-id")
+  @ApiModelProperty(value = "Stønad-id")
   val stonadId: Int = 0,
 
   @ApiModelProperty(value = "Stønadstype")

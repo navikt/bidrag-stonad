@@ -33,7 +33,7 @@ data class PeriodeDto(
   @ApiModelProperty(value = "Valutakoden tilhørende stønadsbeløpet")
   val valutakode: String = "NOK",
 
-  @ApiModelProperty(value = "Resultatkoden tilhørende stønadsbeløpet")
+  @ApiModelProperty(value = "Resultatkode for stønaden")
   val resultatkode: String = ""
 )
 

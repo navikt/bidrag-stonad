@@ -74,7 +74,8 @@ class MottakerIdHistorikkControllerTest {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"))
+      endretAvSaksbehandlerId =  "X654321"
+    ))
 
     // Oppretter ny forekomst
     val response = securedTestRestTemplate.exchange(
@@ -100,8 +101,14 @@ class MottakerIdHistorikkControllerTest {
   fun `skal finne alle endringer av mottaker-id for en stonad`() {
     // Oppretter nye forekomster
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG", sakId = "SAK-001", skyldnerId = "01018011111", kravhaverId = "01010511111",
-      mottakerId = "01018211111", opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId =  "X654321"))
+      stonadType = "BIDRAG",
+      sakId = "SAK-001",
+      skyldnerId = "01018011111",
+      kravhaverId = "01010511111",
+      mottakerId = "01018211111",
+      opprettetAvSaksbehandlerId = "X123456",
+      endretAvSaksbehandlerId =  "X654321"
+    ))
 
     val nyMottakerIdHistorikkOpprettet1 = persistenceService.opprettNyMottakerIdHistorikk(
       MottakerIdHistorikkDto(nyStonadOpprettet.stonadId, "123", "654", "X123456"))

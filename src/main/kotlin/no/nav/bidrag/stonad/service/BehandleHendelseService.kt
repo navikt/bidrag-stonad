@@ -2,7 +2,7 @@ package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.arbeidsflyt.dto.OppgaveSokRequest
 import no.nav.bidrag.arbeidsflyt.hendelse.JournalpostHendelse
-import no.nav.bidrag.stonad.hendelse.Hendelse
+import no.nav.bidrag.stonad.hendelse.StonadType
 import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -20,11 +20,12 @@ class DefaultBehandleHendelseService() : BehandleHendelseService {
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
         LOGGER.info("Behandler journalpostHendelse: $vedtakHendelse")
 
-        when (vedtakHendelse.hentHendelse()) {
-            Hendelse.BARNEBIDRAG -> behandleBarnebidrag(vedtakHendelse)
-            Hendelse.FORSKUDD -> behandleForskudd(vedtakHendelse)
-            Hendelse.SAERTILSKUDD -> behandleSaertilskudd(vedtakHendelse)
-            Hendelse.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.hendelse}'")
+        when (vedtakHendelse.hentStonadType()) {
+            StonadType.BARNEBIDRAG -> behandleBarnebidrag(vedtakHendelse)
+            StonadType.FORSKUDD -> behandleForskudd(vedtakHendelse)
+            StonadType.SAERTILSKUDD -> behandleSaertilskudd(vedtakHendelse)
+            StonadType.ENDRE_MOTTAKERID -> behandleEndreMottakerId(vedtakHendelse)
+            StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.hendelse}'")
         }
     }
 

@@ -1,8 +1,6 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.api.NyMottakerIdHistorikkRequest
-import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -71,9 +69,11 @@ class MottakerIdHistorikkServiceTest {
   @Test
   fun `skal finne data for en mottakerIdHistorikk`() {
     // Oppretter nytt mottakerIdHistorikk
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(stonadType = "BIDRAG", sakId = "SAK-001",
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      stonadType = "BIDRAG", sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId = "X654321"))
+      opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId = "X654321"
+    ))
 
     // Oppretter ny mottakerIdHistorikk
     val nyMottakerIdHistorikk = persistenceService.opprettNyMottakerIdHistorikk(
