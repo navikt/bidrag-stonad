@@ -11,7 +11,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-stonad</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
 
   <name>bidrag-stonad</name>
   <description>Behandling av stønad i Bidrag</description>
@@ -37,7 +37,6 @@
     <signature-api-client-java.version>5.0-RC4</signature-api-client-java.version>
     <nimbus-jose-jwt.version>8.20.1</nimbus-jose-jwt.version>
     <modelmapper.version>2.3.9</modelmapper.version>
-
     <token-support.version>1.3.7</token-support.version>
 
     <!-- navikt -->
@@ -47,7 +46,7 @@
     <wiremock-standalone.version>2.19.0</wiremock-standalone.version>
 
     <!-- language -->
-    <kotlin.version>1.4.30</kotlin.version>
+    <kotlin.version>1.5.0</kotlin.version>
     <java.version>15</java.version>
   </properties>
 
