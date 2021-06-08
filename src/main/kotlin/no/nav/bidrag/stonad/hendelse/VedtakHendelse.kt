@@ -5,7 +5,6 @@ import no.nav.bidrag.stonad.dto.PeriodeDto
 import java.time.LocalDateTime
 
 data class VedtakHendelse(
-  var stonadId: Int = 0,
   var stonadType: String = "",
   var sakId: String? = null,
   var skyldnerId: String = "",
@@ -29,7 +28,5 @@ data class Sporingsdata(var correlationId: String? = null, var opprettet: String
 enum class StonadType {
   BARNEBIDRAG,
   FORSKUDD,
-  SAERTILSKUDD,
-  ENDRE_MOTTAKERID,
   NO_SUPPORT
 }

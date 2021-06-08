@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiResponses
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
-import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -55,7 +54,7 @@ class StonadController(private val stonadService: StonadService) {
   )
 
   fun finnStonad(@PathVariable stonadId: Int): ResponseEntity<FinnStonadResponse> {
-    val stonadFunnet = stonadService.finnStonad(stonadId)
+    val stonadFunnet = stonadService.finnStonadFraId(stonadId)
     LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }

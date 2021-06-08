@@ -30,9 +30,16 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
-  fun finnStonad(stonadId: Int): StonadDto {
+  fun finnStonadFraId(stonadId: Int): StonadDto {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)) }
+    return stonad.toStonadDto()
+  }
+
+  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto {
+    val stonad = stonadRepository.hentStonad(stonadType, skyldnerId, kravhaverId)
+//      .orElseThrow { IllegalArgumentException(String
+//        .format("Fant ikke stønad med id %d i databasen", stonadType, skyldnerId, kravhaverId)) }
     return stonad.toStonadDto()
   }
 

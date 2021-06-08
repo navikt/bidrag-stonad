@@ -6,7 +6,7 @@ import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import kotlin.reflect.full.memberProperties
 
 @ApiModel(value = "Request for å endre mottaker-id på en stønad")
-data class NyMottakerIdHistorikkRequest(
+data class EndreMottakerIdHistorikkRequest(
 
   @ApiModelProperty(value = "Stønad-id")
   val stonadId: Int = 0,
@@ -22,8 +22,8 @@ data class NyMottakerIdHistorikkRequest(
 
 )
 
-fun NyMottakerIdHistorikkRequest.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
-  val propertiesByName = NyMottakerIdHistorikkRequest::class.memberProperties.associateBy { it.name }
+fun EndreMottakerIdHistorikkRequest.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
+  val propertiesByName = EndreMottakerIdHistorikkRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)

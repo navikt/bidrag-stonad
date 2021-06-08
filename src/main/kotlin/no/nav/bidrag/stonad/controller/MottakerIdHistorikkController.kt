@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.NyMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.service.MottakerIdHistorikkService
 import no.nav.security.token.support.core.api.Protected
@@ -34,7 +34,7 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
     ]
   )
 
-  fun opprettMottakerIdHistorikk(@RequestBody request: NyMottakerIdHistorikkRequest): ResponseEntity<MottakerIdHistorikkDto>? {
+  fun opprettMottakerIdHistorikk(@RequestBody request: EndreMottakerIdHistorikkRequest): ResponseEntity<MottakerIdHistorikkDto>? {
     val mottakerIdHistorikkOpprettet = mottakerIdHistorikkService.opprettNyMottakerIdHistorikk(request)
     LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdHistorikkOpprettet")
     return ResponseEntity(mottakerIdHistorikkOpprettet, HttpStatus.OK)

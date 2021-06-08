@@ -59,7 +59,7 @@ class StonadServiceTest {
     ))
 
     // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.finnStonad(nyStonadOpprettet.stonadId)
+    val stonadFunnet = stonadService.finnStonadFraId(nyStonadOpprettet.stonadId)
 
     assertAll(
       Executable { assertThat(stonadFunnet).isNotNull() },

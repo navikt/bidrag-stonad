@@ -4,7 +4,7 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.NyMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -154,8 +154,8 @@ class MottakerIdHistorikkControllerTest {
     return "http://localhost:$port$contextPath"
   }
 
-  private fun byggRequest(stonadId: Int): HttpEntity<NyMottakerIdHistorikkRequest> {
-    return initHttpEntity(NyMottakerIdHistorikkRequest(stonadId, mottakerIdEndretFra = "123", mottakerIdEndretTil = "321", saksbehandlerId = "Test"))
+  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdHistorikkRequest> {
+    return initHttpEntity(EndreMottakerIdHistorikkRequest(stonadId, mottakerIdEndretFra = "123", mottakerIdEndretTil = "321", saksbehandlerId = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

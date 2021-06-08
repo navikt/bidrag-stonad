@@ -44,8 +44,8 @@ class StonadService (val persistenceService: PersistenceService) {
 
   }
 
-  fun finnStonad(stonadId: Int): FinnStonadResponse {
-    val stonadDto = persistenceService.finnStonad(stonadId)
+  fun finnStonadFraId(stonadId: Int): FinnStonadResponse {
+    val stonadDto = persistenceService.finnStonadFraId(stonadId)
     val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadId)
     return FinnStonadResponse(
       stonadDto.stonadType,
@@ -60,5 +60,22 @@ class StonadService (val persistenceService: PersistenceService) {
       periodeDtoListe
     )
     }
+
+  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): FinnStonadResponse {
+    val stonadDto = persistenceService.finnStonadFraId(stonadType, skyldnerId, kravhaverId)
+    val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
+    return FinnStonadResponse(
+      stonadDto.stonadType,
+      stonadDto.sakId,
+      stonadDto.skyldnerId,
+      stonadDto.kravhaverId,
+      stonadDto.mottakerId,
+      stonadDto.opprettetAvSaksbehandlerId,
+      stonadDto.opprettetTimestamp,
+      stonadDto.endretAvSaksbehandlerId,
+      stonadDto.endretTimestamp,
+      periodeDtoListe
+    )
+  }
 
 }
