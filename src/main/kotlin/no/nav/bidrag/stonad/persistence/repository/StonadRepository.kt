@@ -10,5 +10,5 @@ interface StonadRepository : CrudRepository<Stonad, Int?>{
     "select st from Stonad st where st.stonadType = :stonadType and st.kravhaverId = :kravhaverId and st.skyldnerId = :skyldnerId"
   )
 
-  fun hentStonad(stonadType: String, kravhaverId: String, skyldnerId: String): List<Stonad>
+  fun hentStonad(stonadType: String, kravhaverId: String, skyldnerId: String): Stonad
 }

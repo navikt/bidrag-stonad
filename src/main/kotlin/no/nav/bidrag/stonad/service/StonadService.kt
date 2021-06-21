@@ -62,7 +62,7 @@ class StonadService (val persistenceService: PersistenceService) {
     }
 
   fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): FinnStonadResponse {
-    val stonadDto = persistenceService.finnStonadFraId(stonadType, skyldnerId, kravhaverId)
+    val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
     val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
     return FinnStonadResponse(
       stonadDto.stonadType,

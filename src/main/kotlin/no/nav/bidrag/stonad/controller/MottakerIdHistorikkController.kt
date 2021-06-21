@@ -1,8 +1,9 @@
 package no.nav.bidrag.stonad.controller
 
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
@@ -22,15 +23,15 @@ import org.springframework.web.bind.annotation.RestController
 class MottakerIdHistorikkController(private val mottakerIdHistorikkService: MottakerIdHistorikkService) {
 
   @PostMapping(MOTTAKER_ID_HISTORIKK_NY)
-  @ApiOperation("Opprett ny forekomst på mottaker-id-historikk")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Opprett ny forekomst på mottaker-id-historikk")
   @ApiResponses(
     value = [
-      ApiResponse(code = 200, message = "Forekomst på mottaker-id-historikk opprettet"),
-      ApiResponse(code = 400, message = "Feil opplysinger oppgitt"),
-      ApiResponse(code = 401, message = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 501, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
+      ApiResponse(responseCode = "200", description = "Forekomst på mottaker-id-historikk opprettet"),
+      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt"),
+      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
+      ApiResponse(responseCode = "500", description = "Serverfeil"),
+      ApiResponse(responseCode = "501", description = "Serverfeil"),
+      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
     ]
   )
 
@@ -42,15 +43,15 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
 
 
   @GetMapping("$MOTTAKER_ID_HISTORIKK_SOK/{stonadId}")
-  @ApiOperation("Finn alle endringer i mottaker-id for en stønad")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle endringer i mottaker-id for en stønad")
   @ApiResponses(
     value = [
-      ApiResponse(code = 200, message = "Endringer for stønad funnet"),
-      ApiResponse(code = 401, message = "Manglende eller utløpt id-token"),
-      ApiResponse(code = 403, message = "Saksbehandler mangler tilgang til å lese data for aktuelt stonad"),
-      ApiResponse(code = 404, message = "stonad ikke funnet"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
+      ApiResponse(responseCode = "200", description = "Endringer for stønad funnet"),
+      ApiResponse(responseCode = "401", description = "Manglende eller utløpt id-token"),
+      ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuelt stonad"),
+      ApiResponse(responseCode = "404", description = "stonad ikke funnet"),
+      ApiResponse(responseCode = "500", description = "Serverfeil"),
+      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
     ]
   )
 

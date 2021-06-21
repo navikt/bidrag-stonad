@@ -1,8 +1,9 @@
 package no.nav.bidrag.stonad.controller
 
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
@@ -22,14 +23,14 @@ import org.springframework.web.bind.annotation.RestController
 class StonadController(private val stonadService: StonadService) {
 
   @PostMapping(STONAD_NY)
-  @ApiOperation("Oppretter stønad")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Oppretter stønad")
   @ApiResponses(
     value = [
-      ApiResponse(code = 200, message = "Mottaker-id endret"),
-      ApiResponse(code = 400, message = "Feil opplysinger oppgitt"),
-      ApiResponse(code = 401, message = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
+      ApiResponse(responseCode = "200", description = "Mottaker-id endret"),
+      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt"),
+      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
+      ApiResponse(responseCode = "500", description = "Serverfeil"),
+      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
     ]
   )
 
@@ -41,15 +42,15 @@ class StonadController(private val stonadService: StonadService) {
 
 
   @GetMapping("$STONAD_SOK/{stonadId}")
-  @ApiOperation("Finn alle data for en stønad")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad")
   @ApiResponses(
     value = [
-      ApiResponse(code = 200, message = "Stønadsendring funnet"),
-      ApiResponse(code = 401, message = "Manglende eller utløpt id-token"),
-      ApiResponse(code = 403, message = "Saksbehandler mangler tilgang til å lese data for aktuell stønadsendring"),
-      ApiResponse(code = 404, message = "Stønadsendring ikke funnet"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
+      ApiResponse(responseCode = "200", description = "Stønadsendring funnet"),
+      ApiResponse(responseCode = "401", description = "Manglende eller utløpt id-token"),
+      ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuell stønadsendring"),
+      ApiResponse(responseCode = "404", description = "Stønadsendring ikke funnet"),
+      ApiResponse(responseCode = "500", description = "Serverfeil"),
+      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
     ]
   )
 
@@ -60,14 +61,14 @@ class StonadController(private val stonadService: StonadService) {
   }
 
 /*  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
-  @ApiOperation("Endrer mottaker-id på en eksisterende stønad")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Endrer mottaker-id på en eksisterende stønad")
   @ApiResponses(
     value = [
-      ApiResponse(code = 200, message = "Mottaker-id endret"),
-      ApiResponse(code = 400, message = "Feil opplysinger oppgitt"),
-      ApiResponse(code = 401, message = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
-      ApiResponse(code = 500, message = "Serverfeil"),
-      ApiResponse(code = 503, message = "Tjeneste utilgjengelig")
+      ApiResponse(responseCode = "200", description = "Mottaker-id endret"),
+      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt"),
+      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
+      ApiResponse(responseCode = "500", description = "Serverfeil"),
+      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
     ]
   )
 

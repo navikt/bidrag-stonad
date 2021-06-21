@@ -1,23 +1,22 @@
 package no.nav.bidrag.stonad.api
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import kotlin.reflect.full.memberProperties
 
-@ApiModel(value = "Request for å endre mottaker-id på en stønad")
+@Schema(description ="Request for å endre mottaker-id på en stønad")
 data class EndreMottakerIdHistorikkRequest(
 
-  @ApiModelProperty(value = "Stønad-id")
+  @Schema(description = "Stønad-id")
   val stonadId: Int = 0,
 
-  @ApiModelProperty(value = "Mottaker-id som skal erstattes")
+  @Schema(description = "Mottaker-id som skal erstattes")
   val mottakerIdEndretFra: String = "",
 
-  @ApiModelProperty(value = "Mottaker-id som skal erstatte eksisterende id")
+  @Schema(description = "Mottaker-id som skal erstatte eksisterende id")
   val mottakerIdEndretTil: String = "",
 
-  @ApiModelProperty(value = "opprettet_av")
+  @Schema(description = "opprettet_av")
   val saksbehandlerId: String = ""
 
 )
