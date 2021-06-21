@@ -98,13 +98,14 @@ class StonadControllerTest {
     // Oppretter ny forekomst av stonad
 
       val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG",
-      sakId = "SAK-001",
-      skyldnerId = "01018011111",
-      kravhaverId = "01010511111",
-      mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"))
+        stonadType = "BIDRAG",
+        sakId = "SAK-001",
+        skyldnerId = "01018011111",
+        kravhaverId = "01010511111",
+        mottakerId = "01018211111",
+        opprettetAvSaksbehandlerId = "X123456",
+        endretAvSaksbehandlerId =  "X654321"
+      ))
 
     val periodeListe = listOf(
       PeriodeDto(

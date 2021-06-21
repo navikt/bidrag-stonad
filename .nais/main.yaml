@@ -1,0 +1,8 @@
+name: bidrag-stonad
+ingress: https://bidrag-stonad.dev.intern.nav.no
+dbname: bidrag-stonad-main
+kafka:
+  pool: nav-dev
+env:
+  - name: TOPIC_VEDTAK
+    value: bidrag.vedtak

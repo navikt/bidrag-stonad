@@ -2,7 +2,6 @@ package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.NyStonadRequest
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -54,10 +53,13 @@ class StonadServiceTest {
   @Test
   fun `skal finne alle data for en stonad`() {
     // Oppretter nytt stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(stonadType = "Test", opprettetAvSaksbehandlerId = "111"))
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      stonadType = "Test",
+      opprettetAvSaksbehandlerId = "111"
+    ))
 
     // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.finnStonad(nyStonadOpprettet.stonadId)
+    val stonadFunnet = stonadService.finnStonadFraId(nyStonadOpprettet.stonadId)
 
     assertAll(
       Executable { assertThat(stonadFunnet).isNotNull() },

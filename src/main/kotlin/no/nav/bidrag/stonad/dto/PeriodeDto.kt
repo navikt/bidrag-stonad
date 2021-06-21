@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.dto
 
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.math.BigDecimal
@@ -9,31 +9,31 @@ import kotlin.reflect.full.memberProperties
 
 data class PeriodeDto(
 
-  @ApiModelProperty(value = "Periode-id")
+  @Schema(description = "Periode-id")
   val periodeId: Int = 0,
 
-  @ApiModelProperty(value = "Periode fra-og-med-dato")
+  @Schema(description = "Periode fra-og-med-dato")
   val periodeFom: LocalDate = LocalDate.now(),
 
-  @ApiModelProperty(value = "Periode til-dato")
+  @Schema(description = "Periode til-dato")
   val periodeTil: LocalDate? = null,
 
-  @ApiModelProperty(value = "Stonad-id")
+  @Schema(description = "Stonad-id")
   val stonadId: Int = 0,
 
-  @ApiModelProperty(value = "Vedtak-id")
+  @Schema(description = "Vedtak-id")
   val vedtakId: Int = 0,
 
-  @ApiModelProperty(value = "Periode-gjort-ugyldig-av-vedtak-id")
+  @Schema(description = "Periode-gjort-ugyldig-av-vedtak-id")
   val periodeGjortUgyldigAvVedtakId: Int? = 0,
 
-  @ApiModelProperty(value = "Beregnet stønadsbeløp")
+  @Schema(description = "Beregnet stønadsbeløp")
   val belop: BigDecimal = BigDecimal.ZERO,
 
-  @ApiModelProperty(value = "Valutakoden tilhørende stønadsbeløpet")
+  @Schema(description = "Valutakoden tilhørende stønadsbeløpet")
   val valutakode: String = "NOK",
 
-  @ApiModelProperty(value = "Resultatkoden tilhørende stønadsbeløpet")
+  @Schema(description = "Resultatkode for stønaden")
   val resultatkode: String = ""
 )
 

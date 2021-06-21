@@ -4,7 +4,7 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.NyMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -74,7 +74,8 @@ class MottakerIdHistorikkControllerTest {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"))
+      endretAvSaksbehandlerId =  "X654321"
+    ))
 
     // Oppretter ny forekomst
     val response = securedTestRestTemplate.exchange(
@@ -100,8 +101,14 @@ class MottakerIdHistorikkControllerTest {
   fun `skal finne alle endringer av mottaker-id for en stonad`() {
     // Oppretter nye forekomster
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG", sakId = "SAK-001", skyldnerId = "01018011111", kravhaverId = "01010511111",
-      mottakerId = "01018211111", opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId =  "X654321"))
+      stonadType = "BIDRAG",
+      sakId = "SAK-001",
+      skyldnerId = "01018011111",
+      kravhaverId = "01010511111",
+      mottakerId = "01018211111",
+      opprettetAvSaksbehandlerId = "X123456",
+      endretAvSaksbehandlerId =  "X654321"
+    ))
 
     val nyMottakerIdHistorikkOpprettet1 = persistenceService.opprettNyMottakerIdHistorikk(
       MottakerIdHistorikkDto(nyStonadOpprettet.stonadId, "123", "654", "X123456"))
@@ -147,8 +154,8 @@ class MottakerIdHistorikkControllerTest {
     return "http://localhost:$port$contextPath"
   }
 
-  private fun byggRequest(stonadId: Int): HttpEntity<NyMottakerIdHistorikkRequest> {
-    return initHttpEntity(NyMottakerIdHistorikkRequest(stonadId, mottakerIdEndretFra = "123", mottakerIdEndretTil = "321", saksbehandlerId = "Test"))
+  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdHistorikkRequest> {
+    return initHttpEntity(EndreMottakerIdHistorikkRequest(stonadId, mottakerIdEndretFra = "123", mottakerIdEndretTil = "321", saksbehandlerId = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

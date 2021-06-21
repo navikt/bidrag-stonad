@@ -1,35 +1,34 @@
 package no.nav.bidrag.stonad.api
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.dto.StonadDto
 import kotlin.reflect.full.memberProperties
 
-@ApiModel(value = "Egenskaper ved en stønadsendring")
+@Schema(description ="Egenskaper ved en stønadsendring")
 data class NyStonadRequest(
 
-  @ApiModelProperty(value = "Stønadstype")
+  @Schema(description = "Stønadstype")
   val stonadType: String = "",
 
-  @ApiModelProperty(value = "Referanse til sak")
+  @Schema(description = "Referanse til sak")
   val sakId: String? = null,
 
-  @ApiModelProperty(value = "Id til den som skal betale bidraget")
+  @Schema(description = "Id til den som skal betale bidraget")
   val skyldnerId: String = "",
 
-  @ApiModelProperty(value = "Id til den som krever bidraget")
+  @Schema(description = "Id til den som krever bidraget")
   val kravhaverId: String = "",
 
-  @ApiModelProperty(value = "Id til den som mottar bidraget")
+  @Schema(description = "Id til den som mottar bidraget")
   val mottakerId: String = "",
 
-  @ApiModelProperty(value = "opprettet_av")
+  @Schema(description = "opprettet_av")
   val opprettetAvSaksbehandlerId: String = "",
 
-  @ApiModelProperty(value = "endret_av")
+  @Schema(description = "endret_av")
   val endretAvSaksbehandlerId: String = "",
 
-  @ApiModelProperty(value = "Liste over alle perioder som inngår i stønaden")
+  @Schema(description = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest> = emptyList()
 )
 
