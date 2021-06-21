@@ -1,5 +1,0 @@
-{
-  "name": "bidrag-stonad-feature",
-  "kafka-topic-bidrag-vedtak": "bidrag.vedtak-feature",
-  "ingress": "https://bidrag-stonad-feature.dev.intern.nav.no"
-}
