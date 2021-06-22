@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.hendelse.PojoVedtakHendelseListener
+import no.nav.bidrag.stonad.hendelse.VedtakHendelseListener
 import no.nav.bidrag.stonad.service.BehandleHendelseService
 import no.nav.bidrag.stonad.service.JsonMapperService
 import no.nav.security.token.support.test.jersey.TestTokenGeneratorResource
@@ -29,7 +30,7 @@ class BidragStonadTestConfig {
     }
 
     @Bean
-    fun pojoVedtakHendelseListener(
+    fun vedtakHendelseListener(
         jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
-    ) = PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService)
+    ): VedtakHendelseListener = PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService)
 }
