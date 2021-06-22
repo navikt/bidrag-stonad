@@ -12,7 +12,7 @@ class KafkaVedtakHendelseListener(
   jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
 ) : PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService) {
 
-  @KafkaListener(groupId = "bidrag-stonad", topics = ["\${TOPIC_VEDTAK}"], errorHandler = "hendelseErrorHandler")
+  @KafkaListener(groupId = "bidrag-stonad", topics = ["\${TOPIC_VEDTAK}"], errorHandler = "vedtakshendelseErrorHandler")
   override fun lesHendelse(hendelse: String) {
     super.lesHendelse(hendelse)
   }

@@ -11,9 +11,14 @@ import no.nav.bidrag.stonad.hendelse.KafkaVedtakHendelseListener
 import no.nav.bidrag.stonad.service.BehandleHendelseService
 import no.nav.bidrag.stonad.service.JsonMapperService
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.kafka.listener.KafkaListenerErrorHandler
+import org.springframework.kafka.listener.ListenerExecutionFailedException
+import org.springframework.messaging.Message
+import java.util.Optional
 
 const val LIVE_PROFILE = "live"
 
@@ -39,11 +44,28 @@ class BidragStonadConfig {
     }
 }
 
+val LOGGER = LoggerFactory.getLogger(KafkaConfig::class.java)
+
 @Configuration
 @Profile(LIVE_PROFILE)
 class KafkaConfig {
-  @Bean
-  fun vedtakHendelseListener(
-    jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
-  ) = KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
+    @Bean
+    fun vedtakHendelseListener(
+        jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
+    ) = KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
+
+    @Bean
+    fun vedtakshendelseErrorHandler(): KafkaListenerErrorHandler {
+        return KafkaListenerErrorHandler { message: Message<*>, e: ListenerExecutionFailedException ->
+            val messagePayload: Any = try {
+                message.payload
+            } catch (re: RuntimeException) {
+                "Unable to read message payload"
+            }
+
+            LOGGER.error("Message {} cause error: {} - {} - headers: {}", messagePayload, e.javaClass.simpleName, e.message, message.headers)
+            Optional.empty<Any>()
+        }
+    }
+
 }
