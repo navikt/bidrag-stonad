@@ -1,6 +1,5 @@
 package no.nav.bidrag.stonad
 
-import no.nav.bidrag.stonad.BidragStonadConfig.Companion.LIVE_PROFILE
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 

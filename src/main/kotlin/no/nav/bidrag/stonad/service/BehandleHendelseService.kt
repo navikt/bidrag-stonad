@@ -12,7 +12,9 @@ interface BehandleHendelseService {
 }
 
 @Service
-class DefaultBehandleHendelseService() : BehandleHendelseService {
+class DefaultBehandleHendelseService(
+    private val stonadService: StonadService
+) : BehandleHendelseService {
 
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
         LOGGER.info("Behandler journalpostHendelse: $vedtakHendelse")
@@ -25,9 +27,11 @@ class DefaultBehandleHendelseService() : BehandleHendelseService {
     }
 
     private fun behandleBarnebidrag(vedtakHendelse: VedtakHendelse) {
+        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
     }
 
     private fun behandleForskudd(vedtakHendelse: VedtakHendelse) {
+        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
     }
 
 }
