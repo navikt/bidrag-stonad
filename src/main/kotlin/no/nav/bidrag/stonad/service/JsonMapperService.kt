@@ -16,4 +16,6 @@ class JsonMapperService(private val objectMapper: ObjectMapper) {
             LOGGER.debug("Leser hendelse: {}", hendelse)
         }
     }
+
+    fun readTree(hendelse: String) = objectMapper.readTree(hendelse)
 }
