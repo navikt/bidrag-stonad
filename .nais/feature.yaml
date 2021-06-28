@@ -3,4 +3,6 @@ ingress: https://bidrag-stonad-feature.dev.intern.nav.no
 dbname: bidrag-stonad-feature
 kafka:
   pool: nav-dev
-  topic: bidrag.vedtak-feature
+env:
+  - name: TOPIC_VEDTAK
+    value: bidrag.vedtak-feature
