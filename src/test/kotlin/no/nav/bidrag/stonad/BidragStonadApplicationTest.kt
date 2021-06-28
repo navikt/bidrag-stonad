@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [BidragStonadLocal::class])
 @ActiveProfiles(TEST_PROFILE)
-@DisplayName("Bidragstonad")
+@DisplayName("BidragStonad")
 class BidragStonadApplicationTest {
 
   @Test
