@@ -33,10 +33,10 @@ spec:
   resources:
     limits:
       cpu: 1000m
-      memory: 1024Mi
+      memory: 2048Mi
     requests:
       cpu: 500m
-      memory: 512Mi
+      memory: 1024Mi
   ingresses:
     - {{ ingress }}
   gcp:
@@ -49,4 +49,4 @@ spec:
             envVarPrefix: DB
   env:
     - name: TOPIC_VEDTAK
-      value: {{ kafka.topic }}
+      value: {{ kafka-topic-vedtak }}

@@ -10,6 +10,9 @@ import no.nav.bidrag.commons.web.CorrelationIdFilter
 import no.nav.bidrag.stonad.hendelse.KafkaVedtakHendelseListener
 import no.nav.bidrag.stonad.service.BehandleHendelseService
 import no.nav.bidrag.stonad.service.JsonMapperService
+import no.nav.security.token.support.core.context.TokenValidationContext
+import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.security.token.support.core.jwt.JwtToken
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -24,7 +27,7 @@ const val LIVE_PROFILE = "live"
 
 @Configuration
 @OpenAPIDefinition(info = Info(title = "bidrag-stonad", version = "v1"), security = [SecurityRequirement(name = "bearer-key")])
-@EnableJwtTokenValidation(ignore = ["org.springframework"])
+@EnableJwtTokenValidation
 @SecurityScheme(
     bearerFormat = "JWT",
     name = "bearer-key",
@@ -45,6 +48,28 @@ class BidragStonadConfig {
 }
 
 val LOGGER = LoggerFactory.getLogger(KafkaConfig::class.java)
+
+@Bean
+fun oidcTokenManager(tokenValidationContextHolder: TokenValidationContextHolder?): OidcTokenManager? {
+    return OidcTokenManager {
+        Optional.ofNullable(tokenValidationContextHolder)
+            .map { obj: TokenValidationContextHolder -> obj.tokenValidationContext }
+            .map { tokenValidationContext: TokenValidationContext ->
+                tokenValidationContext.getJwtTokenAsOptional(ISSUER)
+            }
+            .map { obj: Optional<JwtToken?> -> obj.get() }
+            .map { obj: JwtToken -> obj.tokenAsString }
+            .orElseThrow {
+                IllegalStateException(
+                    "Kunne ikke videresende Bearer token"
+                )
+            }
+    }
+}
+
+fun interface OidcTokenManager {
+    fun hentIdToken(): String?
+}
 
 @Configuration
 @Profile(LIVE_PROFILE)
@@ -67,5 +92,4 @@ class KafkaConfig {
             Optional.empty<Any>()
         }
     }
-
 }

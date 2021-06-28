@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import no.nav.bidrag.stonad.ISSUER
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.service.PeriodeService
 import no.nav.security.token.support.core.api.Protected
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Protected
+@ProtectedWithClaims(issuer = ISSUER)
 class PeriodeController(private val periodeService: PeriodeService) {
 
   @GetMapping("$PERIODE_SOK/{periodeId}")

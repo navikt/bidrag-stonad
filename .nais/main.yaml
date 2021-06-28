@@ -3,4 +3,4 @@ ingress: https://bidrag-stonad.dev.intern.nav.no
 dbname: bidrag-stonad-main
 kafka:
   pool: nav-dev
-  topic: bidrag.vedtak
+kafka-topic-vedtak: bidrag.vedtak
