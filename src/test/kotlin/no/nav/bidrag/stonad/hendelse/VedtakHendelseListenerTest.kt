@@ -46,7 +46,7 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
             """
             {
-              "stonadType":"BARNEBIDRAG",
+              "stonadType":"BIDRAG",
               "sakId":"",
               "skyldnerId":"",
               "kravhaverId":"",
@@ -58,7 +58,7 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).finnStonad("BARNEBIDRAG", "", "")
+        verify(stonadServiceMock).finnStonad("BIDRAG", "", "")
     }
 
     @Test
