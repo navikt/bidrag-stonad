@@ -17,7 +17,7 @@ class DefaultBehandleHendelseService(
 ) : BehandleHendelseService {
 
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
-        LOGGER.info("Behandler journalpostHendelse: $vedtakHendelse")
+        LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
         when (vedtakHendelse.hentStonadType()) {
             StonadType.BARNEBIDRAG -> behandleBarnebidrag(vedtakHendelse)
