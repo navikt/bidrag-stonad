@@ -20,7 +20,7 @@ class DefaultBehandleHendelseService(
         LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
         when (vedtakHendelse.hentStonadType()) {
-            StonadType.BARNEBIDRAG -> behandleBarnebidrag(vedtakHendelse)
+            StonadType.BIDRAG -> behandleBarnebidrag(vedtakHendelse)
             StonadType.FORSKUDD -> behandleForskudd(vedtakHendelse)
             StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.stonadType}'")
         }
