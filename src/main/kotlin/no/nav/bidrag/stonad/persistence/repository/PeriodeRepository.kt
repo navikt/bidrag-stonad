@@ -9,4 +9,9 @@ interface PeriodeRepository : CrudRepository<Periode, Int?>{
   @Query(
     "select pe from Periode pe where pe.stonad.stonadId = :stonadId")
   fun hentAllePerioderForStonad(stonadId: Int): List<Periode>
+
+
+@Query(
+  "update Periode pe set pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.stonad.stonadId = :stonadId")
+  fun settAllePerioderForStonadSomUgyldig(stonadId: Int, periodeGjortUgyldigAvVedtakId: Int): List<Periode>
 }

@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.hendelse.StonadType
 import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
@@ -13,7 +14,7 @@ interface BehandleHendelseService {
 
 @Service
 class DefaultBehandleHendelseService(
-    private val stonadService: StonadService
+    private val stonadService: StonadService, val persistenceService: PersistenceService
 ) : BehandleHendelseService {
 
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
@@ -27,11 +28,27 @@ class DefaultBehandleHendelseService(
     }
 
     private fun behandleBarnebidrag(vedtakHendelse: VedtakHendelse) {
-        stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
+        val eksisterendeStonad = stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
+        if (eksisterendeStonad != null) {
+            // Mottatt Hendelse skal oppdatere eksisterende stønad
+            oppdaterStonad(vedtakHendelse, eksisterendeStonad)
+        } else {
+            opprettNyStonad(vedtakHendelse)
+        }
     }
 
     private fun behandleForskudd(vedtakHendelse: VedtakHendelse) {
         stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
+    }
+
+    private fun oppdaterStonad(vedtakHendelse: VedtakHendelse, eksisterendeStonad: FinnStonadResponse) {
+        persistenceService.settAllePerioderForStonadSomUgyldig(vedtakHendelse.vedtakId, eksisterendeStonad.vedtakId)
+
+
+    }
+
+    private fun opprettNyStonad(vedtakHendelse: VedtakHendelse) {
+
     }
 
 }

@@ -30,6 +30,12 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
+  fun oppdaterStonad(stonadDto: StonadDto): StonadDto {
+    val oppdatertStonad = stonadDto.toStonadEntity()
+    val stonad = stonadRepository.save(oppdatertStonad)
+    return stonad.toStonadDto()
+  }
+
   fun finnStonadFraId(stonadId: Int): StonadDto {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)) }
@@ -64,6 +70,14 @@ class PersistenceService(
     val nyPeriode = dto.toPeriodeEntity(eksisterendeStonad)
     val periode = periodeRepository.save(nyPeriode)
     return periode.toPeriodeDto()
+  }
+
+  fun settAllePerioderForStonadSomUgyldig(id:Int, periodeGjortUgyldigAvVedtakId: Int): List<PeriodeDto> {
+    val periodeDtoListe = mutableListOf<PeriodeDto>()
+    periodeRepository.settAllePerioderForStonadSomUgyldig(id, periodeGjortUgyldigAvVedtakId)
+    periodeRepository.hentAllePerioderForStonad(id)
+        .forEach {periode -> periodeDtoListe.add(periode.toPeriodeDto())}
+    return periodeDtoListe
   }
 
   fun finnPeriode(id: Int): PeriodeDto {
