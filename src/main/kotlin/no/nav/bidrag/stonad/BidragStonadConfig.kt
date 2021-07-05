@@ -26,7 +26,9 @@ import java.util.Optional
 const val LIVE_PROFILE = "live"
 
 @Configuration
-@OpenAPIDefinition(info = Info(title = "bidrag-stonad", version = "v1"), security = [SecurityRequirement(name = "bearer-key")])
+@OpenAPIDefinition(
+    info = Info(title = "bidrag-stonad", version = "v1"),
+    security = [SecurityRequirement(name = "bearer-key")])
 @EnableJwtTokenValidation
 @SecurityScheme(
     bearerFormat = "JWT",
@@ -61,7 +63,7 @@ fun oidcTokenManager(tokenValidationContextHolder: TokenValidationContextHolder?
             .map { obj: JwtToken -> obj.tokenAsString }
             .orElseThrow {
                 IllegalStateException(
-                    "Kunne ikke videresende Bearer token"
+                    "Kunne ikke videresende Bearer-token"
                 )
             }
     }

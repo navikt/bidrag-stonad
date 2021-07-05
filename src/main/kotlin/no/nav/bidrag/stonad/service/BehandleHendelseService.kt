@@ -17,21 +17,21 @@ class DefaultBehandleHendelseService(
 ) : BehandleHendelseService {
 
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
-        LOGGER.info("Behandler journalpostHendelse: $vedtakHendelse")
+        LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
         when (vedtakHendelse.hentStonadType()) {
-            StonadType.BARNEBIDRAG -> behandleBarnebidrag(vedtakHendelse)
+            StonadType.BIDRAG -> behandleBarnebidrag(vedtakHendelse)
             StonadType.FORSKUDD -> behandleForskudd(vedtakHendelse)
             StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.stonadType}'")
         }
     }
 
     private fun behandleBarnebidrag(vedtakHendelse: VedtakHendelse) {
-        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
+        stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
     }
 
     private fun behandleForskudd(vedtakHendelse: VedtakHendelse) {
-        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
+        stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
     }
 
 }

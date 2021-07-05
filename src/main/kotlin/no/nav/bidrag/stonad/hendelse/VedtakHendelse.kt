@@ -26,7 +26,7 @@ data class VedtakHendelse(
 data class Sporingsdata(var correlationId: String? = null, var opprettet: String? = null)
 
 enum class StonadType {
-  BARNEBIDRAG,
+  BIDRAG,
   FORSKUDD,
   NO_SUPPORT
 }
