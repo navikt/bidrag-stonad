@@ -27,11 +27,11 @@ class DefaultBehandleHendelseService(
     }
 
     private fun behandleBarnebidrag(vedtakHendelse: VedtakHendelse) {
-        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
+        stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
     }
 
     private fun behandleForskudd(vedtakHendelse: VedtakHendelse) {
-        stonadService.finnStonad(vedtakHendelse.stonadType, "", "")
+        stonadService.finnStonad(vedtakHendelse.stonadType, vedtakHendelse.kravhaverId, vedtakHendelse.skyldnerId)
     }
 
 }
