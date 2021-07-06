@@ -36,17 +36,15 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
-  fun finnStonadFraId(stonadId: Int): StonadDto {
+  fun finnStonadFraId(stonadId: Int): StonadDto? {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)) }
     return stonad.toStonadDto()
   }
 
-  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto {
-    val stonad = stonadRepository.hentStonad(stonadType, skyldnerId, kravhaverId)
-//      .orElseThrow { IllegalArgumentException(String
-//        .format("Fant ikke stønad med id %d i databasen", stonadType, skyldnerId, kravhaverId)) }
-    return stonad.toStonadDto()
+  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto? {
+    return stonadRepository.hentStonad(stonadType, skyldnerId, kravhaverId)?.toStonadDto()
+
   }
 
   fun opprettNyMottakerIdHistorikk(dto: MottakerIdHistorikkDto): MottakerIdHistorikkDto {
@@ -57,7 +55,7 @@ class PersistenceService(
     return mottakerIdHistorikk.toMottakerIdHistorikkDto()
   }
 
-  fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto> {
+  fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto>? {
     val mottakerIdHistorikkDtoListe = mutableListOf<MottakerIdHistorikkDto>()
     mottakerIdHistorikkRepository.hentAlleMottakerIdHistorikkForStonad(id)
       .forEach {mottakerIdHistorikk -> mottakerIdHistorikkDtoListe.add(mottakerIdHistorikk.toMottakerIdHistorikkDto()) }
@@ -72,7 +70,7 @@ class PersistenceService(
     return periode.toPeriodeDto()
   }
 
-  fun settAllePerioderForStonadSomUgyldig(id:Int, periodeGjortUgyldigAvVedtakId: Int): List<PeriodeDto> {
+  fun settAllePerioderSomOverlapperForStonadSomUgyldig(id:Int, periodeGjortUgyldigAvVedtakId: Int): List<PeriodeDto> {
     val periodeDtoListe = mutableListOf<PeriodeDto>()
     periodeRepository.settAllePerioderForStonadSomUgyldig(id, periodeGjortUgyldigAvVedtakId)
     periodeRepository.hentAllePerioderForStonad(id)
@@ -80,7 +78,7 @@ class PersistenceService(
     return periodeDtoListe
   }
 
-  fun finnPeriode(id: Int): PeriodeDto {
+  fun finnPeriode(id: Int): PeriodeDto? {
     val periode = periodeRepository.findById(id)
       .orElseThrow { IllegalArgumentException(String.format("Fant ikke periode med id %d i databasen", id)) }
     return periode.toPeriodeDto()

@@ -6,9 +6,6 @@ import java.time.LocalDateTime
 
 data class FinnStonadResponse(
 
-  @Schema(description = "VedtakId")
-  val vedtakId: Int = 0,
-
   @Schema(description = "Stønadstype")
   val stonadType: String = "",
 

@@ -1,6 +1,5 @@
 package no.nav.bidrag.stonad.hendelse
 
-import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.model.VedtakHendelsePeriode
 
 import java.time.LocalDateTime

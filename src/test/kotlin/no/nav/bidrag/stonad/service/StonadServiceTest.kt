@@ -41,7 +41,7 @@ class StonadServiceTest {
 
   @Test
   fun `skal opprette ny stonad`() {
-    // Oppretter nytt stonad
+    // Oppretter ny stonad
     val nyStonadRequest = NyStonadRequest("TEST", "1111")
     val nyStonadOpprettet = stonadService.opprettStonad(nyStonadRequest)
 
@@ -52,7 +52,7 @@ class StonadServiceTest {
 
   @Test
   fun `skal finne alle data for en stonad`() {
-    // Oppretter nytt stonad
+    // Oppretter ny stonad
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "Test",
       opprettetAvSaksbehandlerId = "111"
