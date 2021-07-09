@@ -18,7 +18,7 @@ interface BehandleHendelseService {
 class DefaultBehandleHendelseService(
   private val stonadService: StonadService,
   private val periodeService: PeriodeService,
-  val persistenceService: PersistenceService
+  private val persistenceService: PersistenceService
 ) : BehandleHendelseService {
 
   override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
@@ -53,11 +53,9 @@ class DefaultBehandleHendelseService(
       eksisterendeStonad.periodeListe[0].vedtakId
     )
 
-
   }
 
   private fun opprettNyStonad(vedtakHendelse: VedtakHendelse) {
-
 
     val nyStonad = stonadService.opprettStonad(
       NyStonadRequest(

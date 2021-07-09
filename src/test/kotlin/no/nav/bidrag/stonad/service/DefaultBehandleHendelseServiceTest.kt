@@ -79,15 +79,15 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(nyStonadOpprettet!!.mottakerId).isEqualTo("24680") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.opprettetAvSaksbehandlerId).isEqualTo("R153961") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.endretAvSaksbehandlerId).isEqualTo("R153961") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe!![0].periodeFom)
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeFom)
         .isEqualTo(LocalDate.parse("2021-06-01")) },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe!![0].periodeTil)
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeTil)
         .isEqualTo(LocalDate.parse("2021-07-01")) },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe!![0].belop)
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].belop)
         .isEqualTo(BigDecimal.valueOf(17)) },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe!![0].valutakode)
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].valutakode)
         .isEqualTo("NOK") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe!![0].resultatkode)
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].resultatkode)
         .isEqualTo("Hunky Dory") }
 
 
