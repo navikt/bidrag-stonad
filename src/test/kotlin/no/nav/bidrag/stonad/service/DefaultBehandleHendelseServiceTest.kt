@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import no.nav.bidrag.stonad.model.VedtakHendelsePeriode
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
@@ -91,24 +92,28 @@ internal class DefaultBehandleHendelseServiceTest {
     )
   }
 
-/*
   @Test
   @Suppress("NonAsciiCharacters")
-  fun `skal finne alle data for en stonad`() {
-    // Oppretter ny stønad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(
-      StonadDto(
-      stonadType = "Test",
-      opprettetAvSaksbehandlerId = "111"
-    )
-    )
+  fun `skal opprette ny stonad fra Hendelse og finne den fra stonadId`() {
+    // Oppretter ny hendelse
+    val periodeliste = mutableListOf<VedtakHendelsePeriode>()
+    periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
+      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory"))
 
-    // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.finnStonadFraId(nyStonadOpprettet.stonadId)
+    val nyHendelse = VedtakHendelse(1, "BIDRAG", "SAK-001", "12345",
+      "54321", "24680", "R153961",
+      LocalDateTime.now(), "R153961", LocalDateTime.now(), periodeliste)
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.finnStonad(nyHendelse.stonadType, nyHendelse.skyldnerId, nyHendelse.kravhaverId)
+
+    val stonadFraId = stonadService.finnStonadFraId(nyStonadOpprettet!!.stonadId)
 
     assertAll(
-      Executable { Assertions.assertThat(stonadFunnet).isNotNull() },
-    )
-  }*/
+      Executable { Assertions.assertThat(stonadFraId!!).isNotNull() },
+      Executable { Assertions.assertThat(stonadFraId!!.stonadId).isEqualTo(1) }
 
+    )
+  }
 }

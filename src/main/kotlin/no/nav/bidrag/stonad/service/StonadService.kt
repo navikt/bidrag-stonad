@@ -49,6 +49,7 @@ class StonadService(val persistenceService: PersistenceService) {
     return if (stonadDto != null) {
       val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadId)
       FinnStonadResponse(
+        stonadDto.stonadId,
         stonadDto.stonadType,
         stonadDto.sakId,
         stonadDto.skyldnerId,
@@ -69,6 +70,7 @@ class StonadService(val persistenceService: PersistenceService) {
     if (stonadDto != null) {
       val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
       return FinnStonadResponse(
+        stonadDto.stonadId,
         stonadDto.stonadType,
         stonadDto.sakId,
         stonadDto.skyldnerId,
