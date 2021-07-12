@@ -87,6 +87,25 @@ class StonadServiceTest {
     )
   }
 
+  @Test
+  fun `skal finne stonad fra generert id`() {
+    // Oppretter ny stonad
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      stonadType = "BIDRAG",
+      skyldnerId = "Skyldner123",
+      kravhaverId = "Kravhaver123"
+    ))
+
+    // Finner stønaden som akkurat ble opprettet
+    val stonadFunnet = stonadService.finnStonadFraId(
+      nyStonadOpprettet.stonadId
+    )
+
+    assertAll(
+      Executable { assertThat(stonadFunnet).isNotNull() },
+    )
+  }
+
 
 
 }

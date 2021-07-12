@@ -94,7 +94,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
-  fun `skal opprette ny stonad fra Hendelse og finne den fra stonadId`() {
+  fun `skal opprette ny stonad fra Hendelse og finne den via stonadId`() {
     // Oppretter ny hendelse
     val periodeliste = mutableListOf<VedtakHendelsePeriode>()
     periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
