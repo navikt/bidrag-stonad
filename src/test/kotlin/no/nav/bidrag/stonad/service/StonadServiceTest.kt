@@ -66,5 +66,27 @@ class StonadServiceTest {
     )
   }
 
+  @Test
+  fun `skal finne stonad fra sammensatt nokkel`() {
+    // Oppretter ny stonad
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      stonadType = "BIDRAG",
+      skyldnerId = "Skyldner123",
+      kravhaverId = "Kravhaver123"
+    ))
+
+    // Finner stønaden som akkurat ble opprettet
+    val stonadFunnet = stonadService.finnStonad(
+      nyStonadOpprettet.stonadType,
+      nyStonadOpprettet.skyldnerId,
+      nyStonadOpprettet.kravhaverId
+    )
+
+    assertAll(
+      Executable { assertThat(stonadFunnet).isNotNull() },
+    )
+  }
+
+
 
 }

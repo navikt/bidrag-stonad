@@ -17,7 +17,6 @@ interface BehandleHendelseService {
 @Service
 class DefaultBehandleHendelseService(
   private val stonadService: StonadService,
-  private val periodeService: PeriodeService,
   private val persistenceService: PersistenceService
 ) : BehandleHendelseService {
 
@@ -25,12 +24,12 @@ class DefaultBehandleHendelseService(
     LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
     when (vedtakHendelse.hentStonadType()) {
-      StonadType.BIDRAG, StonadType.FORSKUDD -> behandleVedtak(vedtakHendelse)
+      StonadType.BIDRAG, StonadType.FORSKUDD -> behandleVedtakHendelse(vedtakHendelse)
       StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.stonadType}'")
     }
   }
 
-  private fun behandleVedtak(vedtakHendelse: VedtakHendelse) {
+  private fun behandleVedtakHendelse(vedtakHendelse: VedtakHendelse) {
     val eksisterendeStonad = stonadService.finnStonad(
       vedtakHendelse.stonadType,
       vedtakHendelse.kravhaverId,
@@ -57,7 +56,22 @@ class DefaultBehandleHendelseService(
 
   private fun opprettNyStonad(vedtakHendelse: VedtakHendelse) {
 
-    val nyStonad = stonadService.opprettStonad(
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    vedtakHendelse.periodeListe.forEach {
+      periodeListe.add(
+        NyPeriodeRequest(
+          periodeFom = it.periodeFom,
+          periodeTil = it.periodeTil,
+          vedtakId = vedtakHendelse.vedtakId,
+          periodeGjortUgyldigAvVedtakId = null,
+          belop = it.belop,
+          valutakode = it.valutakode,
+          resultatkode = it.resultatkode
+        )
+      )
+    }
+
+    stonadService.opprettStonad(
       NyStonadRequest(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
@@ -65,23 +79,10 @@ class DefaultBehandleHendelseService(
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
         opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAvSaksbehandlerId,
-        endretAvSaksbehandlerId = vedtakHendelse.endretAvSaksbehandlerId
+        endretAvSaksbehandlerId = vedtakHendelse.endretAvSaksbehandlerId,
+        periodeListe = periodeListe
       )
     )
 
-    vedtakHendelse.periodeListe.forEach {
-      periodeService.opprettNyPeriode(
-        NyPeriodeRequest(
-          periodeFom = it.periodeFom,
-          periodeTil = it.periodeTil,
-          nyStonad.stonadId,
-          vedtakHendelse.vedtakId,
-          null,
-          belop = it.belop,
-          valutakode = it.valutakode,
-          resultatkode = it.resultatkode
-        )
-      )
-    }
   }
 }

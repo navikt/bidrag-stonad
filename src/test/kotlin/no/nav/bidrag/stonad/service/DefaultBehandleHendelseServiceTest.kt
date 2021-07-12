@@ -59,7 +59,7 @@ internal class DefaultBehandleHendelseServiceTest {
     // Oppretter ny hendelse
     val periodeliste = mutableListOf<VedtakHendelsePeriode>()
     periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
-      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17), "NOK", "Hunky Dory"))
+      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory"))
 
     val nyHendelse = VedtakHendelse(1, "BIDRAG", "SAK-001", "12345",
       "54321", "24680", "R153961",
@@ -67,8 +67,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
-    val nyStonadOpprettet = stonadService.finnStonad(
-      nyHendelse.stonadType, nyHendelse.skyldnerId, nyHendelse.kravhaverId)
+    val nyStonadOpprettet = stonadService.finnStonad(nyHendelse.stonadType, nyHendelse.skyldnerId, nyHendelse.kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
@@ -84,13 +83,11 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeTil)
         .isEqualTo(LocalDate.parse("2021-07-01")) },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].belop)
-        .isEqualTo(BigDecimal.valueOf(17)) },
+        .isEqualTo(BigDecimal.valueOf(17.01)) },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].valutakode)
         .isEqualTo("NOK") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].resultatkode)
         .isEqualTo("Hunky Dory") }
-
-
     )
   }
 

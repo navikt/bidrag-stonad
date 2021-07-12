@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS stonad
     opprettet_timestamp timestamp DEFAULT now() NOT NULL,
     endret_av character(7) NOT NULL,
     endret_timestamp timestamp DEFAULT now() NOT NULL,
-    CONSTRAINT stonad_pkey PRIMARY KEY (stonad_id)
+    CONSTRAINT stonad_pkey PRIMARY KEY (stonad_id),
+    UNIQUE (stonad_type, skyldner_id, kravhaver_id)
 )
 
     TABLESPACE pg_default;

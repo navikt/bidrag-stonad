@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class StonadService (val persistenceService: PersistenceService) {
+class StonadService(val persistenceService: PersistenceService) {
 
   private val LOGGER = LoggerFactory.getLogger(PeriodeController::class.java)
 
@@ -66,22 +66,21 @@ class StonadService (val persistenceService: PersistenceService) {
 
   fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): FinnStonadResponse? {
     val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
-    return if (stonadDto != null) {
-    val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
-    return FinnStonadResponse(
-      stonadDto.stonadType,
-      stonadDto.sakId,
-      stonadDto.skyldnerId,
-      stonadDto.kravhaverId,
-      stonadDto.mottakerId,
-      stonadDto.opprettetAvSaksbehandlerId,
-      stonadDto.opprettetTimestamp,
-      stonadDto.endretAvSaksbehandlerId,
-      stonadDto.endretTimestamp,
-      periodeDtoListe
-    )
-    } else
-      null
+    if (stonadDto != null) {
+      val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
+      return FinnStonadResponse(
+        stonadDto.stonadType,
+        stonadDto.sakId,
+        stonadDto.skyldnerId,
+        stonadDto.kravhaverId,
+        stonadDto.mottakerId,
+        stonadDto.opprettetAvSaksbehandlerId,
+        stonadDto.opprettetTimestamp,
+        stonadDto.endretAvSaksbehandlerId,
+        stonadDto.endretTimestamp,
+        periodeDtoListe
+      )
+    } else return null
   }
 
 }

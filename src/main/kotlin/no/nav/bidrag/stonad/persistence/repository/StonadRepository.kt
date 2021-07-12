@@ -8,13 +8,10 @@ import java.time.LocalDateTime
 interface StonadRepository : CrudRepository<Stonad, Int?>{
 
   @Query(
-    "select st from Stonad st where st.stonadType = :stonadType and st.kravhaverId = :kravhaverId and st.skyldnerId = :skyldnerId"
-  )
-  fun hentStonad(stonadType: String, kravhaverId: String, skyldnerId: String): Stonad?
+    "select st from Stonad st where st.stonadType = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId")
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, ): Stonad?
 
-  @Query(
-    "update Stonad st set st.endretAvSaksbehandlerId = :endretAv, st.endretTimestamp = :endretTimestamp " +
-        "where st.stonadId = :stonadId "
-  )
-  fun oppdaterStonad(stonadId: Int, endretAv: String, endretTimestamp: LocalDateTime): Stonad
+/*  @Query(
+    "update Stonad st set st.endretAvSaksbehandlerId = :endretAv, st.endretTimestamp = :endretTimestamp where st.stonadId = :stonadId")
+  fun oppdaterStonad(stonadId: Int, endretAv: String, endretTimestamp: LocalDateTime): Stonad*/
 }
