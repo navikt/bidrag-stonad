@@ -43,14 +43,40 @@ class DefaultBehandleHendelseService(
     }
   }
 
-  private fun endreStonad(
-    vedtakHendelse: VedtakHendelse,
-    eksisterendeStonad: FinnStonadResponse
-  ) {
-    persistenceService.settAllePerioderSomOverlapperForStonadSomUgyldig(
+  private fun endreStonad(vedtakHendelse: VedtakHendelse, originalStonad: FinnStonadResponse) {
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    vedtakHendelse.periodeListe.forEach {
+      periodeListe.add(
+        NyPeriodeRequest(
+          periodeFom = it.periodeFom,
+          periodeTil = it.periodeTil,
+          vedtakId = vedtakHendelse.vedtakId,
+          periodeGjortUgyldigAvVedtakId = null,
+          belop = it.belop,
+          valutakode = it.valutakode,
+          resultatkode = it.resultatkode
+        )
+      )
+    }
+
+    val oppdatertStonad =
+      NyStonadRequest(
+        stonadType = vedtakHendelse.stonadType,
+        sakId = vedtakHendelse.sakId,
+        skyldnerId = vedtakHendelse.skyldnerId,
+        kravhaverId = vedtakHendelse.kravhaverId,
+        mottakerId = vedtakHendelse.mottakerId,
+        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAvSaksbehandlerId,
+        endretAvSaksbehandlerId = vedtakHendelse.endretAvSaksbehandlerId,
+        periodeListe = periodeListe
+      )
+
+    val endretStonad = stonadService.endreStonad(originalStonad, oppdatertStonad)
+
+/*    persistenceService.settAllePerioderSomOverlapperForStonadSomUgyldig(
       vedtakHendelse.vedtakId,
-      eksisterendeStonad.periodeListe[0].vedtakId
-    )
+      originalStonad.periodeListe[0].vedtakId
+    )*/
 
   }
 

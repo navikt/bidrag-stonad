@@ -46,43 +46,71 @@ class StonadService(val persistenceService: PersistenceService) {
 
   fun finnStonadFraId(stonadId: Int): FinnStonadResponse? {
     val stonadDto = persistenceService.finnStonadFraId(stonadId)
-    return if (stonadDto != null) {
-      val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadId)
-      FinnStonadResponse(
-        stonadDto.stonadId,
-        stonadDto.stonadType,
-        stonadDto.sakId,
-        stonadDto.skyldnerId,
-        stonadDto.kravhaverId,
-        stonadDto.mottakerId,
-        stonadDto.opprettetAvSaksbehandlerId,
-        stonadDto.opprettetTimestamp,
-        stonadDto.endretAvSaksbehandlerId,
-        stonadDto.endretTimestamp,
-        periodeDtoListe
-      )
-    } else
-      null
+    if (stonadDto != null) {
+      val periodeDtoListe = persistenceService.finnPerioderForStonad(stonadId)
+      return lagFinnStonadResponse(stonadDto, periodeDtoListe)
+    } else return null
   }
 
   fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): FinnStonadResponse? {
     val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
     if (stonadDto != null) {
-      val periodeDtoListe = persistenceService.finnAllePerioderForStonad(stonadDto.stonadId)
-      return FinnStonadResponse(
-        stonadDto.stonadId,
-        stonadDto.stonadType,
-        stonadDto.sakId,
-        stonadDto.skyldnerId,
-        stonadDto.kravhaverId,
-        stonadDto.mottakerId,
-        stonadDto.opprettetAvSaksbehandlerId,
-        stonadDto.opprettetTimestamp,
-        stonadDto.endretAvSaksbehandlerId,
-        stonadDto.endretTimestamp,
-        periodeDtoListe
-      )
+      val periodeDtoListe = persistenceService.finnPerioderForStonad(stonadDto.stonadId)
+      return lagFinnStonadResponse(stonadDto, periodeDtoListe)
     } else return null
   }
 
+  fun finnStonadInkludertUgyldigePerioder(stonadType: String, skyldnerId: String, kravhaverId: String): FinnStonadResponse? {
+    val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
+    if (stonadDto != null) {
+      val periodeDtoListe =
+        persistenceService.finnPerioderForStonadInkludertUgyldige(stonadDto.stonadId)
+      return lagFinnStonadResponse(stonadDto, periodeDtoListe)
+    } else return null
+  }
+
+  fun lagFinnStonadResponse(stonadDto: StonadDto, periodeDtoListe: List<PeriodeDto>): FinnStonadResponse {
+    return FinnStonadResponse(
+      stonadDto.stonadId,
+      stonadDto.stonadType,
+      stonadDto.sakId,
+      stonadDto.skyldnerId,
+      stonadDto.kravhaverId,
+      stonadDto.mottakerId,
+      stonadDto.opprettetAvSaksbehandlerId,
+      stonadDto.opprettetTimestamp,
+      stonadDto.endretAvSaksbehandlerId,
+      stonadDto.endretTimestamp,
+      periodeDtoListe
+    )
+  }
+
+  fun endreStonad(originalStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
+
+
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

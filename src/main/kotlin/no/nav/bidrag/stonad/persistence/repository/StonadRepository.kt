@@ -9,7 +9,7 @@ interface StonadRepository : CrudRepository<Stonad, Int?>{
 
   @Query(
     "select st from Stonad st where st.stonadType = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId")
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, ): Stonad?
+  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String, ): Stonad?
 
 /*  @Query(
     "update Stonad st set st.endretAvSaksbehandlerId = :endretAv, st.endretTimestamp = :endretTimestamp where st.stonadId = :stonadId")

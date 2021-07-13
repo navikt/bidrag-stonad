@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
@@ -14,10 +15,15 @@ import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.math.BigDecimal
+import java.time.LocalDate
 
 @DisplayName("stonadServiceTest")
 @ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+  classes = [BidragStonadLocal::class],
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 class StonadServiceTest {
 
   @Autowired
@@ -40,9 +46,26 @@ class StonadServiceTest {
   }
 
   @Test
-  fun `skal opprette ny stonad`() {
+  @Suppress("NonAsciiCharacters")
+  fun `skal opprette ny stønad`() {
     // Oppretter ny stonad
-    val nyStonadRequest = NyStonadRequest("TEST", "1111")
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    periodeListe.add(
+      NyPeriodeRequest(
+        periodeFom = LocalDate.parse("2021-02-01"),
+        periodeTil = LocalDate.parse("2021-03-01"),
+        belop = BigDecimal.valueOf(17.01),
+        valutakode = "NOK",
+        resultatkode = "Alles gut"
+      )
+    )
+
+    val nyStonadRequest = NyStonadRequest(
+      "BIDRAG", "SAK-001", "Skyldner123",
+      "Kravhaver123", "MottakerId123", "R153961",
+      "R153961", periodeListe
+    )
+
     val nyStonadOpprettet = stonadService.opprettStonad(nyStonadRequest)
 
     assertAll(
@@ -51,29 +74,117 @@ class StonadServiceTest {
   }
 
   @Test
-  fun `skal finne alle data for en stonad`() {
+  // Returnerer stønad og alle perioder som ikke er markert som ugyldige
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne alle gyldige perioder for en stønad`() {
     // Oppretter ny stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "Test",
-      opprettetAvSaksbehandlerId = "111"
-    ))
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    periodeListe.add(
+      NyPeriodeRequest(
+        periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"
+      )
+    )
+    periodeListe.add(
+      NyPeriodeRequest(
+        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"
+      )
+    )
+    periodeListe.add(
+      NyPeriodeRequest(
+        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"
+      )
+    )
+    periodeListe.add(
+      NyPeriodeRequest(
+        periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"
+      )
+    )
 
-    // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.finnStonadFraId(nyStonadOpprettet.stonadId)
+    val nyStonadRequest = NyStonadRequest(
+      "BIDRAG", "SAK-001", "Skyldner123",
+      "Kravhaver123", "MottakerId123", "R153961",
+      "R153961", periodeListe
+    )
+
+    stonadService.opprettStonad(nyStonadRequest)
+
+    val opprettetStonad = stonadService.finnStonad(nyStonadRequest.stonadType, nyStonadRequest.skyldnerId, nyStonadRequest.kravhaverId)
 
     assertAll(
-      Executable { assertThat(stonadFunnet).isNotNull() },
-    )
+      Executable { assertThat(opprettetStonad).isNotNull() },
+      Executable { assertThat(opprettetStonad!!.periodeListe.size).isEqualTo(3) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
+      Executable { assertThat(opprettetStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      )
+  }
+
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne alle perioder for en stønad, også ugyldiggjorte`() {
+    // Oppretter ny stonad
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+
+    val nyStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "Skyldner123","Kravhaver123",
+      "MottakerId123", "R153961","R153961", periodeListe)
+
+    stonadService.opprettStonad(nyStonadRequest)
+
+    val funnetStonad = stonadService.finnStonadInkludertUgyldigePerioder(nyStonadRequest.stonadType, nyStonadRequest.skyldnerId, nyStonadRequest.kravhaverId)
+
+    assertAll(
+      Executable { assertThat(funnetStonad).isNotNull() },
+      Executable { assertThat(funnetStonad!!.periodeListe.size).isEqualTo(4) },
+      Executable { assertThat(funnetStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+      Executable { assertThat(funnetStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
+      Executable { assertThat(funnetStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
+      Executable { assertThat(funnetStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
+      Executable { assertThat(funnetStonad!!.periodeListe[3].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+
+      )
   }
 
   @Test
-  fun `skal finne stonad fra sammensatt nokkel`() {
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne stønad fra sammensatt nøkkel`() {
     // Oppretter ny stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG",
-      skyldnerId = "Skyldner123",
-      kravhaverId = "Kravhaver123"
-    ))
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(
+      StonadDto(
+        stonadType = "BIDRAG",
+        skyldnerId = "Skyldner123",
+        kravhaverId = "Kravhaver123"
+      )
+    )
 
     // Finner stønaden som akkurat ble opprettet
     val stonadFunnet = stonadService.finnStonad(
@@ -88,13 +199,16 @@ class StonadServiceTest {
   }
 
   @Test
-  fun `skal finne stonad fra generert id`() {
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne stønad fra generert id`() {
     // Oppretter ny stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG",
-      skyldnerId = "Skyldner123",
-      kravhaverId = "Kravhaver123"
-    ))
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(
+      StonadDto(
+        stonadType = "BIDRAG",
+        skyldnerId = "Skyldner123",
+        kravhaverId = "Kravhaver123"
+      )
+    )
 
     // Finner stønaden som akkurat ble opprettet
     val stonadFunnet = stonadService.finnStonadFraId(
@@ -105,7 +219,76 @@ class StonadServiceTest {
       Executable { assertThat(stonadFunnet).isNotNull() },
     )
   }
+/*
+  @Test
+  @Suppress("NonAsciiCharacters")
+  // Test på at periode blir satt som ugyldig
+  fun `skal sette periode som ugyldig`() {
 
+
+  }*/
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  // oppdaterer eksisterende stønad og ugyldiggjør perioder som har blitt endret i nytt vedtak
+  fun `skal oppdatere eksisterende stønad`() {
+    // Oppretter først stønaden som skal endres etterpå
+    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
+    periodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+
+    val originalStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "Skyldner123","Kravhaver123",
+      "MottakerId123", "R153961","R153961", periodeListe)
+
+    stonadService.opprettStonad(originalStonadRequest)
+    val originalStonad = stonadService.finnStonadInkludertUgyldigePerioder(originalStonadRequest.stonadType, originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
+
+    // Oppretter så ny request som skal oppdatere eksisterende stønad
+    val oppdatertPeriodeListe = mutableListOf<NyPeriodeRequest>()
+    oppdatertPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+    oppdatertPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+    oppdatertPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+
+    val endretStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "Skyldner123","Kravhaver123",
+      "MottakerId123", "R153961","R153961", oppdatertPeriodeListe)
+
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    val endretStonad = stonadService.finnStonadInkludertUgyldigePerioder(endretStonadRequest.stonadType, endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
+
+    assertAll(
+      Executable { assertThat(endretStonad).isNotNull() },
+      Executable { assertThat(endretStonad!!.periodeListe.size).isEqualTo(3) },
+      Executable { assertThat(endretStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].periodeGjortUgyldigAvVedtakId).isEqualTo(1) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].periodeGjortUgyldigAvVedtakId).isNull() },
+      Executable { assertThat(endretStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[3].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+
+      )
+
+  }
 
 
 }
