@@ -274,6 +274,7 @@ class StonadServiceTest {
       Executable { assertThat(endretStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+      Executable { assertThat(endretStonad!!.periodeListe[0].periodeGjortUgyldigAvVedtakId).isNull() },
       Executable { assertThat(endretStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
@@ -285,6 +286,7 @@ class StonadServiceTest {
       Executable { assertThat(endretStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[3].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      Executable { assertThat(endretStonad!!.periodeListe[3].periodeGjortUgyldigAvVedtakId).isNull() },
 
       )
 

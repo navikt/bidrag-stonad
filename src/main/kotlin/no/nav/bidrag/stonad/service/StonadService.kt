@@ -86,6 +86,20 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
   fun endreStonad(originalStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
+    val oppdatertStonadDto = StonadDto(
+      stonadId = originalStonad.stonadId,
+      stonadType = originalStonad.stonadType,
+      sakId = originalStonad.sakId,
+      skyldnerId = originalStonad.skyldnerId,
+      kravhaverId = originalStonad.kravhaverId,
+      mottakerId = originalStonad.mottakerId,
+      opprettetAvSaksbehandlerId = originalStonad.opprettetAvSaksbehandlerId,
+      endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
+    )
+
+    val oppdatertStonad = persistenceService.oppdaterStonad(oppdatertStonadDto)
+
+
 
 
   }
