@@ -59,7 +59,7 @@ class DefaultBehandleHendelseService(
       )
     }
 
-    val oppdatertStonad =
+    val endringerStonad =
       NyStonadRequest(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
@@ -71,12 +71,7 @@ class DefaultBehandleHendelseService(
         periodeListe = periodeListe
       )
 
-    val endretStonad = stonadService.endreStonad(originalStonad, oppdatertStonad)
-
-/*    persistenceService.settAllePerioderSomOverlapperForStonadSomUgyldig(
-      vedtakHendelse.vedtakId,
-      originalStonad.periodeListe[0].vedtakId
-    )*/
+    val endretStonad = stonadService.endreStonad(originalStonad, endringerStonad)
 
   }
 

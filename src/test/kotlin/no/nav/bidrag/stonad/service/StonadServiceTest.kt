@@ -230,18 +230,18 @@ class StonadServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
-  // oppdaterer eksisterende stønad og ugyldiggjør perioder som har blitt endret i nytt vedtak
-  fun `skal oppdatere eksisterende stønad`() {
+  // endrer eksisterende stønad og ugyldiggjør perioder som har blitt endret i nytt vedtak
+  fun `skal endre eksisterende stønad`() {
     // Oppretter først stønaden som skal endres etterpå
     val periodeListe = mutableListOf<NyPeriodeRequest>()
     periodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2021-03-01"),
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
     periodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-07-01"),
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
     periodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-07-01"), periodeTil = LocalDate.parse("2021-12-01"),
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "Skyldner123","Kravhaver123",
@@ -251,42 +251,68 @@ class StonadServiceTest {
     val originalStonad = stonadService.finnStonadInkludertUgyldigePerioder(originalStonadRequest.stonadType, originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
 
     // Oppretter så ny request som skal oppdatere eksisterende stønad
-    val oppdatertPeriodeListe = mutableListOf<NyPeriodeRequest>()
-    oppdatertPeriodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
-    oppdatertPeriodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+    val endretStonadPeriodeListe = mutableListOf<NyPeriodeRequest>()
+    endretStonadPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+    endretStonadPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-06-01"), periodeTil = LocalDate.parse("2021-08-01"),
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
-    oppdatertPeriodeListe.add(
-      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+    endretStonadPeriodeListe.add(
+      NyPeriodeRequest(periodeFom = LocalDate.parse("2021-08-01"), periodeTil = LocalDate.parse("2021-10-01"),
+        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.03), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", oppdatertPeriodeListe)
+      "MottakerId123", "R153961","R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.finnStonadInkludertUgyldigePerioder(endretStonadRequest.stonadType, endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
 
     assertAll(
+      // Perioder sorteres på periodeGjortUgyldigAvVedtakId så fom-dato. Perioder med null i periodeGjortUgyldigAvVedtakId kommer først.
       Executable { assertThat(endretStonad).isNotNull() },
-      Executable { assertThat(endretStonad!!.periodeListe.size).isEqualTo(3) },
-      Executable { assertThat(endretStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe.size).isEqualTo(8) },
+      // Første periode er før perioder for nytt vedtak, blir ikke endret
+      Executable { assertThat(endretStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
       Executable { assertThat(endretStonad!!.periodeListe[0].periodeGjortUgyldigAvVedtakId).isNull() },
+      // Avkortet utgave av ugyldiggjort periode med til-dato lik fom-dato for nytt vedtak
       Executable { assertThat(endretStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
-      Executable { assertThat(endretStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
       Executable { assertThat(endretStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
-      Executable { assertThat(endretStonad!!.periodeListe[1].periodeGjortUgyldigAvVedtakId).isEqualTo(1) },
-      Executable { assertThat(endretStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
-      Executable { assertThat(endretStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
-      Executable { assertThat(endretStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
+      Executable { assertThat(endretStonad!!.periodeListe[1].periodeGjortUgyldigAvVedtakId).isNull() },
+      // Periode fra nytt vedtak
+      Executable { assertThat(endretStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-05-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-06-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(5000.01)) },
       Executable { assertThat(endretStonad!!.periodeListe[2].periodeGjortUgyldigAvVedtakId).isNull() },
-      Executable { assertThat(endretStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
-      Executable { assertThat(endretStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-05-01")) },
-      Executable { assertThat(endretStonad!!.periodeListe[3].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      // Periode fra nytt vedtak
+      Executable { assertThat(endretStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-06-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-08-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[3].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
       Executable { assertThat(endretStonad!!.periodeListe[3].periodeGjortUgyldigAvVedtakId).isNull() },
+      // Periode fra nytt vedtak
+      Executable { assertThat(endretStonad!!.periodeListe[4].periodeFom).isEqualTo(LocalDate.parse("2021-08-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[4].periodeTil).isEqualTo(LocalDate.parse("2021-10-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[4].belop).isEqualTo(BigDecimal.valueOf(5000.03)) },
+      Executable { assertThat(endretStonad!!.periodeListe[4].periodeGjortUgyldigAvVedtakId).isNull() },
+      // Avkortet utgave av ugyldiggjort periode med fom-dato lik til-dato for nytt vedtak
+      Executable { assertThat(endretStonad!!.periodeListe[5].periodeFom).isEqualTo(LocalDate.parse("2021-10-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[5].periodeTil).isEqualTo(LocalDate.parse("2021-12-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[5].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      Executable { assertThat(endretStonad!!.periodeListe[5].periodeGjortUgyldigAvVedtakId).isNull() },
+
+      // Perioden overlapper med nytt vedtak, settes til ugyldig
+      Executable { assertThat(endretStonad!!.periodeListe[6].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[6].periodeTil).isEqualTo(LocalDate.parse("2021-07-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[6].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
+      Executable { assertThat(endretStonad!!.periodeListe[6].periodeGjortUgyldigAvVedtakId).isEqualTo(1) },
+      // Perioden overlapper med nytt vedtak, settes til ugyldig
+      Executable { assertThat(endretStonad!!.periodeListe[7].periodeFom).isEqualTo(LocalDate.parse("2021-07-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[7].periodeTil).isEqualTo(LocalDate.parse("2021-12-01")) },
+      Executable { assertThat(endretStonad!!.periodeListe[7].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      Executable { assertThat(endretStonad!!.periodeListe[7].periodeGjortUgyldigAvVedtakId).isEqualTo(1) },
 
       )
 

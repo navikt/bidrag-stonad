@@ -11,6 +11,7 @@ import no.nav.bidrag.stonad.dto.StonadDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @Service
 @Transactional
@@ -85,7 +86,7 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreStonad(originalStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
+  fun endreStonad(originalStonad: FinnStonadResponse, endringerStonad: NyStonadRequest) {
     val oppdatertStonadDto = StonadDto(
       stonadId = originalStonad.stonadId,
       stonadType = originalStonad.stonadType,
@@ -94,14 +95,62 @@ class StonadService(val persistenceService: PersistenceService) {
       kravhaverId = originalStonad.kravhaverId,
       mottakerId = originalStonad.mottakerId,
       opprettetAvSaksbehandlerId = originalStonad.opprettetAvSaksbehandlerId,
-      endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
+      endretAvSaksbehandlerId = endringerStonad.endretAvSaksbehandlerId
     )
 
     val oppdatertStonad = persistenceService.oppdaterStonad(oppdatertStonadDto)
 
+    val endringerStonadDatoFom = endringerStonad.periodeListe.first().periodeFom
+    val endringerStonadDatoTil = endringerStonad.periodeListe.last().periodeTil
+    val endringerStonadVedtakId = endringerStonad.periodeListe.first().vedtakId
+
+    originalStonad.periodeListe.forEach { periode ->
+      if (periode.periodeFom.isBefore(endringerStonadDatoFom.plusDays(1))) {
+        if (periode.periodeTil == null || periode.periodeTil.isAfter(endringerStonadDatoFom)) {
+          // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny til-dato
+          persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
+          lagNyPeriodeMedEndretTilDato(periode, endringerStonadDatoFom)
+
+        }
+      } else if (periode.periodeFom.isBefore(endringerStonadDatoTil)) {
+        if (periode.periodeTil == null || periode.periodeTil.isAfter(endringerStonadDatoTil)) {
+          persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
+          lagNyPeriodeMedEndretFomDato(periode, endringerStonadDatoTil)
+
+        }
 
 
+      }
+    }
 
+  }
+
+  fun lagNyPeriodeMedEndretFomDato(periode: PeriodeDto, nyFomDato: LocalDate?) {
+    persistenceService.opprettNyPeriode(
+      PeriodeDto(
+        periodeFom = periode.periodeFom,
+        periodeTil = nyFomDato,
+        stonadId = periode.stonadId,
+        vedtakId = periode.vedtakId,
+        belop = periode.belop,
+        valutakode = periode.valutakode,
+        resultatkode = periode.resultatkode
+      )
+    )
+  }
+
+  fun lagNyPeriodeMedEndretTilDato(periode: PeriodeDto, nyTilDato: LocalDate) {
+    persistenceService.opprettNyPeriode(
+      PeriodeDto(
+        periodeFom = periode.periodeFom,
+        periodeTil = nyTilDato,
+        stonadId = periode.stonadId,
+        vedtakId = periode.vedtakId,
+        belop = periode.belop,
+        valutakode = periode.valutakode,
+        resultatkode = periode.resultatkode
+      )
+    )
   }
 
 }

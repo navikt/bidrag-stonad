@@ -11,7 +11,7 @@ interface PeriodeRepository : CrudRepository<Periode, Int?>{
   fun finnPerioderForStonad(stonadId: Int): List<Periode>
 
   @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId")
+    "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId desc, pe.periodeFom ")
   fun finnPerioderForStonadInkludertUgyldige(stonadId: Int): List<Periode>
 
 
