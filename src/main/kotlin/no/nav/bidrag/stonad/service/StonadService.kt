@@ -105,27 +105,44 @@ class StonadService(val persistenceService: PersistenceService) {
     val endringerStonadVedtakId = endringerStonad.periodeListe.first().vedtakId
 
     originalStonad.periodeListe.forEach { periode ->
-      if (periode.periodeFom.isBefore(endringerStonadDatoFom.plusDays(1))) {
-        if (periode.periodeTil == null || periode.periodeTil.isAfter(endringerStonadDatoFom)) {
-          // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny til-dato
-          persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
-          lagNyPeriodeMedEndretTilDato(periode, endringerStonadDatoFom)
-
-        }
-      } else if (periode.periodeFom.isBefore(endringerStonadDatoTil)) {
-        if (periode.periodeTil == null || periode.periodeTil.isAfter(endringerStonadDatoTil)) {
-          persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
-          lagNyPeriodeMedEndretFomDato(periode, endringerStonadDatoTil)
-
-        }
-
-
+      val statusOverlapp = finnOverlappPeriode(periode, endringerStonadDatoFom, endringerStonadDatoTil)
+      if (statusOverlapp == "OverlappEndreFomDato") {
+        // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny fom-dato
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
+        lagNyPeriodeMedEndretFomDato(periode, endringerStonadDatoTil!!)
+      } else if ( statusOverlapp == "OverlappEndreTildato") {
+        // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny til-dato
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
+        lagNyPeriodeMedEndretTilDato(periode, endringerStonadDatoFom)
+      } else if ( statusOverlapp == "FullOverLapp") {
+        // Setter opprinnelige periode som ugyldig
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
       }
-    }
 
+    }
   }
 
-  fun lagNyPeriodeMedEndretFomDato(periode: PeriodeDto, nyFomDato: LocalDate?) {
+  fun finnOverlappPeriode(periode: PeriodeDto, endringerStonadDatoFom: LocalDate, endringerStonadDatoTil: LocalDate?): String {
+    var statusOverlapp: String = ""
+    if (periode.periodeFom.isBefore(endringerStonadDatoFom)) {
+      statusOverlapp = if (periode.periodeTil == null || periode.periodeTil.isAfter(endringerStonadDatoFom)) {
+        "OverlappEndreTildato"
+      } else {
+        "IngenOverlapp"
+      }
+    } else if (endringerStonadDatoTil == null) {
+      statusOverlapp = "FullOverLapp"
+    } else if (periode.periodeFom.isAfter(endringerStonadDatoTil.minusDays(1))) {
+      statusOverlapp = "IngenOverlapp"
+      } else if (periode.periodeTil == null) {
+        statusOverlapp = "OverlappEndreFomDato"
+      } else if (periode.periodeTil.isBefore(endringerStonadDatoTil.plusDays(1))) {
+      statusOverlapp = "FullOverlapp"
+    } else statusOverlapp = "OverlappEndreFomDato"
+    return statusOverlapp
+  }
+
+  fun lagNyPeriodeMedEndretFomDato(periode: PeriodeDto, nyFomDato: LocalDate) {
     persistenceService.opprettNyPeriode(
       PeriodeDto(
         periodeFom = periode.periodeFom,
