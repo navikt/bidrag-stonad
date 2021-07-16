@@ -314,8 +314,6 @@ class StonadServiceTest {
       Executable { assertThat(endretStonad!!.periodeListe[7].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
       Executable { assertThat(endretStonad!!.periodeListe[7].periodeGjortUgyldigAvVedtakId).isNull() },
 
-
-
       )
 
   }
