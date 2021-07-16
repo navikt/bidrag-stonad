@@ -86,40 +86,36 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreStonad(originalStonad: FinnStonadResponse, endringerStonad: NyStonadRequest) {
-    val oppdatertStonadDto = StonadDto(
-      stonadId = originalStonad.stonadId,
-      stonadType = originalStonad.stonadType,
-      sakId = originalStonad.sakId,
-      skyldnerId = originalStonad.skyldnerId,
-      kravhaverId = originalStonad.kravhaverId,
-      mottakerId = originalStonad.mottakerId,
-      opprettetAvSaksbehandlerId = originalStonad.opprettetAvSaksbehandlerId,
-      endretAvSaksbehandlerId = endringerStonad.endretAvSaksbehandlerId
-    )
+  fun endreStonad(eksisterendeStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
 
-    val oppdatertStonad = persistenceService.oppdaterStonad(oppdatertStonadDto)
+    val stonadId = eksisterendeStonad.stonadId
+    val endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
 
-    val endringerStonadDatoFom = endringerStonad.periodeListe.first().periodeFom
-    val endringerStonadDatoTil = endringerStonad.periodeListe.last().periodeTil
-    val endringerStonadVedtakId = endringerStonad.periodeListe.first().vedtakId
+    persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId)
 
-    originalStonad.periodeListe.forEach { periode ->
-      val statusOverlapp = finnOverlappPeriode(periode, endringerStonadDatoFom, endringerStonadDatoTil)
+    val oppdatertStonadDatoFom = oppdatertStonad.periodeListe.first().periodeFom
+    val oppdatertStonadDatoTil = oppdatertStonad.periodeListe.last().periodeTil
+    val oppdatertStonadVedtakId = oppdatertStonad.periodeListe.first().vedtakId
+
+    eksisterendeStonad.periodeListe.forEach { periode ->
+      val statusOverlapp = finnOverlappPeriode(periode, oppdatertStonadDatoFom, oppdatertStonadDatoTil)
       if (statusOverlapp == "OverlappEndreFomDato") {
         // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny fom-dato
-        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
-        lagNyPeriodeMedEndretFomDato(periode, endringerStonadDatoTil!!)
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
+        lagNyPeriodeMedEndretFomDato(periode, oppdatertStonadDatoTil!!)
       } else if ( statusOverlapp == "OverlappEndreTildato") {
         // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny til-dato
-        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
-        lagNyPeriodeMedEndretTilDato(periode, endringerStonadDatoFom)
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
+        lagNyPeriodeMedEndretTilDato(periode, oppdatertStonadDatoFom)
       } else if ( statusOverlapp == "FullOverLapp") {
         // Setter opprinnelige periode som ugyldig
-        persistenceService.settPeriodeSomUgyldig(periode.periodeId, endringerStonadVedtakId)
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
       }
-
     }
+    oppdatertStonad.periodeListe.forEach {
+      persistenceService.opprettNyPeriode(it.toPeriodeDto(stonadId))
+    }
+
   }
 
   fun finnOverlappPeriode(periode: PeriodeDto, endringerStonadDatoFom: LocalDate, endringerStonadDatoTil: LocalDate?): String {
@@ -145,10 +141,11 @@ class StonadService(val persistenceService: PersistenceService) {
   fun lagNyPeriodeMedEndretFomDato(periode: PeriodeDto, nyFomDato: LocalDate) {
     persistenceService.opprettNyPeriode(
       PeriodeDto(
-        periodeFom = periode.periodeFom,
-        periodeTil = nyFomDato,
+        periodeFom = nyFomDato,
+        periodeTil = periode.periodeTil,
         stonadId = periode.stonadId,
         vedtakId = periode.vedtakId,
+        periodeGjortUgyldigAvVedtakId = null,
         belop = periode.belop,
         valutakode = periode.valutakode,
         resultatkode = periode.resultatkode
@@ -163,6 +160,7 @@ class StonadService(val persistenceService: PersistenceService) {
         periodeTil = nyTilDato,
         stonadId = periode.stonadId,
         vedtakId = periode.vedtakId,
+        periodeGjortUgyldigAvVedtakId = null,
         belop = periode.belop,
         valutakode = periode.valutakode,
         resultatkode = periode.resultatkode

@@ -30,9 +30,8 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
-  fun oppdaterStonad(stonadDto: StonadDto): StonadDto {
-    val oppdatertStonad = stonadRepository.oppdaterStonad(stonadDto.stonadId, stonadDto.endretAvSaksbehandlerId, stonadDto.endretTimestamp)
-    return oppdatertStonad.toStonadDto()
+  fun oppdaterStonad(stonadId: Int, endretAvSaksbehandlerId: String) {
+    stonadRepository.oppdaterStonad(stonadId, endretAvSaksbehandlerId)
   }
 
   fun finnStonadFraId(stonadId: Int): StonadDto? {

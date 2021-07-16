@@ -37,13 +37,13 @@ class DefaultBehandleHendelseService(
     )
     if (eksisterendeStonad != null) {
       // Mottatt Hendelse skal oppdatere eksisterende stønad
-      endreStonad(vedtakHendelse, eksisterendeStonad)
+      endreStonad(eksisterendeStonad, vedtakHendelse)
     } else {
       opprettStonad(vedtakHendelse)
     }
   }
 
-  private fun endreStonad(vedtakHendelse: VedtakHendelse, originalStonad: FinnStonadResponse) {
+  private fun endreStonad(eksisterendeStonad: FinnStonadResponse, vedtakHendelse: VedtakHendelse) {
     val periodeListe = mutableListOf<NyPeriodeRequest>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(
@@ -59,7 +59,7 @@ class DefaultBehandleHendelseService(
       )
     }
 
-    val endringerStonad =
+    val oppdatertStonad =
       NyStonadRequest(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
@@ -71,7 +71,7 @@ class DefaultBehandleHendelseService(
         periodeListe = periodeListe
       )
 
-    val endretStonad = stonadService.endreStonad(originalStonad, endringerStonad)
+    stonadService.endreStonad(eksisterendeStonad, oppdatertStonad)
 
   }
 

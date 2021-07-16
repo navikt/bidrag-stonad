@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.persistence.repository
 
 import no.nav.bidrag.stonad.persistence.entity.Periode
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
@@ -15,7 +16,8 @@ interface PeriodeRepository : CrudRepository<Periode, Int?>{
   fun finnPerioderForStonadInkludertUgyldige(stonadId: Int): List<Periode>
 
 
-@Query(
+  @Query(
   "update Periode pe set pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.periodeId = :periodeId")
+  @Modifying
   fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int)
 }
