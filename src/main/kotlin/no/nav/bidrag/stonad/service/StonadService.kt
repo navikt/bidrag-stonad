@@ -61,7 +61,7 @@ class StonadService(val persistenceService: PersistenceService) {
     } else return null
   }
 
-  fun finnStonadInkludertUgyldigePerioder(
+  fun finnStonadInkludertUgyldiggjortePerioder(
     stonadType: String,
     skyldnerId: String,
     kravhaverId: String
@@ -69,7 +69,7 @@ class StonadService(val persistenceService: PersistenceService) {
     val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
     if (stonadDto != null) {
       val periodeDtoListe =
-        persistenceService.finnPerioderForStonadInkludertUgyldige(stonadDto.stonadId)
+        persistenceService.finnPerioderForStonadInkludertUgyldiggjorte(stonadDto.stonadId)
       return lagFinnStonadResponse(stonadDto, periodeDtoListe)
     } else return null
   }
@@ -105,40 +105,56 @@ class StonadService(val persistenceService: PersistenceService) {
     eksisterendeStonad.periodeListe.forEach { periode ->
       val justertPeriode = finnOverlappPeriode(periode, oppdatertStonad)
       if (justertPeriode.settPeriodeSomUgyldig) {
-        // Setter opprinnelige periode som ugyldig og lager en ny periode med like data, men med ny fom-dato
+        // Setter opprinnelige periode som ugyldig
         persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
-        // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
-        if (justertPeriode.oppdaterPeriode) {
-          persistenceService.opprettNyPeriode(justertPeriode.periode)
+      }
+      // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
+      if (justertPeriode.oppdaterPerioder) {
+        justertPeriode.periodeListe.forEach { periode ->
+          persistenceService.opprettNyPeriode(periode)
         }
       }
     }
 
     oppdatertStonad.periodeListe.forEach {
       persistenceService.opprettNyPeriode(it.toPeriodeDto(stonadId))
+
     }
   }
 
 
-  fun finnOverlappPeriode(periode: PeriodeDto, oppdatertStonad: NyStonadRequest): OppdatertPeriode {
+  fun finnOverlappPeriode(eksisterendePeriode: PeriodeDto, oppdatertStonad: NyStonadRequest): OppdatertPeriode {
+    val periodeDtoListe = mutableListOf<PeriodeDto>()
     val oppdatertStonadDatoFom = oppdatertStonad.periodeListe.first().periodeFom
     val oppdatertStonadDatoTil = oppdatertStonad.periodeListe.last().periodeTil
-    if (periode.periodeFom.isBefore(oppdatertStonadDatoFom)) {
-      if (periode.periodeTil == null || periode.periodeTil.isAfter(oppdatertStonadDatoFom)) {
-        return OppdatertPeriode(lagNyPeriodeMedEndretTilDato(periode, oppdatertStonadDatoFom), true, false)
+    if (eksisterendePeriode.periodeFom.isBefore(oppdatertStonadDatoFom)) {
+      if (eksisterendePeriode.periodeTil == null || eksisterendePeriode.periodeTil.isAfter(oppdatertStonadDatoFom)
+        && oppdatertStonadDatoTil != null) {
+        periodeDtoListe.add(lagNyPeriodeMedEndretTilDato(eksisterendePeriode, oppdatertStonadDatoFom))
+        periodeDtoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStonadDatoTil!!))
+        return OppdatertPeriode(periodeDtoListe,true,true)
       } else {
-        return OppdatertPeriode(periode, false, false)
+        periodeDtoListe.add(eksisterendePeriode)
+        return OppdatertPeriode(periodeDtoListe, false, false)
       }
+
     } else if (oppdatertStonadDatoTil == null) {
-      return OppdatertPeriode(periode, false, false)
-    } else if (periode.periodeFom.isAfter(oppdatertStonadDatoTil.minusDays(1))) {
-      return OppdatertPeriode(periode, false, false)
-    } else if (periode.periodeTil == null) {
-      return OppdatertPeriode(lagNyPeriodeMedEndretFomDato(periode, oppdatertStonadDatoFom), true, false)
-    } else if (periode.periodeTil.isBefore(oppdatertStonadDatoTil.plusDays(1))) {
-      return OppdatertPeriode(lagNyPeriodeMedEndretFomDato(periode, oppdatertStonadDatoFom), true, false)
-    } else return OppdatertPeriode(lagNyPeriodeMedEndretFomDato(periode, oppdatertStonadDatoFom),true,false
-    )
+      periodeDtoListe.add(eksisterendePeriode)
+      return OppdatertPeriode(periodeDtoListe, false, true)
+
+    } else if (eksisterendePeriode.periodeFom.isAfter(oppdatertStonadDatoTil.minusDays(1))) {
+      periodeDtoListe.add(eksisterendePeriode)
+      return OppdatertPeriode(periodeDtoListe, false, false)
+    } else if (eksisterendePeriode.periodeTil == null) {
+      periodeDtoListe.add(lagNyPeriodeMedEndretTilDato(eksisterendePeriode, oppdatertStonadDatoTil))
+      return OppdatertPeriode(periodeDtoListe, true,true)
+
+    } else if (eksisterendePeriode.periodeTil.isBefore(oppdatertStonadDatoTil.plusDays(1))) {
+      periodeDtoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStonadDatoFom))
+      return OppdatertPeriode(periodeDtoListe,false,true)
+    } else
+      periodeDtoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStonadDatoTil))
+      return OppdatertPeriode(periodeDtoListe, true, true)
   }
 
   fun lagNyPeriodeMedEndretFomDato(periode: PeriodeDto, nyFomDato: LocalDate): PeriodeDto {
@@ -171,7 +187,7 @@ class StonadService(val persistenceService: PersistenceService) {
 }
 
 data class OppdatertPeriode(
-  val periode: PeriodeDto,
-  val oppdaterPeriode: Boolean = false,
+  val periodeListe: List<PeriodeDto>,
+  val oppdaterPerioder: Boolean = false,
   val settPeriodeSomUgyldig: Boolean = false
 )

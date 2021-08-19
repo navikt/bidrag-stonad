@@ -8,12 +8,12 @@ import org.springframework.data.repository.CrudRepository
 interface PeriodeRepository : CrudRepository<Periode, Int?>{
 
   @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.periodeGjortUgyldigAvVedtakId IS NULL")
+    "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.periodeGjortUgyldigAvVedtakId IS NULL order by pe.periodeFom")
   fun finnPerioderForStonad(stonadId: Int): List<Periode>
 
   @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId desc, pe.periodeFom ")
-  fun finnPerioderForStonadInkludertUgyldige(stonadId: Int): List<Periode>
+    "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId asc, pe.periodeFom ")
+  fun finnPerioderForStonadInkludertUgyldiggjorte(stonadId: Int): List<Periode>
 
 
   @Query(

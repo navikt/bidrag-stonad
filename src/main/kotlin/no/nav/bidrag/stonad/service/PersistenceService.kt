@@ -125,9 +125,9 @@ class PersistenceService(
     return periodeDtoListe
   }
 
-  fun finnPerioderForStonadInkludertUgyldige(id: Int): List<PeriodeDto> {
+  fun finnPerioderForStonadInkludertUgyldiggjorte(id: Int): List<PeriodeDto> {
     val periodeDtoListe = mutableListOf<PeriodeDto>()
-    periodeRepository.finnPerioderForStonadInkludertUgyldige(id)
+    periodeRepository.finnPerioderForStonadInkludertUgyldiggjorte(id)
       .forEach { periode -> periodeDtoListe.add(periode.toPeriodeDto()) }
 
     return periodeDtoListe
