@@ -144,7 +144,7 @@ class StonadService(val persistenceService: PersistenceService) {
     } else if (eksisterendePeriode.periodeFom.isAfter(oppdatertStonadDatoTil.minusDays(1))) {
       periodeDtoListe.add(eksisterendePeriode)
       return OppdatertPeriode(periodeDtoListe, false, false)
-    } else if (eksisterendePeriode.periodeTil == null) {
+    } else if (eksisterendePeriode.periodeTil == null || eksisterendePeriode.periodeTil.isAfter(oppdatertStonadDatoTil)) {
       periodeDtoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStonadDatoTil))
       return OppdatertPeriode(periodeDtoListe, true,true)
 
