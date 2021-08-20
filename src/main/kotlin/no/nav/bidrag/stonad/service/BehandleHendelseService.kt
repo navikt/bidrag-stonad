@@ -32,8 +32,8 @@ class DefaultBehandleHendelseService(
   private fun behandleVedtakHendelse(vedtakHendelse: VedtakHendelse) {
     val eksisterendeStonad = stonadService.finnStonad(
       vedtakHendelse.stonadType,
-      vedtakHendelse.kravhaverId,
-      vedtakHendelse.skyldnerId
+      vedtakHendelse.skyldnerId,
+      vedtakHendelse.kravhaverId
     )
     if (eksisterendeStonad != null) {
       // Mottatt Hendelse skal oppdatere eksisterende stønad
