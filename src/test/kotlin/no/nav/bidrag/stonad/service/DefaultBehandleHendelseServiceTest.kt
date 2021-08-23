@@ -129,7 +129,6 @@ internal class DefaultBehandleHendelseServiceTest {
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
-      Executable { Assertions.assertThat(originalStonad!!.stonadId).isEqualTo(1) },
       Executable { Assertions.assertThat(originalStonad!!.periodeListe.size).isEqualTo(3) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-02-01")) },

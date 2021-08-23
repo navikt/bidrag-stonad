@@ -5,7 +5,7 @@ import no.nav.bidrag.stonad.model.VedtakHendelsePeriode
 import java.time.LocalDateTime
 
 data class VedtakHendelse(
-  var vedtakId: Int = 0,
+  var vedtakId: Int,
   var stonadType: String = "",
   var sakId: String? = null,
   var skyldnerId: String = "",
