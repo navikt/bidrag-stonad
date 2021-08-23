@@ -90,5 +90,6 @@ spring:
   flyway.enabled: false
   datasource.type: com.zaxxer.hikari.HikariDataSource
   datasource.url: jdbc:h2:mem:default
+#  datasource.url: jdbc:h2:file:/Users/R153961/Dev/bidrag-stonad/src/main/resources/data
   h2.console.enabled: true
   jpa.hibernate.hbmddl-auto: create-drop

@@ -4,6 +4,7 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -27,6 +28,9 @@ class MottakerIdHistorikkServiceTest {
   private lateinit var stonadRepository: StonadRepository
 
   @Autowired
+  private lateinit var periodeRepository: PeriodeRepository
+
+  @Autowired
   private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
@@ -39,6 +43,7 @@ class MottakerIdHistorikkServiceTest {
   fun `init`() {
     // Sletter alle forekomster
     mottakerIdHistorikkRepository.deleteAll()
+    periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
 /*
@@ -96,6 +101,7 @@ class MottakerIdHistorikkServiceTest {
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].saksbehandlerId).isEqualTo(nyMottakerIdHistorikk.saksbehandlerId) },
     )
     mottakerIdHistorikkRepository.deleteAll()
+    periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
 
