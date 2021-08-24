@@ -13,8 +13,6 @@ data class VedtakHendelse(
   var mottakerId: String = "",
   var opprettetAvSaksbehandlerId: String = "",
   var opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
-  var endretAvSaksbehandlerId: String = "",
-  var endretTimestamp: LocalDateTime = LocalDateTime.now(),
   var periodeListe: List<VedtakHendelsePeriode>,
 
   var sporing: Sporingsdata? = null)

@@ -27,8 +27,7 @@ class StonadService(val persistenceService: PersistenceService) {
       skyldnerId = stonadRequest.skyldnerId,
       kravhaverId = stonadRequest.kravhaverId,
       mottakerId = stonadRequest.mottakerId,
-      opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId,
-      endretAvSaksbehandlerId = stonadRequest.endretAvSaksbehandlerId
+      opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId
     )
 
     val opprettetStonad = persistenceService.opprettNyStonad(stonadDto)
@@ -98,7 +97,7 @@ class StonadService(val persistenceService: PersistenceService) {
     val stonadId = eksisterendeStonad.stonadId
     val endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
 
-    persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId)
+    persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId!!)
 
     val oppdatertStonadVedtakId = oppdatertStonad.periodeListe.first().vedtakId
 
@@ -110,8 +109,8 @@ class StonadService(val persistenceService: PersistenceService) {
       }
       // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
       if (justertPeriode.oppdaterPerioder) {
-        justertPeriode.periodeListe.forEach { periode ->
-          persistenceService.opprettNyPeriode(periode)
+        justertPeriode.periodeListe.forEach {
+          persistenceService.opprettNyPeriode(it)
         }
       }
     }

@@ -9,7 +9,6 @@ import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.service.StonadService
-import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -62,30 +61,10 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
-/*  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
-  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Endrer mottaker-id på en eksisterende stønad")
-  @ApiResponses(
-    value = [
-      ApiResponse(responseCode = "200", description = "Mottaker-id endret"),
-      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt"),
-      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig"),
-      ApiResponse(responseCode = "500", description = "Serverfeil"),
-      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig")
-    ]
-  )
-
-  fun opprettNyStonaddsendring(@RequestBody request: NyStonadRequest): ResponseEntity<StonadDto>? {
-    val stonadsendringOpprettet = stonadService.opprettNyStonadsendring(request)
-    LOGGER.info("Følgende stønadsendring er opprettet: $stonadsendringOpprettet")
-    return ResponseEntity(stonadsendringOpprettet, HttpStatus.OK)
-  }*/
-
-
 
   companion object {
     const val STONAD_NY = "/stonad/ny"
     const val STONAD_SOK = "/stonad"
-    const val STONAD_ENDRE_MOTTAKER_ID = "/stonad/endre-mottaker-id"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
   }
 }
