@@ -40,11 +40,11 @@ data class Stonad(
   @Column(nullable = false, name = "opprettet_timestamp")
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
 
-  @Column(nullable = false, name = "endret_av")
-  val endretAvSaksbehandlerId: String = "",
+  @Column(nullable = true, name = "endret_av")
+  val endretAvSaksbehandlerId: String? = null,
 
-  @Column(nullable = false, name = "endret_timestamp")
-  val endretTimestamp: LocalDateTime = LocalDateTime.now()
+  @Column(nullable = true, name = "endret_timestamp")
+  val endretTimestamp: LocalDateTime? = null
 )
 
 fun Stonad.toStonadDto() = with(::StonadDto) {
