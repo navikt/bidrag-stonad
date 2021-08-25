@@ -52,13 +52,13 @@ class PersistenceService(
     return stonad?.toStonadDto()
   }
 
-  fun endreMottakerId(stonadId: Int, nyMottakerId: String) {
+  fun endreMottakerId(stonadId: Int, nyMottakerId: String, saksbehandler: String) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)
         )
       }
-    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId)
+    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, saksbehandler)
   }
 
   fun opprettNyMottakerIdHistorikk(dto: MottakerIdHistorikkDto): MottakerIdHistorikkDto {

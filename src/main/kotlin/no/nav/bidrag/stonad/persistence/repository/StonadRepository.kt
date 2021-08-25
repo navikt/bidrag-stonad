@@ -13,12 +13,12 @@ interface StonadRepository : CrudRepository<Stonad, Int?>{
   fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): Stonad?
 
   @Query(
-    "update Stonad st set st.endretAvSaksbehandlerId = :endretAv, st.endretTimestamp = CURRENT_TIMESTAMP where st.stonadId = :stonadId")
+    "update Stonad st set st.endretAvSaksbehandlerId = :saksbehandlerId, st.endretTimestamp = CURRENT_TIMESTAMP where st.stonadId = :stonadId")
   @Modifying
-  fun oppdaterStonadMedEndretAvSaksbehandlerIdOgTimestamp(stonadId: Int, endretAv: String)
+  fun oppdaterStonadMedEndretAvSaksbehandlerIdOgTimestamp(stonadId: Int, saksbehandlerId: String)
 
   @Query(
-    "update Stonad st set st.mottakerId = :mottakerId where st.stonadId = :stonadId")
+    "update Stonad st set st.mottakerId = :mottakerId, st.endretAvSaksbehandlerId = :saksbehandlerId, st.endretTimestamp = CURRENT_TIMESTAMP where st.stonadId = :stonadId")
   @Modifying
-  fun endreMottakerIdForStonad(stonadId: Int, mottakerId: String)
+  fun endreMottakerIdForStonad(stonadId: Int, mottakerId: String, saksbehandlerId: String)
 }
