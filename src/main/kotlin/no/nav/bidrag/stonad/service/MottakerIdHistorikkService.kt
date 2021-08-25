@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class MottakerIdHistorikkService (val persistenceService: PersistenceService) {
 
-  fun opprettNyMottakerIdHistorikk(request: EndreMottakerIdHistorikkRequest): MottakerIdHistorikkDto {
+  fun endreMottakerId(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
+    persistenceService.endreMottakerId(request.stonadId, request.mottakerIdEndretTil)
+
     val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId, mottakerIdEndretFra = request.mottakerIdEndretFra,
     mottakerIdEndretTil = request.mottakerIdEndretTil, saksbehandlerId = request.saksbehandlerId)
     return persistenceService.opprettNyMottakerIdHistorikk(mottakerIdHistorikkDto)

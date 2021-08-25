@@ -6,10 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.stonad.ISSUER
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.service.MottakerIdHistorikkService
-import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -37,10 +36,10 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
     ]
   )
 
-  fun opprettMottakerIdHistorikk(@RequestBody request: EndreMottakerIdHistorikkRequest): ResponseEntity<MottakerIdHistorikkDto>? {
-    val mottakerIdHistorikkOpprettet = mottakerIdHistorikkService.opprettNyMottakerIdHistorikk(request)
-    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdHistorikkOpprettet")
-    return ResponseEntity(mottakerIdHistorikkOpprettet, HttpStatus.OK)
+  fun opprettMottakerIdHistorikk(@RequestBody request: EndreMottakerIdRequest): ResponseEntity<MottakerIdHistorikkDto>? {
+    val mottakerIdEndret = mottakerIdHistorikkService.endreMottakerId(request)
+    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdEndret")
+    return ResponseEntity(mottakerIdEndret, HttpStatus.OK)
   }
 
 

@@ -15,5 +15,10 @@ interface StonadRepository : CrudRepository<Stonad, Int?>{
   @Query(
     "update Stonad st set st.endretAvSaksbehandlerId = :endretAv, st.endretTimestamp = CURRENT_TIMESTAMP where st.stonadId = :stonadId")
   @Modifying
-  fun oppdaterStonad(stonadId: Int, endretAv: String)
+  fun oppdaterStonadMedEndretAvSaksbehandlerIdOgTimestamp(stonadId: Int, endretAv: String)
+
+  @Query(
+    "update Stonad st set st.mottakerId = :mottakerId where st.stonadId = :stonadId")
+  @Modifying
+  fun endreMottakerIdForStonad(stonadId: Int, mottakerId: String)
 }
