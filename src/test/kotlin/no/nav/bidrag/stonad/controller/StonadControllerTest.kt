@@ -4,9 +4,11 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -156,6 +158,42 @@ class StonadControllerTest {
     stonadRepository.deleteAll()
   }
 
+  @Test
+  fun `skal endre mottakerId og opprette historikk`() {
+
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      stonadType = "BIDRAG",
+      sakId = "SAK-001",
+      skyldnerId = "01018011111",
+      kravhaverId = "01010511111",
+      mottakerId = "01018211111",
+      opprettetAvSaksbehandlerId = "X123456",
+      endretAvSaksbehandlerId =  "X654321"
+    ))
+
+    // Oppretter ny forekomst
+    val response = securedTestRestTemplate.exchange(
+      fullUrlForEndreMottakerIdStonad(),
+      HttpMethod.POST,
+      byggEndreMottakerIdRequest(nyStonadOpprettet.stonadId),
+      MottakerIdHistorikkDto::class.java
+    )
+
+    assertAll(
+      Executable { assertThat(response).isNotNull() },
+      Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
+      Executable { assertThat(response?.body).isNotNull() },
+      Executable { assertThat(response?.body?.mottakerIdEndretFra).isEqualTo("01018211111") },
+      Executable { assertThat(response?.body?.mottakerIdEndretTil).isEqualTo("123") },
+      Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo("Test") }
+    )
+    mottakerIdHistorikkRepository.deleteAll()
+    stonadRepository.deleteAll()
+  }
+
+  private fun byggEndreMottakerIdRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
+  }
 
   private fun fullUrlForNyStonad(): String {
     return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_NY).toUriString()
@@ -163,6 +201,10 @@ class StonadControllerTest {
 
   private fun fullUrlForSokStonad(): String {
     return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_SOK).toUriString()
+  }
+
+  private fun fullUrlForEndreMottakerIdStonad(): String {
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_ENDRE_MOTTAKER_ID).toUriString()
   }
 
   private fun makeFullContextPath(): String {

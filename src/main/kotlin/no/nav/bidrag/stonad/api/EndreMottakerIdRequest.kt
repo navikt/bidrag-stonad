@@ -10,15 +10,11 @@ data class EndreMottakerIdRequest(
   @Schema(description = "Stønad-id")
   val stonadId: Int = 0,
 
-  @Schema(description = "Mottaker-id som skal erstattes")
-  val mottakerIdEndretFra: String = "",
-
-  @Schema(description = "Mottaker-id som skal erstatte eksisterende id")
-  val mottakerIdEndretTil: String = "",
+  @Schema(description = "Ny Mottaker-id som skal erstatte eksisterende id")
+  val nyMottakerId: String = "",
 
   @Schema(description = "opprettet_av")
   val saksbehandlerId: String = ""
-
 )
 
 fun EndreMottakerIdRequest.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {

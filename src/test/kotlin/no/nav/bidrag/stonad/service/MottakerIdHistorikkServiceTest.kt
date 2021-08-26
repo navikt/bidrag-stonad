@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -82,10 +83,9 @@ class MottakerIdHistorikkServiceTest {
 
     // Oppretter ny mottakerIdHistorikk
     val nyMottakerIdHistorikk = persistenceService.opprettNyMottakerIdHistorikk(
-      MottakerIdHistorikkDto(
+      EndreMottakerIdRequest(
         nyStonadOpprettet.stonadId,
-        mottakerIdEndretFra = "123",
-        mottakerIdEndretTil = "321",
+        nyMottakerId = "123",
         saksbehandlerId = "Test"
       )
     )

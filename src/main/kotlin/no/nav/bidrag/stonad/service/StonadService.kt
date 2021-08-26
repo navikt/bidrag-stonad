@@ -1,11 +1,13 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
 import no.nav.bidrag.stonad.api.toPeriodeDto
 import no.nav.bidrag.stonad.controller.PeriodeController
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import org.slf4j.LoggerFactory
@@ -182,6 +184,12 @@ class StonadService(val persistenceService: PersistenceService) {
       valutakode = periode.valutakode,
       resultatkode = periode.resultatkode
     )
+  }
+
+  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
+    persistenceService.endreMottakerId(request.stonadId, request.nyMottakerId, request.saksbehandlerId)
+
+    return persistenceService.opprettNyMottakerIdHistorikk(request)
   }
 }
 
