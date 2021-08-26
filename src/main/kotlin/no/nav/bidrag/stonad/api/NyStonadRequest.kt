@@ -26,7 +26,7 @@ data class NyStonadRequest(
   val opprettetAvSaksbehandlerId: String = "",
 
   @Schema(description = "endret_av")
-  val endretAvSaksbehandlerId: String = "",
+  val endretAvSaksbehandlerId: String? = null,
 
   @Schema(description = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest> = emptyList()

@@ -48,10 +48,6 @@ internal class DefaultBehandleHendelseServiceTest {
     stonadRepository.deleteAll()
   }
 
-/*  @Test
-  @Suppress("NonAsciiCharacters")
-  fun `skal teste at`() {
-  }*/
 
   @Test
   @Suppress("NonAsciiCharacters")
@@ -63,7 +59,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val nyHendelse = VedtakHendelse(1, "BIDRAG", "SAK-001", "12345",
       "54321", "24680", "R153961",
-    LocalDateTime.now(), "R153961", LocalDateTime.now(), periodeliste)
+    LocalDateTime.now(), periodeliste)
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
@@ -77,7 +73,6 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaverId).isEqualTo("54321") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.mottakerId).isEqualTo("24680") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.opprettetAvSaksbehandlerId).isEqualTo("R153961") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.endretAvSaksbehandlerId).isEqualTo("R153961") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeFom)
         .isEqualTo(LocalDate.parse("2021-06-01")) },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeTil)
@@ -106,7 +101,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalHendelse = VedtakHendelse(1, "BIDRAG", "SAK-001", "Skyldner123",
       "Kravhaver123", "MottakerId123", "R153961",
-      LocalDateTime.now(), "R153961", LocalDateTime.now(), originalPeriodeliste)
+      LocalDateTime.now(), originalPeriodeliste)
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.finnStonad(originalHendelse.stonadType, originalHendelse.skyldnerId, originalHendelse.kravhaverId)
@@ -122,14 +117,13 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val hendelse = VedtakHendelse(2, "BIDRAG", "SAK-001", "Skyldner123",
       "Kravhaver123", "MottakerId123", "R153961",
-      LocalDateTime.now(), "R153961", LocalDateTime.now(), periodeliste)
+      LocalDateTime.now(), periodeliste)
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.finnStonad(hendelse.stonadType, hendelse.skyldnerId, hendelse.kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
-      Executable { Assertions.assertThat(originalStonad!!.stonadId).isEqualTo(1) },
       Executable { Assertions.assertThat(originalStonad!!.periodeListe.size).isEqualTo(3) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-02-01")) },

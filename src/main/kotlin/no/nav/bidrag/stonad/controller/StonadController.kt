@@ -5,11 +5,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.stonad.ISSUER
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.api.NyStonadResponse
+import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.service.StonadService
-import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -62,7 +63,7 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
-/*  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
+  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Endrer mottaker-id på en eksisterende stønad")
   @ApiResponses(
     value = [
@@ -74,13 +75,11 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettNyStonaddsendring(@RequestBody request: NyStonadRequest): ResponseEntity<StonadDto>? {
-    val stonadsendringOpprettet = stonadService.opprettNyStonadsendring(request)
-    LOGGER.info("Følgende stønadsendring er opprettet: $stonadsendringOpprettet")
-    return ResponseEntity(stonadsendringOpprettet, HttpStatus.OK)
-  }*/
-
-
+  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequest): ResponseEntity<MottakerIdHistorikkDto> {
+    val mottakerIdEndret = stonadService.endreMottakerIdOgOpprettHistorikk(request)
+    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdEndret")
+    return ResponseEntity(mottakerIdEndret, HttpStatus.OK)
+  }
 
   companion object {
     const val STONAD_NY = "/stonad/ny"

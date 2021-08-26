@@ -32,10 +32,10 @@ data class StonadDto(
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
 
   @Schema(description = "Id til saksbehandler som sist endret stønaden")
-  val endretAvSaksbehandlerId: String = "",
+  val endretAvSaksbehandlerId: String? = null,
 
   @Schema(description = "Endret timestamp")
-  val endretTimestamp: LocalDateTime = LocalDateTime.now()
+  val endretTimestamp: LocalDateTime? = null
 
 )
 

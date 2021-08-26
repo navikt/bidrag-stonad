@@ -4,7 +4,7 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.EndreMottakerIdHistorikkRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -64,7 +64,7 @@ class MottakerIdHistorikkControllerTest {
     assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
   }
 
-  @Test
+/*  @Test
   fun `skal opprette ny MottakerIdHistorikk`() {
 
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
@@ -95,7 +95,7 @@ class MottakerIdHistorikkControllerTest {
     )
     mottakerIdHistorikkRepository.deleteAll()
     stonadRepository.deleteAll()
-  }
+  }*/
 
   @Test
   fun `skal finne alle endringer av mottaker-id for en stonad`() {
@@ -111,10 +111,10 @@ class MottakerIdHistorikkControllerTest {
     ))
 
     val nyMottakerIdHistorikkOpprettet1 = persistenceService.opprettNyMottakerIdHistorikk(
-      MottakerIdHistorikkDto(nyStonadOpprettet.stonadId, "123", "654", "X123456"))
+      EndreMottakerIdRequest(nyStonadOpprettet.stonadId, "654", "X123456"))
 
     val nyMottakerIdHistorikkOpprettet2 = persistenceService.opprettNyMottakerIdHistorikk(
-      MottakerIdHistorikkDto(nyStonadOpprettet.stonadId, "246", "876", "X654321"))
+      EndreMottakerIdRequest(nyStonadOpprettet.stonadId,"876", "X654321"))
 
     // Henter forekomster
     val response = securedTestRestTemplate.exchange(
@@ -141,11 +141,6 @@ class MottakerIdHistorikkControllerTest {
     )
   }
 
-
-  private fun fullUrlForNyMottakerIdHistorikk(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + MottakerIdHistorikkController.MOTTAKER_ID_HISTORIKK_NY).toUriString()
-  }
-
   private fun fullUrlForSokAlleMottakerIdHistorikkForStonad(): String {
     return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + MottakerIdHistorikkController.MOTTAKER_ID_HISTORIKK_SOK).toUriString()
   }
@@ -154,8 +149,8 @@ class MottakerIdHistorikkControllerTest {
     return "http://localhost:$port$contextPath"
   }
 
-  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdHistorikkRequest> {
-    return initHttpEntity(EndreMottakerIdHistorikkRequest(stonadId, mottakerIdEndretFra = "123", mottakerIdEndretTil = "321", saksbehandlerId = "Test"))
+  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

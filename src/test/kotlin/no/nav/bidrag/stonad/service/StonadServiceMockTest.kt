@@ -64,7 +64,6 @@ class StonadServiceMockTest {
       Executable { assertThat(stonadDto.kravhaverId).isEqualTo("01010511111") },
       Executable { assertThat(stonadDto.mottakerId).isEqualTo("01018211111") },
       Executable { assertThat(stonadDto.opprettetAvSaksbehandlerId).isEqualTo("X123456") },
-      Executable { assertThat(stonadDto.endretAvSaksbehandlerId).isEqualTo("X654321") },
 
 
       // Sjekk PeriodeDto

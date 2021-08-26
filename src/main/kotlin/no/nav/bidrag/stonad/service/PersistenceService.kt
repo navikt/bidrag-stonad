@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.PeriodeDto
 import no.nav.bidrag.stonad.dto.StonadDto
@@ -31,7 +32,7 @@ class PersistenceService(
   }
 
   fun oppdaterStonad(stonadId: Int, endretAvSaksbehandlerId: String) {
-    stonadRepository.oppdaterStonad(stonadId, endretAvSaksbehandlerId)
+    stonadRepository.oppdaterStonadMedEndretAvSaksbehandlerIdOgTimestamp(stonadId, endretAvSaksbehandlerId)
   }
 
   fun finnStonadFraId(stonadId: Int): StonadDto? {
@@ -52,17 +53,30 @@ class PersistenceService(
     return stonad?.toStonadDto()
   }
 
-  fun opprettNyMottakerIdHistorikk(dto: MottakerIdHistorikkDto): MottakerIdHistorikkDto {
-    val eksisterendeStonad = stonadRepository.findById(dto.stonadId)
+  fun endreMottakerId(stonadId: Int, nyMottakerId: String, saksbehandler: String) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
+      .orElseThrow {
+        IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)
+        )
+      }
+    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, saksbehandler)
+  }
+
+  fun opprettNyMottakerIdHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
+    val eksisterendeStonad = stonadRepository.findById(request.stonadId)
       .orElseThrow {
         IllegalArgumentException(
           String.format(
             "Fant ikke stønad med id %d i databasen",
-            dto.stonadId
+            request.stonadId
           )
         )
       }
-    val nyMottakerIdHistorikk = dto.toMottakerIdHistorikkEntity(eksisterendeStonad)
+    val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId,
+      mottakerIdEndretFra = eksisterendeStonad.mottakerId, mottakerIdEndretTil = request.nyMottakerId,
+      saksbehandlerId = request.saksbehandlerId)
+
+    val nyMottakerIdHistorikk = mottakerIdHistorikkDto.toMottakerIdHistorikkEntity(eksisterendeStonad)
     val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
     return mottakerIdHistorikk.toMottakerIdHistorikkDto()
   }
