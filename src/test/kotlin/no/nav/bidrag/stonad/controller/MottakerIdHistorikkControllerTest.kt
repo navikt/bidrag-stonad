@@ -98,7 +98,8 @@ class MottakerIdHistorikkControllerTest {
   }*/
 
   @Test
-  fun `skal finne alle endringer av mottaker-id for en stonad`() {
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne alle endringer av mottaker-id for en stønad`() {
     // Oppretter nye forekomster
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG",
