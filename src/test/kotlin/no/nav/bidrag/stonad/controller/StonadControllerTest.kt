@@ -59,8 +59,6 @@ class StonadControllerTest {
   @LocalServerPort
   private val port = 0
 
-  @Value("\${server.servlet.context-path}")
-  private val contextPath: String? = null
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
@@ -71,7 +69,7 @@ class StonadControllerTest {
 
   @Test
   fun `skal mappe til context path med random port`() {
-    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
+    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port")
   }
 
   @Test
@@ -208,7 +206,7 @@ class StonadControllerTest {
   }
 
   private fun makeFullContextPath(): String {
-    return "http://localhost:$port$contextPath"
+    return "http://localhost:$port"
   }
 
   private fun byggStonadRequest(): HttpEntity<NyStonadRequest> {
