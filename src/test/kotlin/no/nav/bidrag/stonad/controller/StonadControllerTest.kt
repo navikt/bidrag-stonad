@@ -58,7 +58,7 @@ class StonadControllerTest {
 
   @LocalServerPort
   private val port = 0
-  
+
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster

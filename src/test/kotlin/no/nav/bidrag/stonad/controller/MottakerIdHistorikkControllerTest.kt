@@ -49,9 +49,6 @@ class MottakerIdHistorikkControllerTest {
   @LocalServerPort
   private val port = 0
 
-  @Value("\${server.servlet.context-path}")
-  private val contextPath: String? = null
-
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
@@ -61,41 +58,8 @@ class MottakerIdHistorikkControllerTest {
 
   @Test
   fun `skal mappe til context path med random port`() {
-    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port/bidrag-stonad")
+    assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port")
   }
-
-/*  @Test
-  fun `skal opprette ny MottakerIdHistorikk`() {
-
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
-      stonadType = "BIDRAG",
-      sakId = "SAK-001",
-      skyldnerId = "01018011111",
-      kravhaverId = "01010511111",
-      mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"
-    ))
-
-    // Oppretter ny forekomst
-    val response = securedTestRestTemplate.exchange(
-      fullUrlForNyMottakerIdHistorikk(),
-      HttpMethod.POST,
-      byggRequest(nyStonadOpprettet.stonadId),
-      MottakerIdHistorikkDto::class.java
-    )
-
-    assertAll(
-      Executable { assertThat(response).isNotNull() },
-      Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
-      Executable { assertThat(response?.body).isNotNull() },
-      Executable { assertThat(response?.body?.mottakerIdEndretFra).isEqualTo("123") },
-      Executable { assertThat(response?.body?.mottakerIdEndretTil).isEqualTo("321") },
-      Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo("Test") }
-    )
-    mottakerIdHistorikkRepository.deleteAll()
-    stonadRepository.deleteAll()
-  }*/
 
   @Test
   @Suppress("NonAsciiCharacters")
@@ -147,7 +111,7 @@ class MottakerIdHistorikkControllerTest {
   }
 
   private fun makeFullContextPath(): String {
-    return "http://localhost:$port$contextPath"
+    return "http://localhost:$port"
   }
 
   private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
