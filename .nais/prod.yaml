@@ -1,0 +1,6 @@
+name: bidrag-stonad
+ingress: https://bidrag-stonad.intern.nav.no
+dbname: bidrag-stonad-prod
+kafka:
+  pool: nav-prod
+kafka-topic-vedtak: bidrag.vedtak
