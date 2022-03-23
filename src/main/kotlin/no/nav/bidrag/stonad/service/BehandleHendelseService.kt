@@ -1,9 +1,9 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
-import no.nav.bidrag.stonad.hendelse.StonadType
 import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -26,12 +26,15 @@ class DefaultBehandleHendelseService(
     when (vedtakHendelse.hentStonadType()) {
       StonadType.BIDRAG, StonadType.FORSKUDD -> behandleVedtakHendelse(vedtakHendelse)
       StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.stonadType}'")
+      else -> {
+        LOGGER.warn("bidrag-stønad ukjent stønadtype '${vedtakHendelse.stonadType}'")
+      }
     }
   }
 
   private fun behandleVedtakHendelse(vedtakHendelse: VedtakHendelse) {
     val eksisterendeStonad = stonadService.finnStonad(
-      vedtakHendelse.stonadType,
+      vedtakHendelse.stonadType.toString(),
       vedtakHendelse.skyldnerId,
       vedtakHendelse.kravhaverId
     )
@@ -66,8 +69,8 @@ class DefaultBehandleHendelseService(
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
-        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAvSaksbehandlerId,
-        endretAvSaksbehandlerId = vedtakHendelse.opprettetAvSaksbehandlerId,
+        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAv,
+        endretAvSaksbehandlerId = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
 
@@ -99,7 +102,7 @@ class DefaultBehandleHendelseService(
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
-        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAvSaksbehandlerId,
+        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
     )

@@ -5,7 +5,6 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.web.server.LocalServerPort
@@ -115,7 +113,7 @@ class MottakerIdHistorikkControllerTest {
   }
 
   private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

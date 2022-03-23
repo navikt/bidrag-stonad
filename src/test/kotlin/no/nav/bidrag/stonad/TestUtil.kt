@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad
 
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
@@ -13,7 +14,7 @@ class TestUtil {
   companion object {
 
     fun byggStonadRequest() = NyStonadRequest(
-      stonadType = "BIDRAG",
+      stonadType = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",

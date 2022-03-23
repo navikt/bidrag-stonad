@@ -74,7 +74,7 @@ class PersistenceService(
       }
     val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId,
       mottakerIdEndretFra = eksisterendeStonad.mottakerId, mottakerIdEndretTil = request.nyMottakerId,
-      saksbehandlerId = request.saksbehandlerId)
+      saksbehandlerId = request.opprettetAv)
 
     val nyMottakerIdHistorikk = mottakerIdHistorikkDto.toMottakerIdHistorikkEntity(eksisterendeStonad)
     val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)

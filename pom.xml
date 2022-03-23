@@ -31,6 +31,7 @@
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
     <springdoc-openapi-ui.version>1.6.5</springdoc-openapi-ui.version>
     <nimbus-jose-jwt.version>9.18</nimbus-jose-jwt.version>
+    <bidrag-behandling-felles.version>0.0.4</bidrag-behandling-felles.version>
   </properties>
 
   <dependencyManagement>
@@ -78,6 +79,11 @@
     </dependency>
 
     <!-- nav -->
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-behandling-felles</artifactId>
+      <version>${bidrag-behandling-felles.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>

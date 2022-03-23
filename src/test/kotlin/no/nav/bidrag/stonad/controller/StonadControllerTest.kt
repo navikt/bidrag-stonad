@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.web.server.LocalServerPort
@@ -149,7 +148,7 @@ class StonadControllerTest {
       Executable { assertThat(response?.body?.skyldnerId).isEqualTo(nyStonadOpprettet.skyldnerId) },
       Executable { assertThat(response?.body?.kravhaverId).isEqualTo(nyStonadOpprettet.kravhaverId) },
       Executable { assertThat(response?.body?.mottakerId).isEqualTo(nyStonadOpprettet.mottakerId) },
-      Executable { assertThat(response?.body?.opprettetAvSaksbehandlerId).isEqualTo(nyStonadOpprettet.opprettetAvSaksbehandlerId) },
+      Executable { assertThat(response?.body?.opprettetAv).isEqualTo(nyStonadOpprettet.opprettetAvSaksbehandlerId) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
@@ -190,7 +189,7 @@ class StonadControllerTest {
   }
 
   private fun byggEndreMottakerIdRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun fullUrlForNyStonad(): String {
