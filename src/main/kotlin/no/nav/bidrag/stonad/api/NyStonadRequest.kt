@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.api
 
 import io.swagger.v3.oas.annotations.media.Schema
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.dto.StonadDto
 import kotlin.reflect.full.memberProperties
 
@@ -8,28 +9,28 @@ import kotlin.reflect.full.memberProperties
 data class NyStonadRequest(
 
   @Schema(description = "Stønadstype")
-  val stonadType: String = "",
+  val stonadType: StonadType,
 
   @Schema(description = "Referanse til sak")
   val sakId: String? = null,
 
   @Schema(description = "Id til den som skal betale bidraget")
-  val skyldnerId: String = "",
+  val skyldnerId: String,
 
   @Schema(description = "Id til den som krever bidraget")
-  val kravhaverId: String = "",
+  val kravhaverId: String,
 
   @Schema(description = "Id til den som mottar bidraget")
-  val mottakerId: String = "",
+  val mottakerId: String,
 
   @Schema(description = "opprettet_av")
-  val opprettetAvSaksbehandlerId: String = "",
+  val opprettetAv: String,
 
   @Schema(description = "endret_av")
-  val endretAvSaksbehandlerId: String? = null,
+  val endretAv: String? = null,
 
   @Schema(description = "Liste over alle perioder som inngår i stønaden")
-  val periodeListe: List<NyPeriodeRequest> = emptyList()
+  val periodeListe: List<NyPeriodeRequest>
 )
 
 fun NyStonadRequest.toStonadDto(stonadId: Int) = with(::StonadDto) {

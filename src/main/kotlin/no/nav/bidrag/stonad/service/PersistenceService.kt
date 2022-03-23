@@ -31,8 +31,8 @@ class PersistenceService(
     return stonad.toStonadDto()
   }
 
-  fun oppdaterStonad(stonadId: Int, endretAvSaksbehandlerId: String) {
-    stonadRepository.oppdaterStonadMedEndretAvSaksbehandlerIdOgTimestamp(stonadId, endretAvSaksbehandlerId)
+  fun oppdaterStonad(stonadId: Int, opprettetAv: String) {
+    stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
   fun finnStonadFraId(stonadId: Int): StonadDto? {
@@ -53,13 +53,13 @@ class PersistenceService(
     return stonad?.toStonadDto()
   }
 
-  fun endreMottakerId(stonadId: Int, nyMottakerId: String, saksbehandler: String) {
+  fun endreMottakerId(stonadId: Int, nyMottakerId: String, opprettetAv: String) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)
         )
       }
-    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, saksbehandler)
+    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)
   }
 
   fun opprettNyMottakerIdHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
@@ -74,7 +74,7 @@ class PersistenceService(
       }
     val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId,
       mottakerIdEndretFra = eksisterendeStonad.mottakerId, mottakerIdEndretTil = request.nyMottakerId,
-      saksbehandlerId = request.saksbehandlerId)
+      opprettetAv = request.opprettetAv)
 
     val nyMottakerIdHistorikk = mottakerIdHistorikkDto.toMottakerIdHistorikkEntity(eksisterendeStonad)
     val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)

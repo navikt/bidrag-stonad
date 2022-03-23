@@ -18,7 +18,7 @@ data class MottakerIdHistorikkDto(
   val mottakerIdEndretTil: String = "",
 
   @Schema(description = "Saksbehandler som har oppdatert mottaker-id")
-  val saksbehandlerId: String = "",
+  val opprettetAv: String = "",
 
   @Schema(description = "Opprettet timestamp")
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now()

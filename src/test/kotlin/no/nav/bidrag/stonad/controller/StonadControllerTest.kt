@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.web.server.LocalServerPort
@@ -103,8 +102,8 @@ class StonadControllerTest {
         skyldnerId = "01018011111",
         kravhaverId = "01010511111",
         mottakerId = "01018211111",
-        opprettetAvSaksbehandlerId = "X123456",
-        endretAvSaksbehandlerId =  "X654321"
+        opprettetAv = "X123456",
+        endretAv =  "X654321"
       ))
 
     val periodeListe = listOf(
@@ -144,12 +143,12 @@ class StonadControllerTest {
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
-      Executable { assertThat(response?.body?.stonadType).isEqualTo(nyStonadOpprettet.stonadType) },
+      Executable { assertThat(response?.body?.stonadType.toString()).isEqualTo(nyStonadOpprettet.stonadType) },
       Executable { assertThat(response?.body?.sakId).isEqualTo(nyStonadOpprettet.sakId) },
       Executable { assertThat(response?.body?.skyldnerId).isEqualTo(nyStonadOpprettet.skyldnerId) },
       Executable { assertThat(response?.body?.kravhaverId).isEqualTo(nyStonadOpprettet.kravhaverId) },
       Executable { assertThat(response?.body?.mottakerId).isEqualTo(nyStonadOpprettet.mottakerId) },
-      Executable { assertThat(response?.body?.opprettetAvSaksbehandlerId).isEqualTo(nyStonadOpprettet.opprettetAvSaksbehandlerId) },
+      Executable { assertThat(response?.body?.opprettetAv).isEqualTo(nyStonadOpprettet.opprettetAv) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
@@ -165,8 +164,8 @@ class StonadControllerTest {
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"
+      opprettetAv = "X123456",
+      endretAv =  "X654321"
     ))
 
     // Oppretter ny forekomst
@@ -183,14 +182,14 @@ class StonadControllerTest {
       Executable { assertThat(response?.body).isNotNull() },
       Executable { assertThat(response?.body?.mottakerIdEndretFra).isEqualTo("01018211111") },
       Executable { assertThat(response?.body?.mottakerIdEndretTil).isEqualTo("123") },
-      Executable { assertThat(response?.body?.saksbehandlerId).isEqualTo("Test") }
+      Executable { assertThat(response?.body?.opprettetAv).isEqualTo("Test") }
     )
     mottakerIdHistorikkRepository.deleteAll()
     stonadRepository.deleteAll()
   }
 
   private fun byggEndreMottakerIdRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun fullUrlForNyStonad(): String {

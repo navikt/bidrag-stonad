@@ -5,7 +5,6 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.dto.StonadDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.web.server.LocalServerPort
@@ -71,8 +69,8 @@ class MottakerIdHistorikkControllerTest {
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321"
+      opprettetAv = "X123456",
+      endretAv =  "X654321"
     ))
 
     val nyMottakerIdHistorikkOpprettet1 = persistenceService.opprettNyMottakerIdHistorikk(
@@ -97,12 +95,12 @@ class MottakerIdHistorikkControllerTest {
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].stonadId).isEqualTo(nyMottakerIdHistorikkOpprettet1.stonadId) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretFra) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkOpprettet1.mottakerIdEndretTil) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet1.saksbehandlerId) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![0].opprettetAv).isEqualTo(nyMottakerIdHistorikkOpprettet1.opprettetAv) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].stonadId).isEqualTo(nyMottakerIdHistorikkOpprettet2.stonadId) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkOpprettet2.mottakerIdEndretFra) },
       Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkOpprettet2.mottakerIdEndretTil) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet2.saksbehandlerId) },
-      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].saksbehandlerId).isEqualTo(nyMottakerIdHistorikkOpprettet2.saksbehandlerId) }
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].opprettetAv).isEqualTo(nyMottakerIdHistorikkOpprettet2.opprettetAv) },
+      Executable { assertThat(response?.body?.alleMottakerIdHistorikkForStonad!![1].opprettetAv).isEqualTo(nyMottakerIdHistorikkOpprettet2.opprettetAv) }
     )
   }
 
@@ -115,7 +113,7 @@ class MottakerIdHistorikkControllerTest {
   }
 
   private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", saksbehandlerId = "Test"))
+    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

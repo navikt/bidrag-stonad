@@ -3,7 +3,6 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -78,7 +77,7 @@ class MottakerIdHistorikkServiceTest {
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG", sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId = "X654321"
+      opprettetAv = "X123456", endretAv = "X654321"
     ))
 
     // Oppretter ny mottakerIdHistorikk
@@ -86,7 +85,7 @@ class MottakerIdHistorikkServiceTest {
       EndreMottakerIdRequest(
         nyStonadOpprettet.stonadId,
         nyMottakerId = "123",
-        saksbehandlerId = "Test"
+        opprettetAv = "Test"
       )
     )
 
@@ -98,7 +97,7 @@ class MottakerIdHistorikkServiceTest {
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].stonadId).isEqualTo(nyMottakerIdHistorikk.stonadId) },
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretFra) },
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretTil) },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].saksbehandlerId).isEqualTo(nyMottakerIdHistorikk.saksbehandlerId) },
+      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].opprettetAv).isEqualTo(nyMottakerIdHistorikk.opprettetAv) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()

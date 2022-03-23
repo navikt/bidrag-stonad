@@ -27,7 +27,7 @@ data class MottakerIdHistorikk (
   val mottakerIdEndretTil: String = "",
 
   @Column(nullable = false, name = "opprettet_av")
-  val saksbehandlerId: String = "",
+  val opprettetAv: String = "",
 
   @Id
   @Column(nullable = false, name = "opprettet_timestamp")

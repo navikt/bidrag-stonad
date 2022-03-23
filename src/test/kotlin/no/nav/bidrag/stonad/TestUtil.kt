@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad
 
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
 import no.nav.bidrag.stonad.api.NyStonadRequest
 import no.nav.bidrag.stonad.dto.PeriodeDto
@@ -13,13 +14,13 @@ class TestUtil {
   companion object {
 
     fun byggStonadRequest() = NyStonadRequest(
-      stonadType = "BIDRAG",
+      stonadType = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321",
+      opprettetAv = "X123456",
+      endretAv =  "X654321",
       periodeListe = listOf(
         NyPeriodeRequest(
           periodeFom = LocalDate.parse("2019-01-01"),
@@ -48,9 +49,9 @@ class TestUtil {
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
+      opprettetAv = "X123456",
       opprettetTimestamp = LocalDateTime.now(),
-      endretAvSaksbehandlerId = "X654321",
+      endretAv = "X654321",
       endretTimestamp = LocalDateTime.now()
     )
 

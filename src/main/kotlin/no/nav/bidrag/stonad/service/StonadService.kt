@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
 import no.nav.bidrag.stonad.api.FinnStonadResponse
 import no.nav.bidrag.stonad.api.NyPeriodeRequest
@@ -24,12 +25,12 @@ class StonadService(val persistenceService: PersistenceService) {
   // Opprett komplett stonad (alle tabeller)
   fun opprettStonad(stonadRequest: NyStonadRequest): NyStonadResponse {
     val stonadDto = StonadDto(
-      stonadType = stonadRequest.stonadType,
+      stonadType = stonadRequest.stonadType.toString(),
       sakId = stonadRequest.sakId,
       skyldnerId = stonadRequest.skyldnerId,
       kravhaverId = stonadRequest.kravhaverId,
       mottakerId = stonadRequest.mottakerId,
-      opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId
+      opprettetAv = stonadRequest.opprettetAv
     )
 
     val opprettetStonad = persistenceService.opprettNyStonad(stonadDto)
@@ -81,14 +82,14 @@ class StonadService(val persistenceService: PersistenceService) {
   ): FinnStonadResponse {
     return FinnStonadResponse(
       stonadDto.stonadId,
-      stonadDto.stonadType,
+      StonadType.valueOf(stonadDto.stonadType),
       stonadDto.sakId,
       stonadDto.skyldnerId,
       stonadDto.kravhaverId,
       stonadDto.mottakerId,
-      stonadDto.opprettetAvSaksbehandlerId,
+      stonadDto.opprettetAv,
       stonadDto.opprettetTimestamp,
-      stonadDto.endretAvSaksbehandlerId,
+      stonadDto.endretAv,
       stonadDto.endretTimestamp,
       periodeDtoListe
     )
@@ -97,7 +98,7 @@ class StonadService(val persistenceService: PersistenceService) {
   fun endreStonad(eksisterendeStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
 
     val stonadId = eksisterendeStonad.stonadId
-    val endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
+    val endretAvSaksbehandlerId = oppdatertStonad.endretAv
 
     persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId!!)
 
@@ -187,7 +188,7 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
   fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
-    persistenceService.endreMottakerId(request.stonadId, request.nyMottakerId, request.saksbehandlerId)
+    persistenceService.endreMottakerId(request.stonadId, request.nyMottakerId, request.opprettetAv)
 
     return persistenceService.opprettNyMottakerIdHistorikk(request)
   }

@@ -8,13 +8,13 @@ import kotlin.reflect.full.memberProperties
 data class EndreMottakerIdRequest(
 
   @Schema(description = "Stønad-id")
-  val stonadId: Int = 0,
+  val stonadId: Int,
 
   @Schema(description = "Ny Mottaker-id som skal erstatte eksisterende id")
-  val nyMottakerId: String = "",
+  val nyMottakerId: String,
 
   @Schema(description = "opprettet_av")
-  val saksbehandlerId: String = ""
+  val opprettetAv: String = ""
 )
 
 fun EndreMottakerIdRequest.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {

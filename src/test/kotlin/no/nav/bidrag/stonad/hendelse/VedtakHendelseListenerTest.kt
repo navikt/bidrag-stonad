@@ -28,13 +28,14 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
             """
             {
-              "stonadType":"",
+              "vedtakType":"MANUELT",
+              "stonadType":"BIDRAG",
               "sakId":"",
               "skyldnerId":"",
               "kravhaverId":"",
               "mottakerId":"",
-              "opprettetAvSaksbehandlerId":"",
-              "endretAvSaksbehandlerId":"",
+              "opprettetAv":"",
+              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
               "periodeListe":[]
             }
             """.trimIndent()
@@ -46,13 +47,14 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
             """
             {
+              "vedtakType":"MANUELT",
               "stonadType":"BIDRAG",
               "sakId":"",
               "skyldnerId":"",
               "kravhaverId":"",
               "mottakerId":"",
-              "opprettetAvSaksbehandlerId":"",
-              "endretAvSaksbehandlerId":"",
+              "opprettetAv":"",
+              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
               "periodeListe":[]
             }
             """.trimIndent()
@@ -66,13 +68,14 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
             """
             {
+              "vedtakType":"MANUELT",
               "stonadType":"FORSKUDD",
               "sakId":"",
               "skyldnerId":"",
               "kravhaverId":"",
               "mottakerId":"",
-              "opprettetAvSaksbehandlerId":"",
-              "endretAvSaksbehandlerId":"",
+              "opprettetAv":"",
+              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
               "periodeListe":[]
             }
             """.trimIndent()
