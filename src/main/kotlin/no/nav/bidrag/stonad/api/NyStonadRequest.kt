@@ -24,10 +24,10 @@ data class NyStonadRequest(
   val mottakerId: String,
 
   @Schema(description = "opprettet_av")
-  val opprettetAvSaksbehandlerId: String,
+  val opprettetAv: String,
 
   @Schema(description = "endret_av")
-  val endretAvSaksbehandlerId: String? = null,
+  val endretAv: String? = null,
 
   @Schema(description = "Liste over alle perioder som inngår i stønaden")
   val periodeListe: List<NyPeriodeRequest>

@@ -69,7 +69,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.stonadType).isEqualTo("BIDRAG") },
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.stonadType).isEqualTo(StonadType.BIDRAG) },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.sakId).isEqualTo("SAK-001") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.skyldnerId).isEqualTo("12345") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaverId).isEqualTo("54321") },

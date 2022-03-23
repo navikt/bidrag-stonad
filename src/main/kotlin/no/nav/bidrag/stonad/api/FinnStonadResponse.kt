@@ -32,7 +32,7 @@ data class FinnStonadResponse(
   val opprettetTimestamp: LocalDateTime,
 
   @Schema(description = "endret_av")
-  val endretAvSaksbehandlerId: String? = null,
+  val endretAv: String? = null,
 
   @Schema(description = "når_sist_endret_timestamp")
   val endretTimestamp: LocalDateTime? = null,

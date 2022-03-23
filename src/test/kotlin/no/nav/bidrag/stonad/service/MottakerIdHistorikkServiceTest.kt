@@ -77,7 +77,7 @@ class MottakerIdHistorikkServiceTest {
     val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
       stonadType = "BIDRAG", sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456", endretAvSaksbehandlerId = "X654321"
+      opprettetAv = "X123456", endretAv = "X654321"
     ))
 
     // Oppretter ny mottakerIdHistorikk
@@ -97,7 +97,7 @@ class MottakerIdHistorikkServiceTest {
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].stonadId).isEqualTo(nyMottakerIdHistorikk.stonadId) },
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretFra) },
       Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretTil) },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].saksbehandlerId).isEqualTo(nyMottakerIdHistorikk.saksbehandlerId) },
+      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].opprettetAv).isEqualTo(nyMottakerIdHistorikk.opprettetAv) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()

@@ -19,8 +19,8 @@ class TestUtil {
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
-      endretAvSaksbehandlerId =  "X654321",
+      opprettetAv = "X123456",
+      endretAv =  "X654321",
       periodeListe = listOf(
         NyPeriodeRequest(
           periodeFom = LocalDate.parse("2019-01-01"),
@@ -49,9 +49,9 @@ class TestUtil {
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
-      opprettetAvSaksbehandlerId = "X123456",
+      opprettetAv = "X123456",
       opprettetTimestamp = LocalDateTime.now(),
-      endretAvSaksbehandlerId = "X654321",
+      endretAv = "X654321",
       endretTimestamp = LocalDateTime.now()
     )
 

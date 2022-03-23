@@ -25,14 +25,14 @@ data class StonadDto(
   @Schema(description = "Id til den som mottar bidraget")
   val mottakerId: String = "",
 
-  @Schema(description = "Id til saksbehandler som oppretter stønaden")
-  val opprettetAvSaksbehandlerId: String = "",
+  @Schema(description = "Id til saksbehandler/annet som oppretter stønaden")
+  val opprettetAv: String = "",
 
   @Schema(description = "Opprettet timestamp")
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
 
-  @Schema(description = "Id til saksbehandler som sist endret stønaden")
-  val endretAvSaksbehandlerId: String? = null,
+  @Schema(description = "Id til saksbehandler/annet som sist endret stønaden")
+  val endretAv: String? = null,
 
   @Schema(description = "Endret timestamp")
   val endretTimestamp: LocalDateTime? = null

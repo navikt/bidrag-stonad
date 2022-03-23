@@ -7,8 +7,6 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import kotlin.reflect.full.memberProperties
 
 @Entity
@@ -35,13 +33,13 @@ data class Stonad(
   val mottakerId: String = "",
 
   @Column(nullable = false, name = "opprettet_av")
-  val opprettetAvSaksbehandlerId: String = "",
+  val opprettetAv: String = "",
 
   @Column(nullable = false, name = "opprettet_timestamp")
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
 
   @Column(nullable = true, name = "endret_av")
-  val endretAvSaksbehandlerId: String? = null,
+  val endretAv: String? = null,
 
   @Column(nullable = true, name = "endret_timestamp")
   val endretTimestamp: LocalDateTime? = null

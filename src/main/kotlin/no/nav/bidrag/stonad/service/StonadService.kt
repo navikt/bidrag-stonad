@@ -30,7 +30,7 @@ class StonadService(val persistenceService: PersistenceService) {
       skyldnerId = stonadRequest.skyldnerId,
       kravhaverId = stonadRequest.kravhaverId,
       mottakerId = stonadRequest.mottakerId,
-      opprettetAvSaksbehandlerId = stonadRequest.opprettetAvSaksbehandlerId
+      opprettetAv = stonadRequest.opprettetAv
     )
 
     val opprettetStonad = persistenceService.opprettNyStonad(stonadDto)
@@ -87,9 +87,9 @@ class StonadService(val persistenceService: PersistenceService) {
       stonadDto.skyldnerId,
       stonadDto.kravhaverId,
       stonadDto.mottakerId,
-      stonadDto.opprettetAvSaksbehandlerId,
+      stonadDto.opprettetAv,
       stonadDto.opprettetTimestamp,
-      stonadDto.endretAvSaksbehandlerId,
+      stonadDto.endretAv,
       stonadDto.endretTimestamp,
       periodeDtoListe
     )
@@ -98,7 +98,7 @@ class StonadService(val persistenceService: PersistenceService) {
   fun endreStonad(eksisterendeStonad: FinnStonadResponse, oppdatertStonad: NyStonadRequest) {
 
     val stonadId = eksisterendeStonad.stonadId
-    val endretAvSaksbehandlerId = oppdatertStonad.endretAvSaksbehandlerId
+    val endretAvSaksbehandlerId = oppdatertStonad.endretAv
 
     persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId!!)
 

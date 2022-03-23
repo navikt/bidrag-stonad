@@ -69,8 +69,8 @@ class DefaultBehandleHendelseService(
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
-        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAv,
-        endretAvSaksbehandlerId = vedtakHendelse.opprettetAv,
+        opprettetAv = vedtakHendelse.opprettetAv,
+        endretAv = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
 
@@ -102,7 +102,7 @@ class DefaultBehandleHendelseService(
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
-        opprettetAvSaksbehandlerId = vedtakHendelse.opprettetAv,
+        opprettetAv = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
     )
