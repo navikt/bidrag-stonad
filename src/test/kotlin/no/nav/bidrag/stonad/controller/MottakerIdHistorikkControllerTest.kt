@@ -5,7 +5,7 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
@@ -63,7 +63,7 @@ class MottakerIdHistorikkControllerTest {
   @Suppress("NonAsciiCharacters")
   fun `skal finne alle endringer av mottaker-id for en stønad`() {
     // Oppretter nye forekomster
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadBo(
       stonadType = "BIDRAG",
       sakId = "SAK-001",
       skyldnerId = "01018011111",
@@ -81,7 +81,7 @@ class MottakerIdHistorikkControllerTest {
 
     // Henter forekomster
     val response = securedTestRestTemplate.exchange(
-      "${fullUrlForSokAlleMottakerIdHistorikkForStonad()}/${nyStonadOpprettet.stonadId}",
+      "/mottakeridhistorikk/sok/${nyStonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
       AlleMottakerIdHistorikkForStonadResponse::class.java

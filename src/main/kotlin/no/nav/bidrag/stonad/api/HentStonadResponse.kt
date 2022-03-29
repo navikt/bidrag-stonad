@@ -2,10 +2,10 @@ package no.nav.bidrag.stonad.api
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import java.time.LocalDateTime
 
-data class FinnStonadResponse(
+data class HentStonadResponse(
 
   @Schema(description = "StønadId")
   val stonadId: Int = 0,
@@ -38,5 +38,5 @@ data class FinnStonadResponse(
   val endretTimestamp: LocalDateTime? = null,
 
   @Schema(description = "Liste over alle perioder som inngår i stønaden")
-  val periodeListe: List<PeriodeDto>
+  val periodeListe: List<PeriodeBo>
 )

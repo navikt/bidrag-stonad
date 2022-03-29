@@ -1,4 +1,4 @@
-package no.nav.bidrag.stonad.dto
+package no.nav.bidrag.stonad.bo
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.persistence.entity.Periode
@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.full.memberProperties
 
-data class PeriodeDto(
+data class PeriodeBo(
 
   @Schema(description = "Periode-id")
   val periodeId: Int = 0,
@@ -37,8 +37,8 @@ data class PeriodeDto(
   val resultatkode: String = ""
 )
 
-fun PeriodeDto.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
-  val propertiesByName = PeriodeDto::class.memberProperties.associateBy { it.name }
+fun PeriodeBo.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
+  val propertiesByName = PeriodeBo::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       Periode::stonad.name -> eksisterendeStonad

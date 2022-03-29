@@ -3,8 +3,8 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.stonad.TestUtil.Companion.byggPeriodeDto
 import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadDto
 import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadRequest
-import no.nav.bidrag.stonad.dto.PeriodeDto
-import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
+import no.nav.bidrag.stonad.bo.StonadBo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -31,30 +31,29 @@ class StonadServiceMockTest {
   private lateinit var persistenceServiceMock: PersistenceService
 
   @Captor
-  private lateinit var stonadDtoCaptor: ArgumentCaptor<StonadDto>
+  private lateinit var stonadBoCaptor: ArgumentCaptor<StonadBo>
 
   @Captor
-  private lateinit var periodeDtoCaptor: ArgumentCaptor<PeriodeDto>
+  private lateinit var periodeBoCaptor: ArgumentCaptor<PeriodeBo>
 
   @Test
   fun `skal opprette ny komplett stonad`() {
 
-    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(stonadDtoCaptor)))
+    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(stonadBoCaptor)))
       .thenReturn(byggStonadDto())
-    Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeDtoCaptor)))
+    Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeBoCaptor)))
       .thenReturn(byggPeriodeDto())
 
     val nyStonadOpprettet = stonadService.opprettStonad(byggStonadRequest())
 
-    val stonadDto = stonadDtoCaptor.value
-    val periodeDtoListe = periodeDtoCaptor.allValues
+    val stonadDto = stonadBoCaptor.value
+    val periodeDtoListe = periodeBoCaptor.allValues
 
-    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyStonad(MockitoHelper.any(StonadDto::class.java))
-    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyStonad(MockitoHelper.any(StonadBo::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyPeriode(MockitoHelper.any(PeriodeBo::class.java))
 
     assertAll(
       Executable { assertThat(nyStonadOpprettet).isNotNull() },
-      Executable { assertThat(nyStonadOpprettet.stonadId).isNotNull() },
 
       // Sjekk stonadDto
       Executable { assertThat(stonadDto).isNotNull() },

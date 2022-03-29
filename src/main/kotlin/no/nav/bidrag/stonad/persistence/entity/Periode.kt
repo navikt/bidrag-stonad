@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.persistence.Column
@@ -46,11 +46,11 @@ data class Periode(
   val resultatkode: String = ""
 )
 
-  fun Periode.toPeriodeDto() = with(::PeriodeDto) {
+  fun Periode.toPeriodeDto() = with(::PeriodeBo) {
     val propertiesByName = Periode::class.memberProperties.associateBy { it.name }
     callBy(parameters.associateWith { parameter ->
       when (parameter.name) {
-        PeriodeDto::stonadId.name -> stonad.stonadId
+        PeriodeBo::stonadId.name -> stonad.stonadId
         else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
       }
     })

@@ -5,12 +5,12 @@ import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.api.FinnStonadResponse
-import no.nav.bidrag.stonad.api.NyStonadRequest
-import no.nav.bidrag.stonad.api.NyStonadResponse
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
-import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.api.HentStonadResponse
+import no.nav.bidrag.stonad.api.OpprettStonadRequest
+import no.nav.bidrag.stonad.api.OpprettStonadResponse
+import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
+import no.nav.bidrag.stonad.bo.StonadBo
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -79,7 +79,7 @@ class StonadControllerTest {
       fullUrlForNyStonad(),
       HttpMethod.POST,
       byggStonadRequest(),
-      NyStonadResponse::class.java
+      OpprettStonadResponse::class.java
     )
 
     assertAll(
@@ -96,7 +96,7 @@ class StonadControllerTest {
   fun `skal finne data for en stonad`() {
     // Oppretter ny forekomst av stonad
 
-      val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+      val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadBo(
         stonadType = "BIDRAG",
         sakId = "SAK-001",
         skyldnerId = "01018011111",
@@ -107,7 +107,7 @@ class StonadControllerTest {
       ))
 
     val periodeListe = listOf(
-      PeriodeDto(
+      PeriodeBo(
         periodeFom = LocalDate.parse("2019-01-01"),
         periodeTil = LocalDate.parse("2019-07-01"),
         stonadId = nyStonadOpprettet.stonadId,
@@ -116,7 +116,7 @@ class StonadControllerTest {
         belop = BigDecimal.valueOf(3490),
         valutakode = "NOK",
         resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
-      PeriodeDto(
+      PeriodeBo(
         periodeFom = LocalDate.parse("2019-07-01"),
         periodeTil = LocalDate.parse("2020-01-01"),
         stonadId = nyStonadOpprettet.stonadId,
@@ -126,17 +126,17 @@ class StonadControllerTest {
         valutakode = "NOK",
         resultatkode = "KOSTNADSBEREGNET_BIDRAG")
     )
-    val periodeDtoListe = ArrayList<PeriodeDto>()
+    val periodeBoListe = ArrayList<PeriodeBo>()
     periodeListe.forEach {
-      periodeDtoListe.add(persistenceService.opprettNyPeriode(it))
+      periodeBoListe.add(persistenceService.opprettNyPeriode(it))
     }
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "${fullUrlForSokStonad()}/${nyStonadOpprettet.stonadId}",
+      "/stonad/${nyStonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      FinnStonadResponse::class.java
+      HentStonadResponse::class.java
     )
 
     assertAll(
@@ -158,7 +158,7 @@ class StonadControllerTest {
   @Test
   fun `skal endre mottakerId og opprette historikk`() {
 
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadBo(
       stonadType = "BIDRAG",
       sakId = "SAK-001",
       skyldnerId = "01018011111",
@@ -173,7 +173,7 @@ class StonadControllerTest {
       fullUrlForEndreMottakerIdStonad(),
       HttpMethod.POST,
       byggEndreMottakerIdRequest(nyStonadOpprettet.stonadId),
-      MottakerIdHistorikkDto::class.java
+      MottakerIdHistorikkBo::class.java
     )
 
     assertAll(
@@ -197,7 +197,7 @@ class StonadControllerTest {
   }
 
   private fun fullUrlForSokStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_SOK).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_HENT).toUriString()
   }
 
   private fun fullUrlForEndreMottakerIdStonad(): String {
@@ -208,7 +208,7 @@ class StonadControllerTest {
     return "http://localhost:$port"
   }
 
-  private fun byggStonadRequest(): HttpEntity<NyStonadRequest> {
+  private fun byggStonadRequest(): HttpEntity<OpprettStonadRequest> {
     return initHttpEntity(TestUtil.byggStonadRequest())
   }
 

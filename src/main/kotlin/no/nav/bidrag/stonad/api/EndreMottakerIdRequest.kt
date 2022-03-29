@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.api
 
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
 import kotlin.reflect.full.memberProperties
 
 @Schema(description ="Request for å endre mottaker-id på en stønad")
@@ -17,11 +17,11 @@ data class EndreMottakerIdRequest(
   val opprettetAv: String = ""
 )
 
-fun EndreMottakerIdRequest.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
+fun EndreMottakerIdRequest.toMottakerIdHistorikkBo() = with(::MottakerIdHistorikkBo) {
   val propertiesByName = EndreMottakerIdRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)
+      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkBo)
     }
   })
 }

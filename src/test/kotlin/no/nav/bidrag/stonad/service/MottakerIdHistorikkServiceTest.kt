@@ -2,7 +2,7 @@ package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -74,7 +74,7 @@ class MottakerIdHistorikkServiceTest {
   @Test
   fun `skal finne data for en mottakerIdHistorikk`() {
     // Oppretter nytt mottakerIdHistorikk
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadDto(
+    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadBo(
       stonadType = "BIDRAG", sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
       opprettetAv = "X123456", endretAv = "X654321"
@@ -90,7 +90,7 @@ class MottakerIdHistorikkServiceTest {
     )
 
     // Finner mottakerIdHistorikken som akkurat ble opprettet
-    val mottakerIdHistorikkFunnet = mottakerIdHistorikkService.finnAlleEndringerMottakerIdForStonad(nyStonadOpprettet.stonadId)
+    val mottakerIdHistorikkFunnet = mottakerIdHistorikkService.hentAlleEndringerAvMottakerIdForStonad(nyStonadOpprettet.stonadId)
 
     assertAll(
       Executable { assertThat(mottakerIdHistorikkFunnet).isNotNull() },

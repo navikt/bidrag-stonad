@@ -65,7 +65,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
-    val nyStonadOpprettet = stonadService.finnStonad(nyHendelse.stonadType.toString(), nyHendelse.skyldnerId, nyHendelse.kravhaverId)
+    val nyStonadOpprettet = stonadService.hentStonad(nyHendelse.stonadType.toString(), nyHendelse.skyldnerId, nyHendelse.kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
@@ -106,7 +106,7 @@ internal class DefaultBehandleHendelseServiceTest {
       LocalDateTime.now(), originalPeriodeliste)
 
     behandleHendelseService.behandleHendelse(originalHendelse)
-    val originalStonad = stonadService.finnStonad(originalHendelse.stonadType.toString(), originalHendelse.skyldnerId, originalHendelse.kravhaverId)
+    val originalStonad = stonadService.hentStonad(originalHendelse.stonadType.toString(), originalHendelse.skyldnerId, originalHendelse.kravhaverId)
 
     // Oppretter hendelse for nytt vedtak på samme stønad, stønaden over skal da oppdateres. Det er kun midterste periode her som er endret og skal oppdateres
     val periodeliste = mutableListOf<VedtakHendelsePeriode>()
@@ -122,7 +122,7 @@ internal class DefaultBehandleHendelseServiceTest {
       LocalDateTime.now(), periodeliste)
 
     behandleHendelseService.behandleHendelse(hendelse)
-    val oppdatertStonad = stonadService.finnStonad(hendelse.stonadType.toString(), hendelse.skyldnerId, hendelse.kravhaverId)
+    val oppdatertStonad = stonadService.hentStonad(hendelse.stonadType.toString(), hendelse.skyldnerId, hendelse.kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },

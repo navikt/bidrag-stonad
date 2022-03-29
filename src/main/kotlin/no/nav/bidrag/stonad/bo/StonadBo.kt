@@ -1,11 +1,11 @@
-package no.nav.bidrag.stonad.dto
+package no.nav.bidrag.stonad.bo
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
-data class StonadDto(
+data class StonadBo(
 
   @Schema(description = "Stønad-id")
   val stonadId: Int = 0,
@@ -39,8 +39,8 @@ data class StonadDto(
 
 )
 
-fun StonadDto.toStonadEntity() = with(::Stonad) {
-  val propertiesByName = StonadDto::class.memberProperties.associateBy { it.name }
+fun StonadBo.toStonadEntity() = with(::Stonad) {
+  val propertiesByName = StonadBo::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       else -> propertiesByName[parameter.name]?.get(this@toStonadEntity)

@@ -1,13 +1,13 @@
 package no.nav.bidrag.stonad.api
 
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.full.memberProperties
 
 @Schema(description ="Egenskaper ved en periode")
-data class NyPeriodeRequest(
+data class OpprettPeriodeRequest(
 
   @Schema(description = "Periode fra-og-med-dato")
   val periodeFom: LocalDate = LocalDate.now(),
@@ -35,23 +35,23 @@ data class NyPeriodeRequest(
 
   )
 
-fun NyPeriodeRequest.toPeriodeDto(stonadId: Int) = with(::PeriodeDto) {
-  val propertiesByName = NyPeriodeRequest::class.memberProperties.associateBy { it.name }
+fun OpprettPeriodeRequest.toPeriodeBo(stonadId: Int) = with(::PeriodeBo) {
+  val propertiesByName = OpprettPeriodeRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      PeriodeDto::stonadId.name -> stonadId
-      PeriodeDto::periodeId.name -> 0
-      else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
+      PeriodeBo::stonadId.name -> stonadId
+      PeriodeBo::periodeId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
     }
   })
 }
 
-fun NyPeriodeRequest.toPeriodeDto() = with(::PeriodeDto) {
-  val propertiesByName = NyPeriodeRequest::class.memberProperties.associateBy { it.name }
+fun OpprettPeriodeRequest.toPeriodeBo() = with(::PeriodeBo) {
+  val propertiesByName = OpprettPeriodeRequest::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      PeriodeDto::periodeId.name -> 0
-      else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
+      PeriodeBo::periodeId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
     }
   })
 }

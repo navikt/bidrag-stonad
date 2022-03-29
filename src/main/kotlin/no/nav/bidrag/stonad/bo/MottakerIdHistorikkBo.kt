@@ -1,4 +1,4 @@
-package no.nav.bidrag.stonad.dto
+package no.nav.bidrag.stonad.bo
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.persistence.entity.MottakerIdHistorikk
@@ -6,7 +6,7 @@ import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
-data class MottakerIdHistorikkDto(
+data class MottakerIdHistorikkBo(
 
   @Schema(description = "stonad-id")
   val stonadId: Int = 0,
@@ -24,8 +24,8 @@ data class MottakerIdHistorikkDto(
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
-fun MottakerIdHistorikkDto.toMottakerIdHistorikkEntity(stonad: Stonad) = with(::MottakerIdHistorikk) {
-  val propertiesByName = MottakerIdHistorikkDto::class.memberProperties.associateBy { it.name }
+fun MottakerIdHistorikkBo.toMottakerIdHistorikkEntity(stonad: Stonad) = with(::MottakerIdHistorikk) {
+  val propertiesByName = MottakerIdHistorikkBo::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       MottakerIdHistorikk::stonad.name -> stonad
