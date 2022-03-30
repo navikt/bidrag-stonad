@@ -1,9 +1,9 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.api.HentStonadResponse
-import no.nav.bidrag.stonad.api.OpprettPeriodeRequest
-import no.nav.bidrag.stonad.api.OpprettStonadRequest
 import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -46,11 +46,11 @@ class DefaultBehandleHendelseService(
     }
   }
 
-  private fun endreStonad(eksisterendeStonad: HentStonadResponse, vedtakHendelse: VedtakHendelse) {
-    val periodeListe = mutableListOf<OpprettPeriodeRequest>()
+  private fun endreStonad(eksisterendeStonad: HentStonadDto, vedtakHendelse: VedtakHendelse) {
+    val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(
-        OpprettPeriodeRequest(
+        OpprettStonadPeriodeRequestDto(
           periodeFom = it.periodeFom,
           periodeTil = it.periodeTil,
           vedtakId = vedtakHendelse.vedtakId,
@@ -63,14 +63,13 @@ class DefaultBehandleHendelseService(
     }
 
     val oppdatertStonad =
-      OpprettStonadRequest(
+      OpprettStonadRequestDto(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
         opprettetAv = vedtakHendelse.opprettetAv,
-        endretAv = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
 
@@ -80,10 +79,10 @@ class DefaultBehandleHendelseService(
 
   private fun opprettStonad(vedtakHendelse: VedtakHendelse) {
 
-    val periodeListe = mutableListOf<OpprettPeriodeRequest>()
+    val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(
-        OpprettPeriodeRequest(
+        OpprettStonadPeriodeRequestDto(
           periodeFom = it.periodeFom,
           periodeTil = it.periodeTil,
           vedtakId = vedtakHendelse.vedtakId,
@@ -96,7 +95,7 @@ class DefaultBehandleHendelseService(
     }
 
     stonadService.opprettStonad(
-      OpprettStonadRequest(
+      OpprettStonadRequestDto(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
         skyldnerId = vedtakHendelse.skyldnerId,

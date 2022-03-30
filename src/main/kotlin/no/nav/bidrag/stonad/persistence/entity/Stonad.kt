@@ -1,5 +1,7 @@
 package no.nav.bidrag.stonad.persistence.entity
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.bo.StonadBo
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -45,11 +47,20 @@ data class Stonad(
   val endretTimestamp: LocalDateTime? = null
 )
 
-fun Stonad.toStonadDto() = with(::StonadBo) {
+fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
+  val propertiesByName = OpprettStonadRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      else -> propertiesByName[parameter.name]?.get(this@toStonadEntity)
+    }
+  })
+}
+
+fun Stonad.toHentStonadDto() = with(::HentStonadDto) {
   val propertiesByName = Stonad::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
+      else -> propertiesByName[parameter.name]?.get(this@toHentStonadDto)
     }
   })
 }

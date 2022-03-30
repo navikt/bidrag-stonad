@@ -3,8 +3,8 @@ package no.nav.bidrag.stonad.controller
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
+import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadDto
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequestDto
 import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -74,17 +74,17 @@ class MottakerIdHistorikkControllerTest {
     ))
 
     val nyMottakerIdHistorikkOpprettet1 = persistenceService.opprettNyMottakerIdHistorikk(
-      EndreMottakerIdRequest(nyStonadOpprettet.stonadId, "654", "X123456"))
+      EndreMottakerIdRequestDto(nyStonadOpprettet.stonadId, "654", "X123456"))
 
     val nyMottakerIdHistorikkOpprettet2 = persistenceService.opprettNyMottakerIdHistorikk(
-      EndreMottakerIdRequest(nyStonadOpprettet.stonadId,"876", "X654321"))
+      EndreMottakerIdRequestDto(nyStonadOpprettet.stonadId,"876", "X654321"))
 
     // Henter forekomster
     val response = securedTestRestTemplate.exchange(
       "/mottakeridhistorikk/sok/${nyStonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      AlleMottakerIdHistorikkForStonadResponse::class.java
+      AlleMottakerIdHistorikkForStonadDto::class.java
     )
 
     assertAll(
@@ -112,8 +112,8 @@ class MottakerIdHistorikkControllerTest {
     return "http://localhost:$port"
   }
 
-  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
+  private fun byggRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequestDto> {
+    return initHttpEntity(EndreMottakerIdRequestDto(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {

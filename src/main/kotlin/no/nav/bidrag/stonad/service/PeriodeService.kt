@@ -9,6 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 class PeriodeService (val persistenceService: PersistenceService) {
 
   fun finnPeriode(periodeId: Int): PeriodeBo? {
-    return persistenceService.finnPeriode(periodeId)
+    return persistenceService.hentPeriode(periodeId)
   }
 }

@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
+import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -34,11 +34,11 @@ data class MottakerIdHistorikk (
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
-fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkBo) {
+fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
   val propertiesByName = MottakerIdHistorikk::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      MottakerIdHistorikkBo::stonadId.name -> stonad.stonadId
+      MottakerIdHistorikkDto::stonadId.name -> stonad.stonadId
       else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkDto)
     }
   })

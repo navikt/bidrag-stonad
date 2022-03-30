@@ -6,11 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.ISSUER
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.api.HentStonadResponse
-import no.nav.bidrag.stonad.api.OpprettStonadRequest
-import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
@@ -38,7 +38,7 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettNyStonad(@RequestBody request: OpprettStonadRequest): ResponseEntity<Int>? {
+  fun opprettNyStonad(@RequestBody request: OpprettStonadRequestDto): ResponseEntity<Int>? {
     val stonadOpprettet = stonadService.opprettStonad(request)
     LOGGER.info("Stønad opprettet med stønadId: $stonadOpprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)
@@ -58,7 +58,7 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<HentStonadResponse> {
+  fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<HentStonadDto> {
     val stonadFunnet = stonadService.hentStonadFraId(stonadId)
     LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
@@ -77,10 +77,10 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequest): ResponseEntity<MottakerIdHistorikkBo> {
-    val mottakerIdEndret = stonadService.endreMottakerIdOgOpprettHistorikk(request)
-    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdEndret")
-    return ResponseEntity(mottakerIdEndret, HttpStatus.OK)
+  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequestDto): ResponseEntity<MottakerIdHistorikkDto> {
+    val mottakerIdHistorikkDto = stonadService.endreMottakerIdOgOpprettHistorikk(request)
+    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdHistorikkDto")
+    return ResponseEntity(mottakerIdHistorikkDto, HttpStatus.OK)
   }
 
   companion object {

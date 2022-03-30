@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
+import no.nav.bidrag.behandling.felles.dto.stonad.AlleMottakerIdHistorikkForStonadDto
 import no.nav.bidrag.stonad.ISSUER
-import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.service.MottakerIdHistorikkService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
@@ -34,7 +34,7 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
     ]
   )
 
-  fun hentAlleEndringerAvMottakerIdForStonad(@PathVariable stonadId: Int): ResponseEntity<AlleMottakerIdHistorikkForStonadResponse> {
+  fun hentAlleEndringerAvMottakerIdForStonad(@PathVariable stonadId: Int): ResponseEntity<AlleMottakerIdHistorikkForStonadDto> {
     val endringerFunnet = mottakerIdHistorikkService.hentAlleEndringerAvMottakerIdForStonad(stonadId)
     LOGGER.info("Følgende endringer av mottakerId ble funnet: $endringerFunnet")
     return ResponseEntity(endringerFunnet, HttpStatus.OK)

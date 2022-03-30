@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
+import no.nav.bidrag.behandling.felles.dto.stonad.AlleMottakerIdHistorikkForStonadDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class MottakerIdHistorikkService (val persistenceService: PersistenceService) {
 
-  fun hentAlleEndringerAvMottakerIdForStonad(stonadId: Int): AlleMottakerIdHistorikkForStonadResponse {
-    return AlleMottakerIdHistorikkForStonadResponse(persistenceService.hentAlleEndringerAvMottakerIdForStonad(stonadId))
+  fun hentAlleEndringerAvMottakerIdForStonad(stonadId: Int): AlleMottakerIdHistorikkForStonadDto {
+    return AlleMottakerIdHistorikkForStonadDto(persistenceService.hentAlleEndringerAvMottakerIdForStonad(stonadId))
 
   }
 }

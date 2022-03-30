@@ -4,9 +4,9 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.api.HentStonadResponse
-import no.nav.bidrag.stonad.api.OpprettStonadRequest
+import no.nav.bidrag.stonad.api.EndreMottakerIdRequestDto
+import no.nav.bidrag.stonad.api.HentStonadDto
+import no.nav.bidrag.stonad.api.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.api.OpprettStonadResponse
 import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
 import no.nav.bidrag.stonad.bo.StonadBo
@@ -136,7 +136,7 @@ class StonadControllerTest {
       "/stonad/${nyStonadOpprettet.stonadId}",
       HttpMethod.GET,
       null,
-      HentStonadResponse::class.java
+      HentStonadDto::class.java
     )
 
     assertAll(
@@ -172,7 +172,7 @@ class StonadControllerTest {
     val response = securedTestRestTemplate.exchange(
       fullUrlForEndreMottakerIdStonad(),
       HttpMethod.POST,
-      byggEndreMottakerIdRequest(nyStonadOpprettet.stonadId),
+      byggEndreMottakerIdRequestDto(nyStonadOpprettet.stonadId),
       MottakerIdHistorikkBo::class.java
     )
 
@@ -188,8 +188,8 @@ class StonadControllerTest {
     stonadRepository.deleteAll()
   }
 
-  private fun byggEndreMottakerIdRequest(stonadId: Int): HttpEntity<EndreMottakerIdRequest> {
-    return initHttpEntity(EndreMottakerIdRequest(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
+  private fun byggEndreMottakerIdRequestDto(stonadId: Int): HttpEntity<EndreMottakerIdRequestDto> {
+    return initHttpEntity(EndreMottakerIdRequestDto(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun fullUrlForNyStonad(): String {
@@ -208,7 +208,7 @@ class StonadControllerTest {
     return "http://localhost:$port"
   }
 
-  private fun byggStonadRequest(): HttpEntity<OpprettStonadRequest> {
+  private fun byggStonadRequest(): HttpEntity<OpprettStonadRequestDto> {
     return initHttpEntity(TestUtil.byggStonadRequest())
   }
 

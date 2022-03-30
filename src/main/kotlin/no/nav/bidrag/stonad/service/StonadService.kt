@@ -1,20 +1,22 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.api.HentStonadResponse
-import no.nav.bidrag.stonad.api.OpprettPeriodeRequest
-import no.nav.bidrag.stonad.api.OpprettStonadRequest
-import no.nav.bidrag.stonad.api.OpprettStonadResponse
-import no.nav.bidrag.stonad.api.toPeriodeBo
 import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
 import no.nav.bidrag.stonad.bo.PeriodeBo
-import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.controller.StonadController
+import no.nav.bidrag.stonad.persistence.entity.Periode
+import no.nav.bidrag.stonad.persistence.entity.Stonad
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import kotlin.reflect.full.memberProperties
 
 @Service
 @Transactional
@@ -22,44 +24,34 @@ class StonadService(val persistenceService: PersistenceService) {
 
   private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
 
-  // Opprett komplett stonad (alle tabeller)
-  fun opprettStonad(stonadRequest: OpprettStonadRequest): Int {
-    val stonadBo = StonadBo(
-      stonadType = stonadRequest.stonadType.toString(),
-      sakId = stonadRequest.sakId,
-      skyldnerId = stonadRequest.skyldnerId,
-      kravhaverId = stonadRequest.kravhaverId,
-      mottakerId = stonadRequest.mottakerId,
-      opprettetAv = stonadRequest.opprettetAv
-    )
-
-    val opprettetStonad = persistenceService.opprettNyStonad(stonadBo)
-
+  // Opprett komplett stønad (alle tabeller)
+  fun opprettStonad(stonadRequest: OpprettStonadRequestDto): Int {
+    val opprettetStonadId = persistenceService.opprettNyStonad(stonadRequest)
     // Perioder
-    stonadRequest.periodeListe.forEach { opprettPeriode(it, opprettetStonad.stonadId) }
-
-    return opprettetStonad.stonadId
+    stonadRequest.periodeListe.forEach { opprettPeriode(it, opprettetStonadId) }
+    return opprettetStonadId
   }
 
   // Opprett periode
-  private fun opprettPeriode(periodeRequest: OpprettPeriodeRequest, stonadId: Int): PeriodeBo {
-    return persistenceService.opprettNyPeriode(periodeRequest.toPeriodeBo(stonadId))
-
+  private fun opprettPeriode(periodeRequest: OpprettStonadPeriodeRequestDto, stonadId: Int) {
+    persistenceService.opprettNyPeriode(periodeRequest.toPeriodeBo(stonadId))
   }
 
-  fun hentStonadFraId(stonadId: Int): HentStonadResponse? {
-    val stonadDto = persistenceService.hentStonadFraId(stonadId)
-    if (stonadDto != null) {
-      val periodeDtoListe = persistenceService.hentPerioderForStonad(stonadId)
-      return lagHentStonadResponse(stonadDto, periodeDtoListe)
+  // Henter stønad ut fra stonadId
+  fun hentStonadFraId(stonadId: Int): HentStonadDto? {
+    val stonad = persistenceService.hentStonadFraId(stonadId)
+    if (stonad != null) {
+      val periodeListe = persistenceService.hentPerioderForStonad(stonadId)
+      return lagHentStonadDto(stonad, periodeListe)
     } else return null
   }
 
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): HentStonadResponse? {
-    val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
-    if (stonadDto != null) {
-      val periodeDtoListe = persistenceService.hentPerioderForStonad(stonadDto.stonadId)
-      return lagHentStonadResponse(stonadDto, periodeDtoListe)
+  // Henter stønad ut fra unik nøkkel for stønad
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): HentStonadDto? {
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
+    if (stonad != null) {
+      val periodeListe = persistenceService.hentPerioderForStonad(stonad.stonadId)
+      return lagHentStonadDto(stonad, periodeListe)
     } else return null
   }
 
@@ -67,40 +59,54 @@ class StonadService(val persistenceService: PersistenceService) {
     stonadType: String,
     skyldnerId: String,
     kravhaverId: String
-  ): HentStonadResponse? {
-    val stonadDto = persistenceService.finnStonad(stonadType, skyldnerId, kravhaverId)
-    if (stonadDto != null) {
-      val periodeDtoListe =
-        persistenceService.finnPerioderForStonadInkludertUgyldiggjorte(stonadDto.stonadId)
-      return lagHentStonadResponse(stonadDto, periodeDtoListe)
+  ): HentStonadDto? {
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
+    if (stonad != null) {
+      val periodeListe =
+        persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
+      return lagHentStonadDto(stonad, periodeListe)
     } else return null
   }
 
-  fun lagHentStonadResponse(
-    stonadBo: StonadBo,
-    periodeBoListe: List<PeriodeBo>
-  ): HentStonadResponse {
-    return HentStonadResponse(
-      stonadBo.stonadId,
-      StonadType.valueOf(stonadBo.stonadType),
-      stonadBo.sakId,
-      stonadBo.skyldnerId,
-      stonadBo.kravhaverId,
-      stonadBo.mottakerId,
-      stonadBo.opprettetAv,
-      stonadBo.opprettetTimestamp,
-      stonadBo.endretAv,
-      stonadBo.endretTimestamp,
-      periodeBoListe
+  fun lagHentStonadDto(stonad: Stonad, periodeListe: List<Periode>): HentStonadDto {
+    val hentStonadPeriodeDtoListe = mutableListOf<HentStonadPeriodeDto>()
+    periodeListe.forEach {
+      hentStonadPeriodeDtoListe.add(
+        HentStonadPeriodeDto(
+          it.periodeId,
+          it.periodeFom,
+          it.periodeTil,
+          stonad.stonadId,
+          it.vedtakId,
+          it.periodeGjortUgyldigAvVedtakId,
+          it.belop,
+          it.valutakode,
+          it.resultatkode
+        )
+      )
+    }
+
+    return HentStonadDto(
+      stonad.stonadId,
+      StonadType.valueOf(stonad.stonadType),
+      stonad.sakId,
+      stonad.skyldnerId,
+      stonad.kravhaverId,
+      stonad.mottakerId,
+      stonad.opprettetAv,
+      stonad.opprettetTimestamp,
+      stonad.endretAv,
+      stonad.endretTimestamp,
+      hentStonadPeriodeDtoListe
     )
   }
 
-  fun endreStonad(eksisterendeStonad: HentStonadResponse, oppdatertStonad: OpprettStonadRequest) {
+  fun endreStonad(eksisterendeStonad: HentStonadDto, oppdatertStonad: OpprettStonadRequestDto) {
 
     val stonadId = eksisterendeStonad.stonadId
-    val endretAvSaksbehandlerId = oppdatertStonad.endretAv
+    val endretAvSaksbehandlerId = oppdatertStonad.opprettetAv
 
-    persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId!!)
+    persistenceService.oppdaterStonad(stonadId, endretAvSaksbehandlerId)
 
     val oppdatertStonadVedtakId = oppdatertStonad.periodeListe.first().vedtakId
 
@@ -125,7 +131,7 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
 
-  fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStonadRequest): OppdatertPeriode {
+  fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStonadRequestDto): OppdatertPeriode {
     val periodeBoListe = mutableListOf<PeriodeBo>()
     val oppdatertStonadDatoFom = oppdatertStonad.periodeListe.first().periodeFom
     val oppdatertStonadDatoTil = oppdatertStonad.periodeListe.last().periodeTil
@@ -187,7 +193,7 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkBo {
+  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequestDto): MottakerIdHistorikkDto {
     persistenceService.endreMottakerId(request.stonadId, request.nyMottakerId, request.opprettetAv)
 
     return persistenceService.opprettNyMottakerIdHistorikk(request)
@@ -199,3 +205,23 @@ data class OppdatertPeriode(
   val oppdaterPerioder: Boolean = false,
   val settPeriodeSomUgyldig: Boolean = false
 )
+
+fun OpprettStonadPeriodeRequestDto.toPeriodeBo(stonadId: Int) = with(::PeriodeBo) {
+  val propertiesByName = OpprettStonadPeriodeRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      PeriodeBo::stonadId.name -> stonadId
+      PeriodeBo::periodeId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
+    }
+  })
+}
+
+fun EndreMottakerIdRequestDto.toMottakerIdHistorikkBo() = with(::MottakerIdHistorikkBo) {
+  val propertiesByName = EndreMottakerIdRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkBo)
+    }
+  })
+}
