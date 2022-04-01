@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.stonad.hendelse.VedtakHendelse
+import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

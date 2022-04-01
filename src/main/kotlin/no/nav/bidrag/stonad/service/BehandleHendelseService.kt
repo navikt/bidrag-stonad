@@ -3,8 +3,8 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

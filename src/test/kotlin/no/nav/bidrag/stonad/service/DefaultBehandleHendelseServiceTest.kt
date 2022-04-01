@@ -1,10 +1,10 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
+import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelsePeriode
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.hendelse.VedtakHendelse
-import no.nav.bidrag.stonad.model.VedtakHendelsePeriode
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import org.assertj.core.api.Assertions
