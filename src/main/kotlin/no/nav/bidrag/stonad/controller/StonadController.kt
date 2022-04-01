@@ -50,8 +50,8 @@ class StonadController(private val stonadService: StonadService) {
     value = [
       ApiResponse(responseCode = "200", description = "Stønad funnet"),
       ApiResponse(responseCode = "401", description = "Manglende eller utløpt id-token", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuell stønadsendring", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "404", description = "Stønadsendring ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+      ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuell stønad", content = [Content(schema = Schema(hidden = true))]),
+      ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
       ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
       ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))])
     ]
