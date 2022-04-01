@@ -1,6 +1,8 @@
 package no.nav.bidrag.stonad.bo
 
 import io.swagger.v3.oas.annotations.media.Schema
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.math.BigDecimal
@@ -36,6 +38,29 @@ data class PeriodeBo(
   @Schema(description = "Resultatkode for stønaden")
   val resultatkode: String = ""
 )
+
+fun OpprettStonadPeriodeRequestDto.toPeriodeBo() = with(::PeriodeBo) {
+  val propertiesByName = OpprettStonadPeriodeRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      PeriodeBo::periodeId.name -> 0
+      PeriodeBo::stonadId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
+    }
+  })
+}
+
+
+fun HentStonadPeriodeDto.toPeriodeBo() = with(::PeriodeBo) {
+  val propertiesByName = HentStonadPeriodeDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      PeriodeBo::stonadId.name -> stonadId
+      PeriodeBo::periodeId.name -> 0
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
+    }
+  })
+}
 
 fun PeriodeBo.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
   val propertiesByName = PeriodeBo::class.memberProperties.associateBy { it.name }

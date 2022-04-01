@@ -3,20 +3,20 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
-import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
+import no.nav.bidrag.stonad.bo.OppdatertPeriode
 import no.nav.bidrag.stonad.bo.PeriodeBo
+import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.controller.StonadController
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
+import no.nav.bidrag.stonad.persistence.entity.toPeriodeEntity
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
-import kotlin.reflect.full.memberProperties
 
 @Service
 @Transactional
@@ -34,7 +34,7 @@ class StonadService(val persistenceService: PersistenceService) {
 
   // Opprett periode
   private fun opprettPeriode(periodeRequest: OpprettStonadPeriodeRequestDto, stonadId: Int) {
-    persistenceService.opprettNyPeriode(periodeRequest.toPeriodeBo(stonadId))
+    persistenceService.opprettNyPeriode(periodeRequest.toPeriodeBo(), stonadId)
   }
 
   // Henter stønad ut fra stonadId
@@ -111,7 +111,7 @@ class StonadService(val persistenceService: PersistenceService) {
     val oppdatertStonadVedtakId = oppdatertStonad.periodeListe.first().vedtakId
 
     eksisterendeStonad.periodeListe.forEach { periode ->
-      val justertPeriode = finnOverlappPeriode(periode, oppdatertStonad)
+      val justertPeriode = finnOverlappPeriode(periode.toPeriodeBo(), oppdatertStonad)
       if (justertPeriode.settPeriodeSomUgyldig) {
         // Setter opprinnelige periode som ugyldig
         persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
@@ -119,13 +119,13 @@ class StonadService(val persistenceService: PersistenceService) {
       // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
       if (justertPeriode.oppdaterPerioder) {
         justertPeriode.periodeListe.forEach {
-          persistenceService.opprettNyPeriode(it)
+          persistenceService.opprettNyPeriode(it, stonadId)
         }
       }
     }
 
     oppdatertStonad.periodeListe.forEach {
-      persistenceService.opprettNyPeriode(it.toPeriodeBo(stonadId))
+      persistenceService.opprettNyPeriode(it.toPeriodeBo(), stonadId)
 
     }
   }
@@ -193,35 +193,8 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequestDto): MottakerIdHistorikkDto {
-    persistenceService.endreMottakerId(request.stonadId, request.nyMottakerId, request.opprettetAv)
-
+  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequestDto): Int {
+    persistenceService.endreMottakerId(request)
     return persistenceService.opprettNyMottakerIdHistorikk(request)
   }
-}
-
-data class OppdatertPeriode(
-  val periodeListe: List<PeriodeBo>,
-  val oppdaterPerioder: Boolean = false,
-  val settPeriodeSomUgyldig: Boolean = false
-)
-
-fun OpprettStonadPeriodeRequestDto.toPeriodeBo(stonadId: Int) = with(::PeriodeBo) {
-  val propertiesByName = OpprettStonadPeriodeRequestDto::class.memberProperties.associateBy { it.name }
-  callBy(parameters.associateWith { parameter ->
-    when (parameter.name) {
-      PeriodeBo::stonadId.name -> stonadId
-      PeriodeBo::periodeId.name -> 0
-      else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
-    }
-  })
-}
-
-fun EndreMottakerIdRequestDto.toMottakerIdHistorikkBo() = with(::MottakerIdHistorikkBo) {
-  val propertiesByName = EndreMottakerIdRequestDto::class.memberProperties.associateBy { it.name }
-  callBy(parameters.associateWith { parameter ->
-    when (parameter.name) {
-      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkBo)
-    }
-  })
 }

@@ -1,18 +1,18 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.stonad.bo.MottakerIdHistorikkBo
 import no.nav.bidrag.stonad.bo.PeriodeBo
-import no.nav.bidrag.stonad.bo.StonadBo
-import no.nav.bidrag.stonad.bo.toMottakerIdHistorikkEntity
 import no.nav.bidrag.stonad.bo.toPeriodeEntity
-import no.nav.bidrag.stonad.bo.toStonadEntity
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkDto
 import no.nav.bidrag.stonad.persistence.entity.toHentStonadPeriodeDto
+import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkEntity
+import no.nav.bidrag.stonad.persistence.entity.toPeriodeEntity
 import no.nav.bidrag.stonad.persistence.entity.toStonadEntity
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
@@ -39,30 +39,34 @@ class PersistenceService(
     stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
-  fun opprettNyPeriode(periodeBo: PeriodeBo) {
-    val eksisterendeStonad = stonadRepository.findById(periodeBo.stonadId)
+  fun opprettNyPeriode(periodeBo: PeriodeBo, stonadId: Int) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
           String.format(
-            "Fant ikke stonad med id %d i databasen",
-            periodeBo.stonadId
+            "Fant ikke stønad med id %d i databasen",
+            stonadId
           )
         )
       }
     val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad)
-    val periode = periodeRepository.save(nyPeriode)
-    return periode.toHentStonadPeriodeDto()
+    periodeRepository.save(nyPeriode)
   }
 
-  fun opprettNyePerioder(periodeBoListe: List<PeriodeBo>, stonadBo: StonadBo): List<PeriodeBo> {
-    val stonad = stonadBo.toStonadEntity()
-    val opprettedePeriodeBoListe = mutableListOf<PeriodeBo>()
-    periodeBoListe.forEach {
-      val nyPeriode = it.toPeriodeEntity(stonad)
-      val periode = periodeRepository.save(nyPeriode)
-      opprettedePeriodeBoListe.add(periode.toHentStonadPeriodeDto())
+  fun opprettNyePerioder(periodeRequestListe: List<OpprettStonadPeriodeRequestDto>, stonadId: Int) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
+      .orElseThrow {
+        IllegalArgumentException(
+          String.format(
+            "Fant ikke stønad med id %d i databasen",
+            stonadId
+          )
+        )
+      }
+    periodeRequestListe.forEach {
+      val nyPeriode = it.toPeriodeEntity(eksisterendeStonad)
+      periodeRepository.save(nyPeriode)
     }
-    return opprettedePeriodeBoListe
   }
 
   fun hentStonadFraId(stonadId: Int): Stonad? {
@@ -111,11 +115,8 @@ class PersistenceService(
           )
         )
       }
-    val mottakerIdHistorikkBo = MottakerIdHistorikkBo(stonadId = request.stonadId,
-      mottakerIdEndretFra = eksisterendeStonad.mottakerId, mottakerIdEndretTil = request.nyMottakerId,
-      opprettetAv = request.opprettetAv)
 
-    val nyMottakerIdHistorikk = mottakerIdHistorikkBo.toMottakerIdHistorikkEntity(eksisterendeStonad)
+    val nyMottakerIdHistorikk = request.toMottakerIdHistorikkEntity(eksisterendeStonad, request)
     mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
     return request.stonadId
   }
@@ -132,7 +133,7 @@ class PersistenceService(
     periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId)
   }
 
-  fun hentPeriode(id: Int): PeriodeBo? {
+  fun hentPeriode(id: Int): HentStonadPeriodeDto? {
     val periode = periodeRepository.findById(id)
       .orElseThrow {
         IllegalArgumentException(

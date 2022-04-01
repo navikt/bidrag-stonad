@@ -1,8 +1,10 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequestDto
-import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -15,6 +17,8 @@ import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.math.BigDecimal
+import java.time.LocalDate
 
 @DisplayName("MottakerIdHistorikkServiceTest")
 @ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
@@ -46,58 +50,48 @@ class MottakerIdHistorikkServiceTest {
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
-/*
-  @Test
-  fun `skal opprette ny mottakerIdHistorikk`() {
-    // Oppretter ny MottakerIdHistorikk
-    val nyStonadRequest = NyStonadRequest("BIDRAG", "SAK-001", "01018011111", "01010511111",
-      "01018211111", "X123456", "X654321")
-    val nyStonadOpprettet = stonadService.opprettStonad(nyStonadRequest)
-
-    // Oppretter ny MottakerIdHistorikk
-    val nyMottakerIdHistorikkRequest = NyMottakerIdHistorikkRequest(
-      nyStonadOpprettet.stonadId,
-      "123",
-      "321",
-      "Test")
-    val nyMottakerIdHistorikkOpprettet = mottakerIdHistorikkService.opprettNyMottakerIdHistorikk(nyMottakerIdHistorikkRequest)
-
-    assertAll(
-      Executable { assertThat(nyMottakerIdHistorikkOpprettet).isNotNull() },
-      Executable { assertThat(nyMottakerIdHistorikkOpprettet.stonadId).isEqualTo(nyMottakerIdHistorikkRequest.stonadId) },
-      Executable { assertThat(nyMottakerIdHistorikkOpprettet.saksbehandlerId).isEqualTo(nyMottakerIdHistorikkRequest.saksbehandlerId) },
-      Executable { assertThat(nyMottakerIdHistorikkOpprettet.mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikkRequest.mottakerIdEndretFra) },
-      Executable { assertThat(nyMottakerIdHistorikkOpprettet.mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikkRequest.mottakerIdEndretTil) }
-    )
-  }*/
 
   @Test
   fun `skal finne data for en mottakerIdHistorikk`() {
     // Oppretter nytt mottakerIdHistorikk
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(StonadBo(
-      stonadType = "BIDRAG", sakId = "SAK-001",
+    val periodeListe = listOf(
+      OpprettStonadPeriodeRequestDto(
+        periodeFom = LocalDate.parse("2019-01-01"),
+        periodeTil = LocalDate.parse("2019-07-01"),
+        vedtakId = 321,
+        periodeGjortUgyldigAvVedtakId = 246,
+        belop = BigDecimal.valueOf(3490),
+        valutakode = "NOK",
+        resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
+    )
+    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
+      OpprettStonadRequestDto(
+      stonadType = StonadType.BIDRAG, sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAv = "X123456", endretAv = "X654321"
-    ))
-
-    // Oppretter ny mottakerIdHistorikk
-    val nyMottakerIdHistorikk = persistenceService.opprettNyMottakerIdHistorikk(
-      EndreMottakerIdRequestDto(
-        nyStonadOpprettet.stonadId,
-        nyMottakerId = "123",
-        opprettetAv = "Test"
-      )
+      opprettetAv = "X123456", periodeListe)
     )
 
+    val endreMottakerIdRequest = EndreMottakerIdRequestDto(
+      nyStonadOpprettetStonadId,
+      nyMottakerId = "123",
+      opprettetAv = "Test"
+    )
+
+    // Oppretter ny mottakerIdHistorikk
+    val nyMottakerIdHistorikkStonadId = persistenceService.opprettNyMottakerIdHistorikk(endreMottakerIdRequest)
+
     // Finner mottakerIdHistorikken som akkurat ble opprettet
-    val mottakerIdHistorikkFunnet = mottakerIdHistorikkService.hentAlleEndringerAvMottakerIdForStonad(nyStonadOpprettet.stonadId)
+    val mottakerIdHistorikkFunnet = mottakerIdHistorikkService.hentAlleEndringerAvMottakerIdForStonad(nyMottakerIdHistorikkStonadId)
 
     assertAll(
       Executable { assertThat(mottakerIdHistorikkFunnet).isNotNull() },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].stonadId).isEqualTo(nyMottakerIdHistorikk.stonadId) },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretFra).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretFra) },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil).isEqualTo(nyMottakerIdHistorikk.mottakerIdEndretTil) },
-      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].opprettetAv).isEqualTo(nyMottakerIdHistorikk.opprettetAv) },
+      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].stonadId)
+        .isEqualTo(endreMottakerIdRequest.stonadId) },
+
+      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].mottakerIdEndretTil)
+        .isEqualTo(endreMottakerIdRequest.nyMottakerId) },
+      Executable { assertThat(mottakerIdHistorikkFunnet.alleMottakerIdHistorikkForStonad!![0].opprettetAv)
+        .isEqualTo(endreMottakerIdRequest.opprettetAv) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()

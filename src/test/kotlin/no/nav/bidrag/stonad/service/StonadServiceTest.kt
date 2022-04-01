@@ -1,10 +1,9 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.api.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.stonad.api.OpprettStonadRequestDto
-import no.nav.bidrag.stonad.bo.StonadBo
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -55,6 +54,8 @@ class StonadServiceTest {
       OpprettStonadPeriodeRequestDto(
         periodeFom = LocalDate.parse("2021-02-01"),
         periodeTil = LocalDate.parse("2021-03-01"),
+        vedtakId = 1,
+        periodeGjortUgyldigAvVedtakId = null,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
         resultatkode = "Alles gut"
@@ -64,7 +65,7 @@ class StonadServiceTest {
     val opprettStonadRequest = OpprettStonadRequestDto(
       StonadType.BIDRAG, "SAK-001", "Skyldner123",
       "Kravhaver123", "MottakerId123", "R153961",
-      "R153961", periodeListe
+      periodeListe
     )
 
     val nyStonadOpprettet = stonadService.opprettStonad(opprettStonadRequest)
@@ -82,25 +83,25 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+        periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+        periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"
       )
     )
@@ -108,7 +109,7 @@ class StonadServiceTest {
     val opprettStonadRequest = OpprettStonadRequestDto(
       StonadType.BIDRAG, "SAK-001", "Skyldner123",
       "Kravhaver123", "MottakerId123", "R153961",
-      "R153961", periodeListe
+      periodeListe
     )
 
     stonadService.opprettStonad(opprettStonadRequest)
@@ -137,20 +138,20 @@ class StonadServiceTest {
     // Oppretter ny stonad
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
-      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"),
+      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
     periodeListe.add(
-      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
     periodeListe.add(
-      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"),
+      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
     periodeListe.add(
-      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"),
+      OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 1,
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val opprettStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(opprettStonadRequest)
 
@@ -185,18 +186,31 @@ class StonadServiceTest {
   @Test
   @Suppress("NonAsciiCharacters")
   fun `skal finne stønad fra sammensatt nøkkel`() {
-    // Oppretter ny stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(
-      StonadBo(
-        stonadType = "BIDRAG",
-        skyldnerId = "Skyldner123",
-        kravhaverId = "Kravhaver123"
-      )
+    // Oppretter ny stønad
+
+    val periodeListe = listOf(
+      OpprettStonadPeriodeRequestDto(
+        periodeFom = LocalDate.parse("2019-01-01"),
+        periodeTil = LocalDate.parse("2019-07-01"),
+        vedtakId = 1,
+        periodeGjortUgyldigAvVedtakId = null,
+        belop = BigDecimal.valueOf(1),
+        valutakode = "NOK",
+        resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
     )
+
+    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
+      OpprettStonadRequestDto(
+        StonadType.BIDRAG, "SAK-001", "Skyldner123",
+    "Kravhaver123", "MottakerId123", "R153961",
+    periodeListe)
+    )
+
+    val nyStonadOpprettet = persistenceService.hentStonadFraId(nyStonadOpprettetStonadId)
 
     // Finner stønaden som akkurat ble opprettet
     val stonadFunnet = stonadService.hentStonad(
-      nyStonadOpprettet.stonadType,
+      nyStonadOpprettet!!.stonadType,
       nyStonadOpprettet.skyldnerId,
       nyStonadOpprettet.kravhaverId
     )
@@ -210,18 +224,26 @@ class StonadServiceTest {
   @Suppress("NonAsciiCharacters")
   fun `skal finne stønad fra generert id`() {
     // Oppretter ny stonad
-    val nyStonadOpprettet = persistenceService.opprettNyStonad(
-      StonadBo(
-        stonadType = "BIDRAG",
-        skyldnerId = "Skyldner123",
-        kravhaverId = "Kravhaver123"
-      )
+    val periodeListe = listOf(
+      OpprettStonadPeriodeRequestDto(
+        periodeFom = LocalDate.parse("2019-01-01"),
+        periodeTil = LocalDate.parse("2019-07-01"),
+        vedtakId = 1,
+        periodeGjortUgyldigAvVedtakId = null,
+        belop = BigDecimal.valueOf(1),
+        valutakode = "NOK",
+        resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
+    )
+
+    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
+      OpprettStonadRequestDto(
+        StonadType.BIDRAG, "SAK-001", "Skyldner123",
+        "Kravhaver123", "MottakerId123", "R153961",
+        periodeListe)
     )
 
     // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.hentStonadFraId(
-      nyStonadOpprettet.stonadId
-    )
+    val stonadFunnet = stonadService.hentStonadFraId(nyStonadOpprettetStonadId)
 
     assertAll(
       Executable { assertThat(stonadFunnet).isNotNull() },
@@ -246,7 +268,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(originalStonadRequest)
     val originalStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(originalStonadRequest.stonadType.toString(), originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
@@ -264,7 +286,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.03), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","EndretAv", endretStonadPeriodeListe)
+      "MottakerId123", "R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.stonadType.toString(), endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
@@ -333,7 +355,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(originalStonadRequest)
     val originalStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(originalStonadRequest.stonadType.toString(), originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
@@ -345,7 +367,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","EndretAv", endretStonadPeriodeListe)
+      "MottakerId123", "R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.stonadType.toString(), endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
@@ -395,7 +417,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(originalStonadRequest)
     val originalStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(originalStonadRequest.stonadType.toString(), originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
@@ -407,7 +429,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","EndretAv", endretStonadPeriodeListe)
+      "MottakerId123", "R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.stonadType.toString(), endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
@@ -450,7 +472,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(originalStonadRequest)
     val originalStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(originalStonadRequest.stonadType.toString(), originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
@@ -462,7 +484,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","EndretAv", endretStonadPeriodeListe)
+      "MottakerId123", "R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.stonadType.toString(), endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)
@@ -519,7 +541,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","R153961", periodeListe)
+      "MottakerId123", "R153961", periodeListe)
 
     stonadService.opprettStonad(originalStonadRequest)
     val originalStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(originalStonadRequest.stonadType.toString(), originalStonadRequest.skyldnerId, originalStonadRequest.kravhaverId)
@@ -540,7 +562,7 @@ class StonadServiceTest {
         periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
-      "MottakerId123", "R153961","EndretAv", endretStonadPeriodeListe)
+      "MottakerId123", "R153961", endretStonadPeriodeListe)
 
     stonadService.endreStonad(originalStonad!!, endretStonadRequest)
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.stonadType.toString(), endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId)

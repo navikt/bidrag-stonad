@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.ISSUER
 import no.nav.bidrag.stonad.service.StonadService
@@ -77,10 +76,10 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequestDto): ResponseEntity<MottakerIdHistorikkDto> {
-    val mottakerIdHistorikkDto = stonadService.endreMottakerIdOgOpprettHistorikk(request)
-    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $mottakerIdHistorikkDto")
-    return ResponseEntity(mottakerIdHistorikkDto, HttpStatus.OK)
+  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequestDto): ResponseEntity<Int> {
+    val stonadIdEndretStonad = stonadService.endreMottakerIdOgOpprettHistorikk(request)
+    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $stonadIdEndretStonad")
+    return ResponseEntity(stonadIdEndretStonad, HttpStatus.OK)
   }
 
   companion object {
