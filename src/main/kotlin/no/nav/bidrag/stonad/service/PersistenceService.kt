@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -10,7 +10,7 @@ import no.nav.bidrag.stonad.bo.toPeriodeEntity
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkDto
-import no.nav.bidrag.stonad.persistence.entity.toHentStonadPeriodeDto
+import no.nav.bidrag.stonad.persistence.entity.toStonadPeriodeDto
 import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkEntity
 import no.nav.bidrag.stonad.persistence.entity.toPeriodeEntity
 import no.nav.bidrag.stonad.persistence.entity.toStonadEntity
@@ -133,7 +133,7 @@ class PersistenceService(
     periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId)
   }
 
-  fun hentPeriode(id: Int): HentStonadPeriodeDto? {
+  fun hentPeriode(id: Int): StonadPeriodeDto? {
     val periode = periodeRepository.findById(id)
       .orElseThrow {
         IllegalArgumentException(
@@ -143,7 +143,7 @@ class PersistenceService(
           )
         )
       }
-    return periode.toHentStonadPeriodeDto()
+    return periode.toStonadPeriodeDto()
   }
 
 

@@ -1,8 +1,8 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
@@ -38,20 +38,20 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
   // Henter stønad ut fra stonadId
-  fun hentStonadFraId(stonadId: Int): HentStonadDto? {
+  fun hentStonadFraId(stonadId: Int): StonadDto? {
     val stonad = persistenceService.hentStonadFraId(stonadId)
     if (stonad != null) {
       val periodeListe = persistenceService.hentPerioderForStonad(stonadId)
-      return lagHentStonadDto(stonad, periodeListe)
+      return lagStonadDto(stonad, periodeListe)
     } else return null
   }
 
   // Henter stønad ut fra unik nøkkel for stønad
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): HentStonadDto? {
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto? {
     val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
     if (stonad != null) {
       val periodeListe = persistenceService.hentPerioderForStonad(stonad.stonadId)
-      return lagHentStonadDto(stonad, periodeListe)
+      return lagStonadDto(stonad, periodeListe)
     } else return null
   }
 
@@ -59,20 +59,20 @@ class StonadService(val persistenceService: PersistenceService) {
     stonadType: String,
     skyldnerId: String,
     kravhaverId: String
-  ): HentStonadDto? {
+  ): StonadDto? {
     val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
     if (stonad != null) {
       val periodeListe =
         persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
-      return lagHentStonadDto(stonad, periodeListe)
+      return lagStonadDto(stonad, periodeListe)
     } else return null
   }
 
-  fun lagHentStonadDto(stonad: Stonad, periodeListe: List<Periode>): HentStonadDto {
-    val hentStonadPeriodeDtoListe = mutableListOf<HentStonadPeriodeDto>()
+  fun lagStonadDto(stonad: Stonad, periodeListe: List<Periode>): StonadDto {
+    val hentStonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
     periodeListe.forEach {
       hentStonadPeriodeDtoListe.add(
-        HentStonadPeriodeDto(
+        StonadPeriodeDto(
           it.periodeId,
           it.periodeFom,
           it.periodeTil,
@@ -86,7 +86,7 @@ class StonadService(val persistenceService: PersistenceService) {
       )
     }
 
-    return HentStonadDto(
+    return StonadDto(
       stonad.stonadId,
       StonadType.valueOf(stonad.stonadType),
       stonad.sakId,
@@ -101,7 +101,7 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreStonad(eksisterendeStonad: HentStonadDto, oppdatertStonad: OpprettStonadRequestDto) {
+  fun endreStonad(eksisterendeStonad: StonadDto, oppdatertStonad: OpprettStonadRequestDto) {
 
     val stonadId = eksisterendeStonad.stonadId
     val endretAvSaksbehandlerId = oppdatertStonad.opprettetAv

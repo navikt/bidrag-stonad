@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.bo
 
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
@@ -51,8 +51,8 @@ fun OpprettStonadPeriodeRequestDto.toPeriodeBo() = with(::PeriodeBo) {
 }
 
 
-fun HentStonadPeriodeDto.toPeriodeBo() = with(::PeriodeBo) {
-  val propertiesByName = HentStonadPeriodeDto::class.memberProperties.associateBy { it.name }
+fun StonadPeriodeDto.toPeriodeBo() = with(::PeriodeBo) {
+  val propertiesByName = StonadPeriodeDto::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       PeriodeBo::stonadId.name -> stonadId
