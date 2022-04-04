@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.controller
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -137,7 +137,7 @@ class StonadControllerTest {
       "/stonad/${stonadOpprettetStonadId}",
       HttpMethod.GET,
       null,
-      HentStonadDto::class.java
+      StonadDto::class.java
     )
 
     assertAll(

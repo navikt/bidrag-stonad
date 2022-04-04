@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -59,11 +59,11 @@ fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
   })
 }
 
-fun Stonad.toHentStonadDto() = with(::HentStonadDto) {
+fun Stonad.toStonadDto() = with(::StonadDto) {
   val propertiesByName = Stonad::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
-      else -> propertiesByName[parameter.name]?.get(this@toHentStonadDto)
+      else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })
 }

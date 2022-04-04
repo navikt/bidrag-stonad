@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.ISSUER
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -57,7 +57,7 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<HentStonadDto> {
+  fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<StonadDto> {
     val stonadFunnet = stonadService.hentStonadFraId(stonadId)
     LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)

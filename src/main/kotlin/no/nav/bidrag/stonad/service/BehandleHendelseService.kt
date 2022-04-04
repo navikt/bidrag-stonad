@@ -1,9 +1,9 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
+import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -46,7 +46,7 @@ class DefaultBehandleHendelseService(
     }
   }
 
-  private fun endreStonad(eksisterendeStonad: HentStonadDto, vedtakHendelse: VedtakHendelse) {
+  private fun endreStonad(eksisterendeStonad: StonadDto, vedtakHendelse: VedtakHendelse) {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(

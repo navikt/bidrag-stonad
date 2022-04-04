@@ -1,7 +1,7 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
-import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelsePeriode
+import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
+import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelsePeriode
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.BidragStonadLocal
@@ -56,8 +56,10 @@ internal class DefaultBehandleHendelseServiceTest {
   fun `skal opprette ny stonad fra Hendelse`() {
     // Oppretter ny hendelse
     val periodeliste = mutableListOf<VedtakHendelsePeriode>()
-    periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
-      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory"))
+    periodeliste.add(
+      VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
+      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory")
+    )
 
     val nyHendelse = VedtakHendelse(1, VedtakType.MANUELT,StonadType.BIDRAG, "SAK-001", "12345",
       "54321", "24680", "R153961",
