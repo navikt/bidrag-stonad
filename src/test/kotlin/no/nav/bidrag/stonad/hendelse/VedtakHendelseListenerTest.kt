@@ -2,7 +2,6 @@ package no.nav.bidrag.stonad.hendelse
 
 import no.nav.bidrag.stonad.BidragStonadLocal
 import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
-import no.nav.bidrag.stonad.service.BehandleHendelseService
 import no.nav.bidrag.stonad.service.StonadService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -60,7 +59,7 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).finnStonad("BIDRAG", "", "")
+        verify(stonadServiceMock).hentStonad("BIDRAG", "", "")
     }
 
     @Test
@@ -81,6 +80,6 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).finnStonad("FORSKUDD", "", "")
+        verify(stonadServiceMock).hentStonad("FORSKUDD", "", "")
     }
 }

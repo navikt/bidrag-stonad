@@ -1,10 +1,9 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.TestUtil.Companion.byggPeriodeDto
-import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadRequest
-import no.nav.bidrag.stonad.dto.PeriodeDto
-import no.nav.bidrag.stonad.dto.StonadDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -12,10 +11,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.doNothing
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -31,34 +33,36 @@ class StonadServiceMockTest {
   private lateinit var persistenceServiceMock: PersistenceService
 
   @Captor
-  private lateinit var stonadDtoCaptor: ArgumentCaptor<StonadDto>
+  private lateinit var opprettStonadRequestDto: ArgumentCaptor<OpprettStonadRequestDto>
 
   @Captor
-  private lateinit var periodeDtoCaptor: ArgumentCaptor<PeriodeDto>
+  private lateinit var periodeBoCaptor: ArgumentCaptor<PeriodeBo>
 
   @Test
   fun `skal opprette ny komplett stonad`() {
 
-    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(stonadDtoCaptor)))
-      .thenReturn(byggStonadDto())
-    Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeDtoCaptor)))
-      .thenReturn(byggPeriodeDto())
+    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(opprettStonadRequestDto)))
+      .thenReturn(1)
+//    Mockito.`when`(persistenceServiceMock.opprettNyPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1)))
+      doNothing().`when`(persistenceServiceMock).opprettNyPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1))
+//      .thenReturn(null)
 
-    val nyStonadOpprettet = stonadService.opprettStonad(byggStonadRequest())
+    val nyStonadOpprettetStonadId = stonadService.opprettStonad(byggStonadRequest())
 
-    val stonadDto = stonadDtoCaptor.value
-    val periodeDtoListe = periodeDtoCaptor.allValues
+    val stonadDto = opprettStonadRequestDto.value
+    val periodeDtoListe = periodeBoCaptor.allValues
 
-    Mockito.verify(persistenceServiceMock, Mockito.times(1)).opprettNyStonad(MockitoHelper.any(StonadDto::class.java))
-    Mockito.verify(persistenceServiceMock, Mockito.times(2)).opprettNyPeriode(MockitoHelper.any(PeriodeDto::class.java))
+    Mockito.verify(persistenceServiceMock, Mockito.times(1))
+      .opprettNyStonad(MockitoHelper.any(OpprettStonadRequestDto::class.java))
+//    Mockito.verify(persistenceServiceMock, Mockito.times(2))
+//      .opprettNyPeriode(MockitoHelper.any(PeriodeBo::class.java), nyStonadOpprettetStonadId)
 
     assertAll(
-      Executable { assertThat(nyStonadOpprettet).isNotNull() },
-      Executable { assertThat(nyStonadOpprettet.stonadId).isNotNull() },
+      Executable { assertThat(nyStonadOpprettetStonadId).isNotNull() },
 
       // Sjekk stonadDto
       Executable { assertThat(stonadDto).isNotNull() },
-      Executable { assertThat(stonadDto.stonadType).isEqualTo("BIDRAG") },
+      Executable { assertThat(stonadDto.stonadType).isEqualTo(StonadType.BIDRAG) },
       Executable { assertThat(stonadDto.sakId).isEqualTo("SAK-001") },
       Executable { assertThat(stonadDto.skyldnerId).isEqualTo("01018011111") },
       Executable { assertThat(stonadDto.kravhaverId).isEqualTo("01010511111") },

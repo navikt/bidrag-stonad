@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
+import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -13,7 +14,7 @@ import kotlin.reflect.full.memberProperties
 
 @IdClass(MottakerIdHistorikkPK::class)
 @Entity
-data class MottakerIdHistorikk (
+data class MottakerIdHistorikk(
 
   @Id
   @ManyToOne
@@ -34,6 +35,23 @@ data class MottakerIdHistorikk (
   val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
 )
 
+fun EndreMottakerIdRequestDto.toMottakerIdHistorikkEntity(
+  stonad: Stonad,
+  request: EndreMottakerIdRequestDto
+) = with(::MottakerIdHistorikk) {
+  val propertiesByName = EndreMottakerIdRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      MottakerIdHistorikk::stonad.name -> stonad
+      MottakerIdHistorikk::mottakerIdEndretFra.name -> stonad.mottakerId
+      MottakerIdHistorikk::mottakerIdEndretTil.name -> request.nyMottakerId
+      MottakerIdHistorikk::opprettetTimestamp.name -> LocalDateTime.now()
+      else -> propertiesByName[parameter.name]?.get(this@toMottakerIdHistorikkEntity)
+    }
+  })
+}
+
+
 fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkDto) {
   val propertiesByName = MottakerIdHistorikk::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
@@ -44,4 +62,7 @@ fun MottakerIdHistorikk.toMottakerIdHistorikkDto() = with(::MottakerIdHistorikkD
   })
 }
 
-class MottakerIdHistorikkPK(val stonad: Int = 0, val opprettetTimestamp: LocalDateTime = LocalDateTime.now()) : Serializable
+class MottakerIdHistorikkPK(
+  val stonad: Int = 0,
+  val opprettetTimestamp: LocalDateTime = LocalDateTime.now()
+) : Serializable

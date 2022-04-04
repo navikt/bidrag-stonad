@@ -1,15 +1,19 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.stonad.api.EndreMottakerIdRequest
-import no.nav.bidrag.stonad.dto.MottakerIdHistorikkDto
-import no.nav.bidrag.stonad.dto.PeriodeDto
-import no.nav.bidrag.stonad.dto.StonadDto
-import no.nav.bidrag.stonad.dto.toMottakerIdHistorikkEntity
-import no.nav.bidrag.stonad.dto.toPeriodeEntity
-import no.nav.bidrag.stonad.dto.toStonadEntity
+import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
+import no.nav.bidrag.stonad.bo.toPeriodeEntity
+import no.nav.bidrag.stonad.persistence.entity.Periode
+import no.nav.bidrag.stonad.persistence.entity.Stonad
 import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkDto
-import no.nav.bidrag.stonad.persistence.entity.toPeriodeDto
-import no.nav.bidrag.stonad.persistence.entity.toStonadDto
+import no.nav.bidrag.stonad.persistence.entity.toHentStonadPeriodeDto
+import no.nav.bidrag.stonad.persistence.entity.toMottakerIdHistorikkEntity
+import no.nav.bidrag.stonad.persistence.entity.toPeriodeEntity
+import no.nav.bidrag.stonad.persistence.entity.toStonadEntity
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
@@ -25,17 +29,47 @@ class PersistenceService(
 
   private val LOGGER = LoggerFactory.getLogger(PersistenceService::class.java)
 
-  fun opprettNyStonad(stonadDto: StonadDto): StonadDto {
-    val nyStonad = stonadDto.toStonadEntity()
+  fun opprettNyStonad(opprettStonadRequestDto: OpprettStonadRequestDto): Int {
+    val nyStonad = opprettStonadRequestDto.toStonadEntity()
     val stonad = stonadRepository.save(nyStonad)
-    return stonad.toStonadDto()
+    return stonad.stonadId
   }
 
   fun oppdaterStonad(stonadId: Int, opprettetAv: String) {
     stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
-  fun finnStonadFraId(stonadId: Int): StonadDto? {
+  fun opprettNyPeriode(periodeBo: PeriodeBo, stonadId: Int) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
+      .orElseThrow {
+        IllegalArgumentException(
+          String.format(
+            "Fant ikke stønad med id %d i databasen",
+            stonadId
+          )
+        )
+      }
+    val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad)
+    periodeRepository.save(nyPeriode)
+  }
+
+  fun opprettNyePerioder(periodeRequestListe: List<OpprettStonadPeriodeRequestDto>, stonadId: Int) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
+      .orElseThrow {
+        IllegalArgumentException(
+          String.format(
+            "Fant ikke stønad med id %d i databasen",
+            stonadId
+          )
+        )
+      }
+    periodeRequestListe.forEach {
+      val nyPeriode = it.toPeriodeEntity(eksisterendeStonad)
+      periodeRepository.save(nyPeriode)
+    }
+  }
+
+  fun hentStonadFraId(stonadId: Int): Stonad? {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -45,24 +79,33 @@ class PersistenceService(
           )
         )
       }
-    return stonad.toStonadDto()
+    return stonad
   }
 
-  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto? {
-    val stonad = stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId)
-    return stonad?.toStonadDto()
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): Stonad? {
+    return stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId)
   }
 
-  fun endreMottakerId(stonadId: Int, nyMottakerId: String, opprettetAv: String) {
-    val eksisterendeStonad = stonadRepository.findById(stonadId)
+
+  fun hentPerioderForStonad(id: Int): List<Periode> {
+    return periodeRepository.hentPerioderForStonad(id)
+  }
+
+
+  fun hentPerioderForStonadInkludertUgyldiggjorte(id: Int): List<Periode> {
+    return periodeRepository.hentPerioderForStonadInkludertUgyldiggjorte(id)
+  }
+
+  fun endreMottakerId(request: EndreMottakerIdRequestDto) {
+    stonadRepository.findById(request.stonadId)
       .orElseThrow {
-        IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", stonadId)
+        IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", request.stonadId)
         )
       }
-    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)
+    stonadRepository.endreMottakerIdForStonad(request.stonadId, request.nyMottakerId, request.opprettetAv)
   }
 
-  fun opprettNyMottakerIdHistorikk(request: EndreMottakerIdRequest): MottakerIdHistorikkDto {
+  fun opprettNyMottakerIdHistorikk(request: EndreMottakerIdRequestDto): Int {
     val eksisterendeStonad = stonadRepository.findById(request.stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -72,53 +115,25 @@ class PersistenceService(
           )
         )
       }
-    val mottakerIdHistorikkDto = MottakerIdHistorikkDto(stonadId = request.stonadId,
-      mottakerIdEndretFra = eksisterendeStonad.mottakerId, mottakerIdEndretTil = request.nyMottakerId,
-      opprettetAv = request.opprettetAv)
 
-    val nyMottakerIdHistorikk = mottakerIdHistorikkDto.toMottakerIdHistorikkEntity(eksisterendeStonad)
-    val mottakerIdHistorikk = mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
-    return mottakerIdHistorikk.toMottakerIdHistorikkDto()
+    val nyMottakerIdHistorikk = request.toMottakerIdHistorikkEntity(eksisterendeStonad, request)
+    mottakerIdHistorikkRepository.save(nyMottakerIdHistorikk)
+    return request.stonadId
   }
 
-  fun finnAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto>? {
-    val mottakerIdHistorikkDtoListe = mutableListOf<MottakerIdHistorikkDto>()
+  fun hentAlleEndringerAvMottakerIdForStonad(id: Int): List<MottakerIdHistorikkDto>? {
+    val mottakerIdHistorikkBoListe = mutableListOf<MottakerIdHistorikkDto>()
     mottakerIdHistorikkRepository.hentAlleMottakerIdHistorikkForStonad(id)
-      .forEach { mottakerIdHistorikk -> mottakerIdHistorikkDtoListe.add(mottakerIdHistorikk.toMottakerIdHistorikkDto()) }
-    return mottakerIdHistorikkDtoListe
+      .forEach { mottakerIdHistorikk -> mottakerIdHistorikkBoListe.add(mottakerIdHistorikk.toMottakerIdHistorikkDto()) }
+    return mottakerIdHistorikkBoListe
   }
 
-  fun opprettNyPeriode(periodeDto: PeriodeDto): PeriodeDto {
-    val eksisterendeStonad = stonadRepository.findById(periodeDto.stonadId)
-      .orElseThrow {
-        IllegalArgumentException(
-          String.format(
-            "Fant ikke stonad med id %d i databasen",
-            periodeDto.stonadId
-          )
-        )
-      }
-    val nyPeriode = periodeDto.toPeriodeEntity(eksisterendeStonad)
-    val periode = periodeRepository.save(nyPeriode)
-    return periode.toPeriodeDto()
-  }
-
-  fun opprettNyePerioder(periodeDtoListe: List<PeriodeDto>, stonadDto: StonadDto): List<PeriodeDto> {
-    val stonad = stonadDto.toStonadEntity()
-    val opprettedePeriodeDtoListe = mutableListOf<PeriodeDto>()
-    periodeDtoListe.forEach {
-      val nyPeriode = it.toPeriodeEntity(stonad)
-      val periode = periodeRepository.save(nyPeriode)
-      opprettedePeriodeDtoListe.add(periode.toPeriodeDto())
-    }
-    return opprettedePeriodeDtoListe
-  }
 
   fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int) {
     periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId)
   }
 
-  fun finnPeriode(id: Int): PeriodeDto? {
+  fun hentPeriode(id: Int): HentStonadPeriodeDto? {
     val periode = periodeRepository.findById(id)
       .orElseThrow {
         IllegalArgumentException(
@@ -128,23 +143,9 @@ class PersistenceService(
           )
         )
       }
-    return periode.toPeriodeDto()
+    return periode.toHentStonadPeriodeDto()
   }
 
-  fun finnPerioderForStonad(id: Int): List<PeriodeDto> {
-    val periodeDtoListe = mutableListOf<PeriodeDto>()
-    periodeRepository.finnPerioderForStonad(id)
-      .forEach { periode -> periodeDtoListe.add(periode.toPeriodeDto()) }
 
-    return periodeDtoListe
-  }
-
-  fun finnPerioderForStonadInkludertUgyldiggjorte(id: Int): List<PeriodeDto> {
-    val periodeDtoListe = mutableListOf<PeriodeDto>()
-    periodeRepository.finnPerioderForStonadInkludertUgyldiggjorte(id)
-      .forEach { periode -> periodeDtoListe.add(periode.toPeriodeDto()) }
-
-    return periodeDtoListe
-  }
 
 }

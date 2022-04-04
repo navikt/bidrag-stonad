@@ -1,6 +1,8 @@
 package no.nav.bidrag.stonad.persistence.entity
 
-import no.nav.bidrag.stonad.dto.PeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.stonad.bo.PeriodeBo
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.persistence.Column
@@ -46,13 +48,22 @@ data class Periode(
   val resultatkode: String = ""
 )
 
-  fun Periode.toPeriodeDto() = with(::PeriodeDto) {
+fun OpprettStonadPeriodeRequestDto.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
+  val propertiesByName = OpprettStonadPeriodeRequestDto::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      Periode::stonad.name -> eksisterendeStonad
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeEntity)
+    }
+  })
+}
+
+  fun Periode.toHentStonadPeriodeDto() = with(::HentStonadPeriodeDto) {
     val propertiesByName = Periode::class.memberProperties.associateBy { it.name }
     callBy(parameters.associateWith { parameter ->
       when (parameter.name) {
-        PeriodeDto::stonadId.name -> stonad.stonadId
-        else -> propertiesByName[parameter.name]?.get(this@toPeriodeDto)
+        PeriodeBo::stonadId.name -> stonad.stonadId
+        else -> propertiesByName[parameter.name]?.get(this@toHentStonadPeriodeDto)
       }
     })
-
 }

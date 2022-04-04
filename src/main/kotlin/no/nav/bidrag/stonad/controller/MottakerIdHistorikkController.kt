@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
+import no.nav.bidrag.behandling.felles.dto.stonad.AlleMottakerIdHistorikkForStonadDto
 import no.nav.bidrag.stonad.ISSUER
-import no.nav.bidrag.stonad.api.AlleMottakerIdHistorikkForStonadResponse
 import no.nav.bidrag.stonad.service.MottakerIdHistorikkService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = ISSUER)
 class MottakerIdHistorikkController(private val mottakerIdHistorikkService: MottakerIdHistorikkService) {
 
-  @GetMapping("$MOTTAKER_ID_HISTORIKK_SOK/{stonadId}")
+  @GetMapping(MOTTAKER_ID_HISTORIKK_SOK)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle endringer av mottaker-id for en stønad")
   @ApiResponses(
     value = [
@@ -34,14 +34,14 @@ class MottakerIdHistorikkController(private val mottakerIdHistorikkService: Mott
     ]
   )
 
-  fun finnAlleEndringerMottakerIdForStonad(@PathVariable stonadId: Int): ResponseEntity<AlleMottakerIdHistorikkForStonadResponse> {
-    val endringerFunnet = mottakerIdHistorikkService.finnAlleEndringerMottakerIdForStonad(stonadId)
-    LOGGER.info("Følgende stonad ble funnet: $endringerFunnet")
+  fun hentAlleEndringerAvMottakerIdForStonad(@PathVariable stonadId: Int): ResponseEntity<AlleMottakerIdHistorikkForStonadDto> {
+    val endringerFunnet = mottakerIdHistorikkService.hentAlleEndringerAvMottakerIdForStonad(stonadId)
+    LOGGER.info("Følgende endringer av mottakerId ble funnet: $endringerFunnet")
     return ResponseEntity(endringerFunnet, HttpStatus.OK)
   }
 
   companion object {
-    const val MOTTAKER_ID_HISTORIKK_SOK = "/mottakeridhistorikk/sok"
+    const val MOTTAKER_ID_HISTORIKK_SOK = "/mottakeridhistorikk/sok/{stonadId}"
     private val LOGGER = LoggerFactory.getLogger(MottakerIdHistorikkController::class.java)
   }
 }

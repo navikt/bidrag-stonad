@@ -9,11 +9,11 @@ interface PeriodeRepository : CrudRepository<Periode, Int?>{
 
   @Query(
     "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.periodeGjortUgyldigAvVedtakId IS NULL order by pe.periodeFom")
-  fun finnPerioderForStonad(stonadId: Int): List<Periode>
+  fun hentPerioderForStonad(stonadId: Int): List<Periode>
 
   @Query(
     "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId asc, pe.periodeFom ")
-  fun finnPerioderForStonadInkludertUgyldiggjorte(stonadId: Int): List<Periode>
+  fun hentPerioderForStonadInkludertUgyldiggjorte(stonadId: Int): List<Periode>
 
 
   @Query(

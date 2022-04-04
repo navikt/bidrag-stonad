@@ -1,10 +1,10 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.api.FinnStonadResponse
-import no.nav.bidrag.stonad.api.NyPeriodeRequest
-import no.nav.bidrag.stonad.api.NyStonadRequest
-import no.nav.bidrag.stonad.hendelse.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -33,7 +33,7 @@ class DefaultBehandleHendelseService(
   }
 
   private fun behandleVedtakHendelse(vedtakHendelse: VedtakHendelse) {
-    val eksisterendeStonad = stonadService.finnStonad(
+    val eksisterendeStonad = stonadService.hentStonad(
       vedtakHendelse.stonadType.toString(),
       vedtakHendelse.skyldnerId,
       vedtakHendelse.kravhaverId
@@ -46,11 +46,11 @@ class DefaultBehandleHendelseService(
     }
   }
 
-  private fun endreStonad(eksisterendeStonad: FinnStonadResponse, vedtakHendelse: VedtakHendelse) {
-    val periodeListe = mutableListOf<NyPeriodeRequest>()
+  private fun endreStonad(eksisterendeStonad: HentStonadDto, vedtakHendelse: VedtakHendelse) {
+    val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(
-        NyPeriodeRequest(
+        OpprettStonadPeriodeRequestDto(
           periodeFom = it.periodeFom,
           periodeTil = it.periodeTil,
           vedtakId = vedtakHendelse.vedtakId,
@@ -63,14 +63,13 @@ class DefaultBehandleHendelseService(
     }
 
     val oppdatertStonad =
-      NyStonadRequest(
+      OpprettStonadRequestDto(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
         skyldnerId = vedtakHendelse.skyldnerId,
         kravhaverId = vedtakHendelse.kravhaverId,
         mottakerId = vedtakHendelse.mottakerId,
         opprettetAv = vedtakHendelse.opprettetAv,
-        endretAv = vedtakHendelse.opprettetAv,
         periodeListe = periodeListe
       )
 
@@ -80,10 +79,10 @@ class DefaultBehandleHendelseService(
 
   private fun opprettStonad(vedtakHendelse: VedtakHendelse) {
 
-    val periodeListe = mutableListOf<NyPeriodeRequest>()
+    val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     vedtakHendelse.periodeListe.forEach {
       periodeListe.add(
-        NyPeriodeRequest(
+        OpprettStonadPeriodeRequestDto(
           periodeFom = it.periodeFom,
           periodeTil = it.periodeTil,
           vedtakId = vedtakHendelse.vedtakId,
@@ -96,7 +95,7 @@ class DefaultBehandleHendelseService(
     }
 
     stonadService.opprettStonad(
-      NyStonadRequest(
+      OpprettStonadRequestDto(
         stonadType = vedtakHendelse.stonadType,
         sakId = vedtakHendelse.sakId,
         skyldnerId = vedtakHendelse.skyldnerId,
