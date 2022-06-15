@@ -22,7 +22,7 @@
 <!--    <java.version>17</java.version>-->
     <kotlin.version>1.5.31</kotlin.version>
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
-    <token-support.version>2.0.15</token-support.version>
+    <token-support.version>2.0.0</token-support.version>
 
     <!-- dependencies -->
     <bidrag-commons.version>0.5.19</bidrag-commons.version>
