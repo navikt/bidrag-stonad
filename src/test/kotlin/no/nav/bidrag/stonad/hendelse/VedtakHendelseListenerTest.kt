@@ -1,8 +1,9 @@
 package no.nav.bidrag.stonad.hendelse
 
-import no.nav.bidrag.stonad.BidragStonadLocal
-import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
+import no.nav.bidrag.stonad.BidragStonadTest
+import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.service.StonadService
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -11,9 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [BidragStonadLocal::class])
+@SpringBootTest(classes = [BidragStonadTest::class])
 @DisplayName("VedtakHendelseListener (test av forretningslogikk)")
 @ActiveProfiles(TEST_PROFILE)
+@EnableMockOAuth2Server
+
 class VedtakHendelseListenerTest {
 
     @Autowired

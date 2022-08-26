@@ -5,6 +5,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.StonadType
+import no.nav.bidrag.stonad.SECURE_LOGGER
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -21,7 +22,8 @@ class DefaultBehandleHendelseService(
 ) : BehandleHendelseService {
 
   override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
-    LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
+    LOGGER.info("Behandler vedtakHendelse for vedtakid: ${vedtakHendelse.vedtakId}")
+    SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
     when (vedtakHendelse.hentStonadType()) {
       StonadType.BIDRAG, StonadType.FORSKUDD -> behandleVedtakHendelse(vedtakHendelse)

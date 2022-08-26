@@ -4,10 +4,11 @@ import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.StonadType
-import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -21,8 +22,9 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @DisplayName("MottakerIdHistorikkServiceTest")
-@ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragStonadTest.TEST_PROFILE)
+@SpringBootTest(classes = [BidragStonadTest::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableMockOAuth2Server
 class MottakerIdHistorikkServiceTest {
 
   @Autowired

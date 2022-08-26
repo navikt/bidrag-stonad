@@ -4,9 +4,10 @@ import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelsePeriode
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.behandling.felles.enums.VedtakType
-import no.nav.bidrag.stonad.BidragStonadLocal
+import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 
@@ -24,8 +25,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @DisplayName("DefaultBehandleHendelseServiceTest")
-@ActiveProfiles(BidragStonadLocal.TEST_PROFILE)
-@SpringBootTest(classes = [BidragStonadLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BidragStonadTest.TEST_PROFILE)
+@SpringBootTest(classes = [BidragStonadTest::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableMockOAuth2Server
 internal class DefaultBehandleHendelseServiceTest {
 
   @Autowired

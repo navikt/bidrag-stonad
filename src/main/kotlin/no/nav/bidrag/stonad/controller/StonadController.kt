@@ -10,6 +10,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.ISSUER
+import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.service.StonadService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
@@ -59,7 +60,8 @@ class StonadController(private val stonadService: StonadService) {
 
   fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<StonadDto> {
     val stonadFunnet = stonadService.hentStonadFraId(stonadId)
-    LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
+    LOGGER.info("Følgende stønad-id ble hentet: ${stonadFunnet?.stonadId}")
+    SECURE_LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 

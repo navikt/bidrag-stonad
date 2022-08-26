@@ -1,28 +1,35 @@
 package no.nav.bidrag.stonad
 
-import no.nav.bidrag.stonad.BidragStonadLocal.Companion.TEST_PROFILE
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import no.nav.bidrag.stonad.BidragStonadLocal.Companion.LOCAL_PROFILE
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootApplication
-@ActiveProfiles(TEST_PROFILE)
-@Import(TokenGeneratorConfiguration::class)
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class])])
+@EnableMockOAuth2Server
+@EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
+@ActiveProfiles(LOCAL_PROFILE)
+@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class, BidragStonadTest::class])])
 class BidragStonadLocal {
-
   companion object {
-    const val TEST_PROFILE = "test"
+    const val LOCAL_PROFILE = "local"
   }
 }
-
 fun main(args: Array<String>) {
-  val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
+  val wireMockServer = WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort().dynamicHttpsPort()) //No-args constructor will start on port 8080, no HTTPS
+  wireMockServer.start()
+
+  val profile = if (args.isEmpty()) LOCAL_PROFILE else args[0]
   val app = SpringApplication(BidragStonadLocal::class.java)
   app.setAdditionalProfiles(profile)
   app.run(*args)
+
+  wireMockServer.resetAll()
+  wireMockServer.stop()
 }
