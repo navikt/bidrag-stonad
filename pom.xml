@@ -21,8 +21,7 @@
     <!-- build/language -->
     <kotlin.version>1.6.10</kotlin.version>
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
-    <token-support.version>2.1.4</token-support.version>
-
+    <token-support.version>2.1.5</token-support.version>
     <!-- dependencies -->
     <bidrag-commons.version>0.7.9</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.2</bidrag-commons-test.version>
