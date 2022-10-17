@@ -1,7 +1,8 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
+import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
-import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelsePeriode
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.BidragStonadTest
@@ -57,27 +58,33 @@ internal class DefaultBehandleHendelseServiceTest {
   @Suppress("NonAsciiCharacters")
   fun `skal opprette ny stonad fra Hendelse`() {
     // Oppretter ny hendelse
-    val periodeliste = mutableListOf<VedtakHendelsePeriode>()
+
+    val periodeliste = mutableListOf<Periode>()
     periodeliste.add(
-      VedtakHendelsePeriode(LocalDate.parse("2021-06-01"),
-      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory")
+      Periode(LocalDate.parse("2021-06-01"),
+      LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1")
     )
 
-    val nyHendelse = VedtakHendelse(1, VedtakType.MANUELT,StonadType.BIDRAG, "SAK-001", "12345",
-      "54321", "24680", "R153961",
-    LocalDateTime.now(), periodeliste)
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
+      stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
-    val nyStonadOpprettet = stonadService.hentStonad(nyHendelse.stonadType.toString(), nyHendelse.skyldnerId, nyHendelse.kravhaverId)
+    val nyStonadOpprettet = stonadService.hentStonad(
+      nyHendelse.stonadsendringListe!![0].stonadType.toString(), nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.stonadType).isEqualTo(StonadType.BIDRAG) },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.sakId).isEqualTo("SAK-001") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.skyldnerId).isEqualTo("12345") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaverId).isEqualTo("54321") },
-      Executable { Assertions.assertThat(nyStonadOpprettet!!.mottakerId).isEqualTo("24680") },
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.skyldnerId).isEqualTo("Skyldner1") },
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaverId).isEqualTo("Kravhaver1") },
+      Executable { Assertions.assertThat(nyStonadOpprettet!!.mottakerId).isEqualTo("Mottaker1") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.opprettetAv).isEqualTo("R153961") },
       Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeFom)
         .isEqualTo(LocalDate.parse("2021-06-01")) },
@@ -97,36 +104,46 @@ internal class DefaultBehandleHendelseServiceTest {
   // Tester at perioder som er endret i nytt vedtak blir satt til ugyldig og erstattet av nye perioder
   fun `skal oppdatere eksisterende stønad med like fra- og til-datoer og ulike beløp`() {
     // Oppretter ny hendelse som etterpå skal oppdateres
-    val originalPeriodeliste = mutableListOf<VedtakHendelsePeriode>()
-    originalPeriodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-02-01"),
-      BigDecimal.valueOf(17.01), "NOK", "Hunky Dory"))
-    originalPeriodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-02-01"), LocalDate.parse("2021-03-01"),
-      BigDecimal.valueOf(17.02), "NOK", "Hunky Dory"))
-    originalPeriodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01"),
-      BigDecimal.valueOf(17.03), "NOK", "Hunky Dory"))
+    val originalPeriodeliste = mutableListOf<Periode>()
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-02-01"),
+      BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-02-01"), LocalDate.parse("2021-03-01"),
+      BigDecimal.valueOf(17.02), "NOK", "Hunky Dory", "referanse2"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01"),
+      BigDecimal.valueOf(17.03), "NOK", "Hunky Dory", "referanse3"))
 
-    val originalHendelse = VedtakHendelse(1, VedtakType.MANUELT,StonadType.BIDRAG, "SAK-001", "Skyldner123",
-      "Kravhaver123", "MottakerId123", "R153961",
-      LocalDateTime.now(), originalPeriodeliste)
+    val originalStonadsendringListe = mutableListOf<Stonadsendring>()
+    originalStonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, null, "Skyldner1", "Kravhaver1", "Mottaker1", originalPeriodeliste)
+    )
+
+    val originalHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
+      originalStonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(originalHendelse)
-    val originalStonad = stonadService.hentStonad(originalHendelse.stonadType.toString(), originalHendelse.skyldnerId, originalHendelse.kravhaverId)
+    val originalStonad = stonadService.hentStonad(
+      originalHendelse.stonadsendringListe!![0].stonadType.toString(), originalHendelse.stonadsendringListe!![0].skyldnerId, originalHendelse.stonadsendringListe!![0].kravhaverId)
 
     // Oppretter hendelse for nytt vedtak på samme stønad, stønaden over skal da oppdateres. Det er kun midterste periode her som er endret og skal oppdateres
-    val periodeliste = mutableListOf<VedtakHendelsePeriode>()
-    periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-02-01"),
-      BigDecimal.valueOf(17.01), "NOK", "Hunky Dory"))
-    periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-02-01"), LocalDate.parse("2021-03-01"),
-      BigDecimal.valueOf(100.02), "NOK", "Hunky Dory"))
-    periodeliste.add(VedtakHendelsePeriode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01"),
-      BigDecimal.valueOf(17.03), "NOK", "Hunky Dory"))
+    val periodeliste = mutableListOf<Periode>()
+    periodeliste.add(Periode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-02-01"),
+      BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1"))
+    periodeliste.add(Periode(LocalDate.parse("2021-02-01"), LocalDate.parse("2021-03-01"),
+      BigDecimal.valueOf(100.02), "NOK", "Hunky Dory", "referanse2"))
+    periodeliste.add(Periode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01"),
+      BigDecimal.valueOf(17.03), "NOK", "Hunky Dory", "referanse3"))
 
-    val hendelse = VedtakHendelse(2, VedtakType.MANUELT,StonadType.BIDRAG, "SAK-001", "Skyldner123",
-      "Kravhaver123", "MottakerId123", "R153961",
-      LocalDateTime.now(), periodeliste)
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, null, "Skyldner1", "Kravhaver1", "Mottaker1", periodeliste)
+    )
+
+    val hendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
+      stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
-    val oppdatertStonad = stonadService.hentStonad(hendelse.stonadType.toString(), hendelse.skyldnerId, hendelse.kravhaverId)
+    val oppdatertStonad = stonadService.hentStonad(
+      hendelse.stonadsendringListe!![0].stonadType.toString(), hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId)
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
@@ -135,7 +152,19 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-02-01")) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
       Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].valutakode).isEqualTo("NOK") },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].resultatkode).isEqualTo("Hunky Dory") }
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].resultatkode).isEqualTo("Hunky Dory") },
+
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(100.02)) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].valutakode).isEqualTo("NOK") },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].resultatkode).isEqualTo("Hunky Dory") },
+
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].valutakode).isEqualTo("NOK") },
+      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].resultatkode).isEqualTo("Hunky Dory") }
 
     )
   }

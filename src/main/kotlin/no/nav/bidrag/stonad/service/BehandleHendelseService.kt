@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.SECURE_LOGGER
@@ -25,37 +26,39 @@ class DefaultBehandleHendelseService(
     LOGGER.info("Behandler vedtakHendelse for vedtakid: ${vedtakHendelse.vedtakId}")
     SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
-    when (vedtakHendelse.hentStonadType()) {
-      StonadType.BIDRAG, StonadType.FORSKUDD -> behandleVedtakHendelse(vedtakHendelse)
-      StonadType.NO_SUPPORT -> LOGGER.warn("bidrag-stønad støtter ikke hendelsen '${vedtakHendelse.stonadType}'")
-      else -> {
-        LOGGER.warn("bidrag-stønad ukjent stønadtype '${vedtakHendelse.stonadType}'")
+    vedtakHendelse.stonadsendringListe?.forEach() { stonadsendring ->
+      if (stonadsendring.stonadType == StonadType.NO_SUPPORT) {
+        LOGGER.warn("bidrag-stønad støtter ikke stønadtype '${stonadsendring.stonadType}'")
+        throw IllegalArgumentException(String.format("bidrag-stønad støtter ikke stønadtype '${stonadsendring.stonadType}'"))
       }
+      behandleVedtakHendelse(stonadsendring, vedtakHendelse.vedtakId, vedtakHendelse.opprettetAv)
+
     }
   }
 
-  private fun behandleVedtakHendelse(vedtakHendelse: VedtakHendelse) {
+  private fun behandleVedtakHendelse(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
     val eksisterendeStonad = stonadService.hentStonad(
-      vedtakHendelse.stonadType.toString(),
-      vedtakHendelse.skyldnerId,
-      vedtakHendelse.kravhaverId
+      stonadsendring.stonadType.toString(),
+      stonadsendring.skyldnerId,
+      stonadsendring.kravhaverId
     )
+
     if (eksisterendeStonad != null) {
       // Mottatt Hendelse skal oppdatere eksisterende stønad
-      endreStonad(eksisterendeStonad, vedtakHendelse)
+      endreStonad(eksisterendeStonad, stonadsendring, vedtakId, opprettetAv)
     } else {
-      opprettStonad(vedtakHendelse)
+      opprettStonad(stonadsendring, vedtakId, opprettetAv)
     }
   }
 
-  private fun endreStonad(eksisterendeStonad: StonadDto, vedtakHendelse: VedtakHendelse) {
+  private fun endreStonad(eksisterendeStonad: StonadDto, stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
-    vedtakHendelse.periodeListe.forEach {
+    stonadsendring.periodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
-          periodeFom = it.periodeFom,
-          periodeTil = it.periodeTil,
-          vedtakId = vedtakHendelse.vedtakId,
+          periodeFom = it.periodeFomDato,
+          periodeTil = it.periodeTilDato,
+          vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
           valutakode = it.valutakode,
@@ -66,12 +69,12 @@ class DefaultBehandleHendelseService(
 
     val oppdatertStonad =
       OpprettStonadRequestDto(
-        stonadType = vedtakHendelse.stonadType,
-        sakId = vedtakHendelse.sakId,
-        skyldnerId = vedtakHendelse.skyldnerId,
-        kravhaverId = vedtakHendelse.kravhaverId,
-        mottakerId = vedtakHendelse.mottakerId,
-        opprettetAv = vedtakHendelse.opprettetAv,
+        stonadType = stonadsendring.stonadType,
+        sakId = stonadsendring.sakId,
+        skyldnerId = stonadsendring.skyldnerId,
+        kravhaverId = stonadsendring.kravhaverId,
+        mottakerId = stonadsendring.mottakerId,
+        opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )
 
@@ -79,15 +82,15 @@ class DefaultBehandleHendelseService(
 
   }
 
-  private fun opprettStonad(vedtakHendelse: VedtakHendelse) {
+  private fun opprettStonad(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
 
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
-    vedtakHendelse.periodeListe.forEach {
+    stonadsendring.periodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
-          periodeFom = it.periodeFom,
-          periodeTil = it.periodeTil,
-          vedtakId = vedtakHendelse.vedtakId,
+          periodeFom = it.periodeFomDato,
+          periodeTil = it.periodeTilDato,
+          vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
           valutakode = it.valutakode,
@@ -98,12 +101,12 @@ class DefaultBehandleHendelseService(
 
     stonadService.opprettStonad(
       OpprettStonadRequestDto(
-        stonadType = vedtakHendelse.stonadType,
-        sakId = vedtakHendelse.sakId,
-        skyldnerId = vedtakHendelse.skyldnerId,
-        kravhaverId = vedtakHendelse.kravhaverId,
-        mottakerId = vedtakHendelse.mottakerId,
-        opprettetAv = vedtakHendelse.opprettetAv,
+        stonadType = stonadsendring.stonadType,
+        sakId = stonadsendring.sakId,
+        skyldnerId = stonadsendring.skyldnerId,
+        kravhaverId = stonadsendring.kravhaverId,
+        mottakerId = stonadsendring.mottakerId,
+        opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )
     )
