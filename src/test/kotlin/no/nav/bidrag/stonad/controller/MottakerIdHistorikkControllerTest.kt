@@ -9,6 +9,7 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
+import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -47,6 +48,9 @@ class MottakerIdHistorikkControllerTest {
   private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
 
   @Autowired
+  private lateinit var periodeRepository: PeriodeRepository
+
+  @Autowired
   private lateinit var stonadRepository: StonadRepository
 
   @Autowired
@@ -59,6 +63,7 @@ class MottakerIdHistorikkControllerTest {
   fun `init`() {
     // Sletter alle forekomster
     mottakerIdHistorikkRepository.deleteAll()
+    periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
 
