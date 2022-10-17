@@ -31,14 +31,21 @@ class VedtakHendelseListenerTest {
             """
             {
               "vedtakType":"MANUELT",
-              "stonadType":"BIDRAG",
-              "sakId":"",
-              "skyldnerId":"",
-              "kravhaverId":"",
-              "mottakerId":"",
-              "opprettetAv":"",
-              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
-              "periodeListe":[]
+              "vedtakId":"1",
+              "vedtakDato":"2022-01-11",              
+              "enhetId":"Enhet1",
+              "opprettetAv":"Saksbehandler1",
+              "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
+              "stonadsendringListe": [
+                {
+                 "stonadType": "BIDRAG",
+                 "sakId": "",
+                 "skyldnerId": "",
+                 "kravhaverId": "",
+                 "mottakerId": "",
+                 "periodeListe": []             
+              }        
+              ]
             }
             """.trimIndent()
         )
@@ -47,17 +54,24 @@ class VedtakHendelseListenerTest {
     @Test
     fun `skal behandle barnebidrag`() {
         vedtakHendelseListener.lesHendelse(
-            """
+          """
             {
               "vedtakType":"MANUELT",
-              "stonadType":"BIDRAG",
-              "sakId":"",
-              "skyldnerId":"",
-              "kravhaverId":"",
-              "mottakerId":"",
-              "opprettetAv":"",
-              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
-              "periodeListe":[]
+              "vedtakId":"1",
+              "vedtakDato":"2022-01-11",              
+              "enhetId":"Enhet1",
+              "opprettetAv":"Saksbehandler1",
+              "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
+              "stonadsendringListe": [
+                {
+                 "stonadType": "BIDRAG",
+                 "sakId": "",
+                 "skyldnerId": "",
+                 "kravhaverId": "",
+                 "mottakerId": "",
+                 "periodeListe": []             
+              }        
+              ]
             }
             """.trimIndent()
         )
@@ -68,17 +82,24 @@ class VedtakHendelseListenerTest {
     @Test
     fun `skal behandle forskudd`() {
         vedtakHendelseListener.lesHendelse(
-            """
+          """
             {
               "vedtakType":"MANUELT",
-              "stonadType":"FORSKUDD",
-              "sakId":"",
-              "skyldnerId":"",
-              "kravhaverId":"",
-              "mottakerId":"",
-              "opprettetAv":"",
-              "opprettetTimestamp":"2022-01-11T10:00:00.000001",
-              "periodeListe":[]
+              "vedtakId":"1",
+              "vedtakDato":"2022-01-11",              
+              "enhetId":"Enhet1",
+              "opprettetAv":"Saksbehandler1",
+              "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
+              "stonadsendringListe": [
+                {
+                 "stonadType": "FORSKUDD",
+                 "sakId": "",
+                 "skyldnerId": "",
+                 "kravhaverId": "",
+                 "mottakerId": "",
+                 "periodeListe": []             
+              }        
+              ]
             }
             """.trimIndent()
         )
