@@ -27,7 +27,7 @@ const val LIVE_PROFILE = "live"
 
 @Configuration
 @OpenAPIDefinition(
-    info = Info(title = "bidrag-vedtak", version = "v1"),
+    info = Info(title = "bidrag-stonad", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")]
 )
 @EnableJwtTokenValidation
