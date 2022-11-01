@@ -93,6 +93,7 @@ class StonadService(val persistenceService: PersistenceService) {
       stonad.skyldnerId,
       stonad.kravhaverId,
       stonad.mottakerId,
+      stonad.indeksreguleringAar,
       stonad.opprettetAv,
       stonad.opprettetTimestamp,
       stonad.endretAv,
