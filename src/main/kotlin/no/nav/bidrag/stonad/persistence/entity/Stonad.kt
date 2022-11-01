@@ -33,6 +33,9 @@ data class Stonad(
   @Column(nullable = false, name = "mottaker_id")
   val mottakerId: String = "",
 
+  @Column(nullable = false, name = "indeksregulering_aar")
+  val indeksreguleringAar: String? = "",
+
   @Column(nullable = false, name = "opprettet_av")
   val opprettetAv: String = "",
 

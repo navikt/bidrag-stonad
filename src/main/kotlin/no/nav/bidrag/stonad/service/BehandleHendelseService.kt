@@ -74,6 +74,7 @@ class DefaultBehandleHendelseService(
         skyldnerId = stonadsendring.skyldnerId,
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
+        indeksreguleringAar = stonadsendring.indeksreguleringAar,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )
@@ -106,6 +107,7 @@ class DefaultBehandleHendelseService(
         skyldnerId = stonadsendring.skyldnerId,
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
+        indeksreguleringAar = stonadsendring.indeksreguleringAar,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )

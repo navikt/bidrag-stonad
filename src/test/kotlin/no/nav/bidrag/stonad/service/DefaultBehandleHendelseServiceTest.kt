@@ -67,10 +67,10 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
     )
 
-    val nyHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
+    val nyHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null, "R153961", LocalDateTime.now(),
       stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(nyHendelse)
@@ -114,11 +114,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, null, "Skyldner1", "Kravhaver1", "Mottaker1", originalPeriodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", originalPeriodeliste)
     )
 
-    val originalHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
-      originalStonadsendringListe, emptyList())
+    val originalHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
+      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.hentStonad(
@@ -135,11 +135,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, null, "Skyldner1", "Kravhaver1", "Mottaker1", periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
     )
 
-    val hendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1", "R153961", LocalDateTime.now(),
-      stonadsendringListe, emptyList())
+    val hendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.hentStonad(
