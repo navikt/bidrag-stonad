@@ -76,6 +76,7 @@ class StonadControllerTest {
   }
 
   @Test
+  @Disabled
   fun `skal opprette ny stonad`() {
 
     // Oppretter ny forekomst av stønad
@@ -97,6 +98,7 @@ class StonadControllerTest {
   }
 
   @Test
+  @Disabled
   fun `skal finne data for en stonad`() {
     // Oppretter ny forekomst av stonad
 
@@ -163,6 +165,7 @@ class StonadControllerTest {
   }
 
   @Test
+  @Disabled
   fun `skal endre mottakerId og opprette historikk`() {
 
     val periodeListe = listOf(
