@@ -27,12 +27,7 @@ class DefaultBehandleHendelseService(
     SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
     vedtakHendelse.stonadsendringListe?.forEach() { stonadsendring ->
-      if (stonadsendring.stonadType == StonadType.NO_SUPPORT) {
-        LOGGER.warn("bidrag-stønad støtter ikke stønadtype '${stonadsendring.stonadType}'")
-        throw IllegalArgumentException(String.format("bidrag-stønad støtter ikke stønadtype '${stonadsendring.stonadType}'"))
-      }
       behandleVedtakHendelse(stonadsendring, vedtakHendelse.vedtakId, vedtakHendelse.opprettetAv)
-
     }
   }
 
