@@ -74,7 +74,6 @@ class MottakerIdHistorikkControllerTest {
   }
 
   @Test
-  @Disabled
   @Suppress("NonAsciiCharacters")
   fun `skal finne alle endringer av mottaker-id for en stønad`() {
     // Oppretter nye forekomster
