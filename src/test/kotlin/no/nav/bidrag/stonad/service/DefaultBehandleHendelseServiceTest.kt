@@ -67,7 +67,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, periodeliste)
     )
 
     val nyHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null, "R153961", LocalDateTime.now(),
@@ -76,7 +76,8 @@ internal class DefaultBehandleHendelseServiceTest {
     behandleHendelseService.behandleHendelse(nyHendelse)
 
     val nyStonadOpprettet = stonadService.hentStonad(
-      nyHendelse.stonadsendringListe!![0].stonadType.toString(), nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId)
+      nyHendelse.stonadsendringListe!![0].stonadType.toString(), nyHendelse.stonadsendringListe!![0].skyldnerId,
+      nyHendelse.stonadsendringListe!![0].kravhaverId, nyHendelse.stonadsendringListe!![0].sakId)
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
@@ -114,7 +115,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", originalPeriodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, originalPeriodeliste)
     )
 
     val originalHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
@@ -122,7 +123,8 @@ internal class DefaultBehandleHendelseServiceTest {
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.hentStonad(
-      originalHendelse.stonadsendringListe!![0].stonadType.toString(), originalHendelse.stonadsendringListe!![0].skyldnerId, originalHendelse.stonadsendringListe!![0].kravhaverId)
+      originalHendelse.stonadsendringListe!![0].stonadType.toString(), originalHendelse.stonadsendringListe!![0].skyldnerId,
+      originalHendelse.stonadsendringListe!![0].kravhaverId, originalHendelse.stonadsendringListe!![0].sakId)
 
     // Oppretter hendelse for nytt vedtak på samme stønad, stønaden over skal da oppdateres. Det er kun midterste periode her som er endret og skal oppdateres
     val periodeliste = mutableListOf<Periode>()
@@ -135,7 +137,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, periodeliste)
     )
 
     val hendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
@@ -143,7 +145,8 @@ internal class DefaultBehandleHendelseServiceTest {
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.hentStonad(
-      hendelse.stonadsendringListe!![0].stonadType.toString(), hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId)
+      hendelse.stonadsendringListe!![0].stonadType.toString(), hendelse.stonadsendringListe!![0].skyldnerId,
+      hendelse.stonadsendringListe!![0].kravhaverId, hendelse.stonadsendringListe!![0].sakId)
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },

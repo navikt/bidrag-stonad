@@ -76,7 +76,7 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).hentStonad("BIDRAG", "", "")
+        verify(stonadServiceMock).hentStonad("BIDRAG", "", "", "")
     }
 
     @Test
@@ -104,6 +104,6 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).hentStonad("FORSKUDD", "", "")
+        verify(stonadServiceMock).hentStonad("FORSKUDD", "", "", "")
     }
 }

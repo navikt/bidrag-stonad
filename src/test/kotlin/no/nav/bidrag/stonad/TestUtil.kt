@@ -18,6 +18,7 @@ class TestUtil {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      opphortFra = null,
       opprettetAv = "X123456",
       periodeListe = listOf(
         OpprettStonadPeriodeRequestDto(
@@ -47,6 +48,7 @@ class TestUtil {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      opphortFra = null,
       opprettetAv = "X123456",
       listOf(
         OpprettStonadPeriodeRequestDto(
