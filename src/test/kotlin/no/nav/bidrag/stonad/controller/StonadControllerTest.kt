@@ -76,7 +76,6 @@ class StonadControllerTest {
   }
 
   @Test
-  @Disabled
   fun `skal opprette ny stonad`() {
 
     // Oppretter ny forekomst av stønad
@@ -84,7 +83,7 @@ class StonadControllerTest {
       fullUrlForNyStonad(),
       HttpMethod.POST,
       byggStonadRequest(),
-      Int::class.java
+      String::class.java
     )
 
     assertAll(
@@ -98,7 +97,6 @@ class StonadControllerTest {
   }
 
   @Test
-  @Disabled
   fun `skal finne data for en stonad`() {
     // Oppretter ny forekomst av stonad
 
@@ -129,6 +127,7 @@ class StonadControllerTest {
         kravhaverId = "01010511111",
         mottakerId = "01018211111",
         indeksreguleringAar = "2024",
+        opphortFra = null,
         opprettetAv = "X123456",
         periodeListe = periodeListe
       )
@@ -165,7 +164,6 @@ class StonadControllerTest {
   }
 
   @Test
-  @Disabled
   fun `skal endre mottakerId og opprette historikk`() {
 
     val periodeListe = listOf(
@@ -186,6 +184,7 @@ class StonadControllerTest {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      opphortFra = null,
       opprettetAv = "X123456",
       periodeListe
     ))

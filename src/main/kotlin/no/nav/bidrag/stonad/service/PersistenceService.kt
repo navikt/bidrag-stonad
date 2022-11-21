@@ -82,8 +82,8 @@ class PersistenceService(
     return stonad
   }
 
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): Stonad? {
-    return stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId)
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): Stonad? {
+    return stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId, sakId)
   }
 
 

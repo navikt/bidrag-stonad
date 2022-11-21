@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository
 interface StonadRepository : CrudRepository<Stonad, Int?>{
 
   @Query(
-    "select st from Stonad st where st.stonadType = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId")
-  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String): Stonad?
+    "select st from Stonad st where st.stonadType = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId and st.sakId = :sakId")
+  fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): Stonad?
 
   @Query(
     "update Stonad st set st.endretAv = :opprettetAv, st.endretTimestamp = CURRENT_TIMESTAMP where st.stonadId = :stonadId")

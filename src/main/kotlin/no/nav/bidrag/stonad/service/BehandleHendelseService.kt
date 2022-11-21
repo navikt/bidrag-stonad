@@ -35,7 +35,8 @@ class DefaultBehandleHendelseService(
     val eksisterendeStonad = stonadService.hentStonad(
       stonadsendring.stonadType.toString(),
       stonadsendring.skyldnerId,
-      stonadsendring.kravhaverId
+      stonadsendring.kravhaverId,
+      stonadsendring.sakId
     )
 
     if (eksisterendeStonad != null) {
@@ -70,6 +71,7 @@ class DefaultBehandleHendelseService(
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
         indeksreguleringAar = stonadsendring.indeksreguleringAar,
+        opphortFra = stonadsendring.opphortFra,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )
@@ -103,6 +105,7 @@ class DefaultBehandleHendelseService(
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
         indeksreguleringAar = stonadsendring.indeksreguleringAar,
+        opphortFra = stonadsendring.opphortFra,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )

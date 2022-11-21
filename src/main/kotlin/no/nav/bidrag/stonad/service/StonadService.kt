@@ -47,8 +47,8 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
   // Henter stønad ut fra unik nøkkel for stønad
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String): StonadDto? {
-    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
+  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): StonadDto? {
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
     if (stonad != null) {
       val periodeListe = persistenceService.hentPerioderForStonad(stonad.stonadId)
       return lagStonadDto(stonad, periodeListe)
@@ -58,9 +58,10 @@ class StonadService(val persistenceService: PersistenceService) {
   fun hentStonadInkludertUgyldiggjortePerioder(
     stonadType: String,
     skyldnerId: String,
-    kravhaverId: String
+    kravhaverId: String,
+    sakId: String
   ): StonadDto? {
-    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId)
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
     if (stonad != null) {
       val periodeListe =
         persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
@@ -94,6 +95,7 @@ class StonadService(val persistenceService: PersistenceService) {
       stonad.kravhaverId,
       stonad.mottakerId,
       stonad.indeksreguleringAar,
+      stonad.opphortFra,
       stonad.opprettetAv,
       stonad.opprettetTimestamp,
       stonad.endretAv,

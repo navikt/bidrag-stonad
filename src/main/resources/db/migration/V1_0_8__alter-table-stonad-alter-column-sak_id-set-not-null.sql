@@ -1,0 +1,2 @@
+ALTER TABLE stonad
+    ALTER COLUMN sak_id SET NOT NULL ;
