@@ -30,10 +30,10 @@ data class PeriodeBo(
   val periodeGjortUgyldigAvVedtakId: Int? = 0,
 
   @Schema(description = "Beregnet stønadsbeløp")
-  val belop: BigDecimal = BigDecimal.ZERO,
+  val belop: BigDecimal? = BigDecimal.ZERO,
 
   @Schema(description = "Valutakoden tilhørende stønadsbeløpet")
-  val valutakode: String = "NOK",
+  val valutakode: String? = "NOK",
 
   @Schema(description = "Resultatkode for stønaden")
   val resultatkode: String = ""
