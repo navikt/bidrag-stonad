@@ -70,7 +70,7 @@ class MottakerIdHistorikkServiceTest {
       OpprettStonadRequestDto(
       stonadType = StonadType.BIDRAG, sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAv = "X123456", indeksreguleringAar = "2024", opphortFra = null,  periodeListe = periodeListe)
+      opprettetAv = "X123456", indeksreguleringAar = "2024", periodeListe = periodeListe)
     )
 
     val endreMottakerIdRequest = EndreMottakerIdRequestDto(

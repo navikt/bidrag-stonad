@@ -2,7 +2,6 @@ package no.nav.bidrag.stonad.persistence.entity
 
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -36,9 +35,6 @@ data class Stonad(
 
   @Column(nullable = true, name = "indeksregulering_aar")
   val indeksreguleringAar: String? = "",
-
-  @Column(nullable = true, name = "opphortFra")
-  val opphortFra: LocalDate? = null,
 
   @Column(nullable = false, name = "opprettet_av")
   val opprettetAv: String = "",

@@ -18,7 +18,6 @@ import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -127,7 +126,6 @@ class StonadControllerTest {
         kravhaverId = "01010511111",
         mottakerId = "01018211111",
         indeksreguleringAar = "2024",
-        opphortFra = null,
         opprettetAv = "X123456",
         periodeListe = periodeListe
       )
@@ -184,7 +182,6 @@ class StonadControllerTest {
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
-      opphortFra = null,
       opprettetAv = "X123456",
       periodeListe
     ))
