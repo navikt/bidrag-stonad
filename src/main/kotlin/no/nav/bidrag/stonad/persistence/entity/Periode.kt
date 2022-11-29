@@ -38,11 +38,11 @@ data class Periode(
   @Column(nullable = true, name = "periode_gjort_ugyldig_av_vedtak_id")
   val periodeGjortUgyldigAvVedtakId: Int? = null,
 
-  @Column(nullable = false, name = "belop")
-  val belop: BigDecimal = BigDecimal.ZERO,
+  @Column(nullable = true, name = "belop")
+  val belop: BigDecimal? = null,
 
-  @Column(nullable = false, name = "valutakode")
-  val valutakode: String = "",
+  @Column(nullable = true, name = "valutakode")
+  val valutakode: String? = null,
 
   @Column(nullable = false, name = "resultatkode")
   val resultatkode: String = ""
