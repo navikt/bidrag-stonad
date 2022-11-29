@@ -12,7 +12,6 @@ import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.controller.StonadController
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
-import no.nav.bidrag.stonad.persistence.entity.toPeriodeEntity
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -95,7 +94,6 @@ class StonadService(val persistenceService: PersistenceService) {
       stonad.kravhaverId,
       stonad.mottakerId,
       stonad.indeksreguleringAar,
-      stonad.opphortFra,
       stonad.opprettetAv,
       stonad.opprettetTimestamp,
       stonad.endretAv,

@@ -67,7 +67,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
     )
 
     val nyHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null, "R153961", LocalDateTime.now(),
@@ -115,7 +115,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, originalPeriodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", originalPeriodeliste)
     )
 
     val originalHendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
@@ -137,7 +137,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", null, periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", periodeliste)
     )
 
     val hendelse = VedtakHendelse(VedtakType.MANUELT, 1, LocalDate.now(), "enhetId1",  null, null,
