@@ -4,3 +4,6 @@ dbname: bidrag-stonad-feature
 kafka:
   pool: nav-dev
 kafka-topic-vedtak: bidrag.vedtak-feature
+spec:
+  replicas:
+    min: 1
