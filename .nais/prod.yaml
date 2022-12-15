@@ -4,3 +4,6 @@ dbname: bidrag-stonad-prod
 kafka:
   pool: nav-prod
 kafka-topic-vedtak: bidrag.vedtak
+spec:
+  replicas:
+    min: 2
