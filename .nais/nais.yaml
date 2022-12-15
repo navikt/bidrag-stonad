@@ -41,7 +41,7 @@ spec:
     replicas:
       cpuThresholdPercentage: 80
       max: 4
-      min: { { spec.replicas.min } }
+      min: {{ spec.replicas.min }}
   ingresses:
     - {{ ingress }}
   gcp:
