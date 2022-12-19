@@ -7,3 +7,6 @@ kafka-topic-vedtak: bidrag.vedtak
 spec:
   replicas:
     min: 2
+  gcp:
+    sqlInstances:
+      tier: db-f1-micro
