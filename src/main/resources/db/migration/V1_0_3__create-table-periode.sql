@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS periode
     stonad_id integer NOT NULL,
     vedtak_id integer NOT NULL,
     periode_gjort_ugyldig_av_vedtak_id integer,
-    belop float NOT NULL,
-    valutakode varchar(10) NOT NULL,
+    belop float,
+    valutakode varchar(10),
     resultatkode varchar(255) NOT NULL,
     CONSTRAINT periode_pkey PRIMARY KEY (periode_id),
     CONSTRAINT fk_stonad_id FOREIGN KEY (stonad_id)
