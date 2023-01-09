@@ -1,6 +1,7 @@
 package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.TestUtil.Companion.byggStonadRequest
 import no.nav.bidrag.stonad.bo.PeriodeBo
@@ -61,12 +62,14 @@ class StonadServiceMockTest {
 
       // Sjekk stonadDto
       Executable { assertThat(stonadDto).isNotNull() },
-      Executable { assertThat(stonadDto.stonadType).isEqualTo(StonadType.BIDRAG) },
+      Executable { assertThat(stonadDto.type).isEqualTo(StonadType.BIDRAG) },
       Executable { assertThat(stonadDto.sakId).isEqualTo("SAK-001") },
       Executable { assertThat(stonadDto.skyldnerId).isEqualTo("01018011111") },
       Executable { assertThat(stonadDto.kravhaverId).isEqualTo("01010511111") },
       Executable { assertThat(stonadDto.mottakerId).isEqualTo("01018211111") },
       Executable { assertThat(stonadDto.opprettetAv).isEqualTo("X123456") },
+      Executable { assertThat(stonadDto.indeksreguleringAar).isEqualTo("2024") },
+      Executable { assertThat(stonadDto.innkreving).isEqualTo(Innkreving.JA) },
 
 
       // Sjekk PeriodeDto

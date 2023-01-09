@@ -23,17 +23,17 @@ class DefaultBehandleHendelseService(
 ) : BehandleHendelseService {
 
   override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
-    LOGGER.info("Behandler vedtakHendelse for vedtakid: ${vedtakHendelse.vedtakId}")
+    LOGGER.info("Behandler vedtakHendelse for vedtakid: ${vedtakHendelse.id}")
     SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
     vedtakHendelse.stonadsendringListe?.forEach() { stonadsendring ->
-      behandleVedtakHendelse(stonadsendring, vedtakHendelse.vedtakId, vedtakHendelse.opprettetAv)
+      behandleVedtakHendelse(stonadsendring, vedtakHendelse.id, vedtakHendelse.opprettetAv)
     }
   }
 
   private fun behandleVedtakHendelse(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
     val eksisterendeStonad = stonadService.hentStonad(
-      stonadsendring.stonadType.toString(),
+      stonadsendring.type.toString(),
       stonadsendring.skyldnerId,
       stonadsendring.kravhaverId,
       stonadsendring.sakId
@@ -52,8 +52,8 @@ class DefaultBehandleHendelseService(
     stonadsendring.periodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
-          periodeFom = it.periodeFomDato,
-          periodeTil = it.periodeTilDato,
+          periodeFom = it.fomDato,
+          periodeTil = it.tilDato,
           vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
@@ -65,12 +65,13 @@ class DefaultBehandleHendelseService(
 
     val oppdatertStonad =
       OpprettStonadRequestDto(
-        stonadType = stonadsendring.stonadType,
+        type = stonadsendring.type,
         sakId = stonadsendring.sakId,
         skyldnerId = stonadsendring.skyldnerId,
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
         indeksreguleringAar = stonadsendring.indeksreguleringAar,
+        innkreving = stonadsendring.innkreving,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )
@@ -85,8 +86,8 @@ class DefaultBehandleHendelseService(
     stonadsendring.periodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
-          periodeFom = it.periodeFomDato,
-          periodeTil = it.periodeTilDato,
+          periodeFom = it.fomDato,
+          periodeTil = it.tilDato,
           vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
@@ -98,12 +99,13 @@ class DefaultBehandleHendelseService(
 
     stonadService.opprettStonad(
       OpprettStonadRequestDto(
-        stonadType = stonadsendring.stonadType,
+        type = stonadsendring.type,
         sakId = stonadsendring.sakId,
         skyldnerId = stonadsendring.skyldnerId,
         kravhaverId = stonadsendring.kravhaverId,
         mottakerId = stonadsendring.mottakerId,
         indeksreguleringAar = stonadsendring.indeksreguleringAar,
+        innkreving = stonadsendring.innkreving,
         opprettetAv = opprettetAv,
         periodeListe = periodeListe
       )

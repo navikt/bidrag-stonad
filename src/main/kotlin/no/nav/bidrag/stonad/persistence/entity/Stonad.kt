@@ -12,14 +12,13 @@ import kotlin.reflect.full.memberProperties
 
 @Entity
 data class Stonad(
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "stonad_id")
   val stonadId: Int = 0,
 
-  @Column(nullable = false, name = "stonad_type")
-  val stonadType: String = "",
+  @Column(nullable = false, name = "type")
+  val type: String = "",
 
   @Column(nullable = false, name = "sak_id")
   val sakId: String = "",
@@ -35,6 +34,9 @@ data class Stonad(
 
   @Column(nullable = true, name = "indeksregulering_aar")
   val indeksreguleringAar: String? = "",
+
+  @Column(nullable = false, name = "innkreving")
+  val innkreving: String = "",
 
   @Column(nullable = false, name = "opprettet_av")
   val opprettetAv: String = "",
@@ -54,7 +56,8 @@ fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       Stonad::stonadId.name -> 0
-      Stonad::stonadType.name -> stonadType.toString()
+      Stonad::type.name -> type.toString()
+      Stonad::innkreving.name -> innkreving.toString()
       Stonad::opprettetTimestamp.name -> LocalDateTime.now()
       Stonad::endretAv.name -> opprettetAv
       else -> propertiesByName[parameter.name]?.get(this@toStonadEntity)

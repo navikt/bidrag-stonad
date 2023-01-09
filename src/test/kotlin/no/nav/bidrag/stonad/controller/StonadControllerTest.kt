@@ -4,6 +4,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadTest
@@ -120,12 +121,13 @@ class StonadControllerTest {
 
     val stonadOpprettetStonadId = persistenceService.opprettNyStonad(
       OpprettStonadRequestDto(
-        stonadType = StonadType.BIDRAG,
+        type = StonadType.BIDRAG,
         sakId = "SAK-001",
         skyldnerId = "01018011111",
         kravhaverId = "01010511111",
         mottakerId = "01018211111",
         indeksreguleringAar = "2024",
+        innkreving = Innkreving.JA,
         opprettetAv = "X123456",
         periodeListe = periodeListe
       )
@@ -149,12 +151,13 @@ class StonadControllerTest {
       Executable { assertThat(response).isNotNull() },
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull },
-      Executable { assertThat(response?.body?.stonadType.toString()).isEqualTo(stonadOpprettet?.stonadType) },
+      Executable { assertThat(response?.body?.type.toString()).isEqualTo(stonadOpprettet?.type) },
       Executable { assertThat(response?.body?.sakId).isEqualTo(stonadOpprettet?.sakId) },
       Executable { assertThat(response?.body?.skyldnerId).isEqualTo(stonadOpprettet?.skyldnerId) },
       Executable { assertThat(response?.body?.kravhaverId).isEqualTo(stonadOpprettet?.kravhaverId) },
       Executable { assertThat(response?.body?.mottakerId).isEqualTo(stonadOpprettet?.mottakerId) },
       Executable { assertThat(response?.body?.opprettetAv).isEqualTo(stonadOpprettet?.opprettetAv) },
+      Executable { assertThat(response?.body?.innkreving).isEqualTo(stonadOpprettet?.innkreving) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
@@ -176,12 +179,13 @@ class StonadControllerTest {
     )
 
     val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(OpprettStonadRequestDto(
-      stonadType = StonadType.BIDRAG,
+      type = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      innkreving = Innkreving.JA,
       opprettetAv = "X123456",
       periodeListe
     ))
