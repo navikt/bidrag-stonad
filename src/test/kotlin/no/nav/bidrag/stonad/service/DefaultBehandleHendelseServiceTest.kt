@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
 import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
@@ -77,9 +78,9 @@ internal class DefaultBehandleHendelseServiceTest {
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
-    val nyStonadOpprettet = stonadService.hentStonad(
-      nyHendelse.stonadsendringListe!![0].type.toString(), nyHendelse.stonadsendringListe!![0].skyldnerId,
-      nyHendelse.stonadsendringListe!![0].kravhaverId, nyHendelse.stonadsendringListe!![0].sakId)
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+      nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+      nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
 
     assertAll(
       Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
@@ -126,9 +127,9 @@ internal class DefaultBehandleHendelseServiceTest {
       "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(originalHendelse)
-    val originalStonad = stonadService.hentStonad(
-      originalHendelse.stonadsendringListe!![0].type.toString(), originalHendelse.stonadsendringListe!![0].skyldnerId,
-      originalHendelse.stonadsendringListe!![0].kravhaverId, originalHendelse.stonadsendringListe!![0].sakId)
+    val originalStonad = stonadService.hentStonad(HentStonadRequest(
+      originalHendelse.stonadsendringListe!![0].type, originalHendelse.stonadsendringListe!![0].sakId,
+      originalHendelse.stonadsendringListe!![0].skyldnerId, originalHendelse.stonadsendringListe!![0].kravhaverId))
 
     // Oppretter hendelse for nytt vedtak på samme stønad, stønaden over skal da oppdateres. Det er kun midterste periode her som er endret og skal oppdateres
     val periodeliste = mutableListOf<Periode>()
@@ -148,9 +149,9 @@ internal class DefaultBehandleHendelseServiceTest {
       "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
-    val oppdatertStonad = stonadService.hentStonad(
-      hendelse.stonadsendringListe!![0].type.toString(), hendelse.stonadsendringListe!![0].skyldnerId,
-      hendelse.stonadsendringListe!![0].kravhaverId, hendelse.stonadsendringListe!![0].sakId)
+    val oppdatertStonad = stonadService.hentStonad(HentStonadRequest(
+      hendelse.stonadsendringListe!![0].type, hendelse.stonadsendringListe!![0].sakId,
+      hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId))
 
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },

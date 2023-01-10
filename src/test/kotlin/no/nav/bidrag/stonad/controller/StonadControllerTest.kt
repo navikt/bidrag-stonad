@@ -1,7 +1,6 @@
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.Innkreving
@@ -11,7 +10,6 @@ import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
 import no.nav.bidrag.stonad.bo.toPeriodeBo
-import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
@@ -51,9 +49,6 @@ class StonadControllerTest {
   private lateinit var periodeRepository: PeriodeRepository
 
   @Autowired
-  private lateinit var mottakerIdHistorikkRepository: MottakerIdHistorikkRepository
-
-  @Autowired
   private lateinit var stonadRepository: StonadRepository
 
   @Autowired
@@ -65,7 +60,6 @@ class StonadControllerTest {
   @BeforeEach
   fun `init`() {
     // Sletter alle forekomster
-    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
@@ -91,7 +85,6 @@ class StonadControllerTest {
       Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
       Executable { assertThat(response?.body).isNotNull() },
     )
-    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
   }
@@ -141,9 +134,9 @@ class StonadControllerTest {
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "/stonad/${stonadOpprettetStonadId}",
-      HttpMethod.GET,
-      null,
+      "/hent-stonad/",
+      HttpMethod.POST,
+      byggStonadResponse(),
       StonadDto::class.java
     )
 
@@ -159,61 +152,8 @@ class StonadControllerTest {
       Executable { assertThat(response?.body?.opprettetAv).isEqualTo(stonadOpprettet?.opprettetAv) },
       Executable { assertThat(response?.body?.innkreving.toString()).isEqualTo(stonadOpprettet?.innkreving) },
     )
-    mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
     stonadRepository.deleteAll()
-  }
-
-  @Test
-  fun `skal endre mottakerId og opprette historikk`() {
-
-    val periodeListe = listOf(
-      OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2019-01-01"),
-        periodeTil = LocalDate.parse("2019-07-01"),
-        vedtakId = 321,
-        periodeGjortUgyldigAvVedtakId = 246,
-        belop = BigDecimal.valueOf(3490),
-        valutakode = "NOK",
-        resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
-    )
-
-    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(OpprettStonadRequestDto(
-      type = StonadType.BIDRAG,
-      sakId = "SAK-001",
-      skyldnerId = "01018011111",
-      kravhaverId = "01010511111",
-      mottakerId = "01018211111",
-      indeksreguleringAar = "2024",
-      innkreving = Innkreving.JA,
-      opprettetAv = "X123456",
-      periodeListe
-    ))
-
-    // Oppretter ny forekomst
-    val response = securedTestRestTemplate.exchange(
-      fullUrlForEndreMottakerIdStonad(),
-      HttpMethod.POST,
-      byggEndreMottakerIdRequestDto(nyStonadOpprettetStonadId),
-      String::class.java
-    )
-
-    val mottakerIdHistorikkListe = persistenceService.hentAlleEndringerAvMottakerIdForStonad(nyStonadOpprettetStonadId)
-
-    assertAll(
-      Executable { assertThat(response).isNotNull() },
-      Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
-      Executable { assertThat(response?.body).isNotNull() },
-      Executable { assertThat(mottakerIdHistorikkListe!![0].mottakerIdEndretFra).isEqualTo("01018211111") },
-      Executable { assertThat(mottakerIdHistorikkListe!![0].mottakerIdEndretTil).isEqualTo("123") },
-      Executable { assertThat(mottakerIdHistorikkListe!![0].opprettetAv).isEqualTo("Test") }
-    )
-    mottakerIdHistorikkRepository.deleteAll()
-    stonadRepository.deleteAll()
-  }
-
-  private fun byggEndreMottakerIdRequestDto(stonadId: Int): HttpEntity<EndreMottakerIdRequestDto> {
-    return initHttpEntity(EndreMottakerIdRequestDto(stonadId, nyMottakerId = "123", opprettetAv = "Test"))
   }
 
   private fun fullUrlForNyStonad(): String {
@@ -221,11 +161,7 @@ class StonadControllerTest {
   }
 
   private fun fullUrlForSokStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_HENT).toUriString()
-  }
-
-  private fun fullUrlForEndreMottakerIdStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_ENDRE_MOTTAKER_ID).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.HENT_STONAD).toUriString()
   }
 
   private fun makeFullContextPath(): String {
@@ -234,6 +170,10 @@ class StonadControllerTest {
 
   private fun byggStonadRequest(): HttpEntity<OpprettStonadRequestDto> {
     return initHttpEntity(TestUtil.byggStonadRequest())
+  }
+
+  private fun byggStonadResponse(): HttpEntity<StonadDto> {
+    return initHttpEntity(TestUtil.byggStonadDto())
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {
