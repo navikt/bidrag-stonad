@@ -15,11 +15,10 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.constraints.NotNull
 
 @RestController
 @ProtectedWithClaims(issuer = ISSUER)
@@ -44,7 +43,7 @@ class StonadController(private val stonadService: StonadService) {
   }
 
 
-  @GetMapping(STONAD_HENT)
+  @PostMapping(HENT_STONAD)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad")
   @ApiResponses(
     value = [
@@ -57,8 +56,11 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun hentStonad(@PathVariable stonadId: Int): ResponseEntity<StonadDto> {
-    val stonadFunnet = stonadService.hentStonadFraId(stonadId)
+  fun hentStonad(@NotNull @RequestBody type: String,
+                 @NotNull @RequestBody skyldnerId: String,
+                 @NotNull @RequestBody kravhaverId: String,
+                 @NotNull @RequestBody sakId: String): ResponseEntity<StonadDto> {
+    val stonadFunnet = stonadService.hentStonad(type, skyldnerId, kravhaverId, sakId)
     LOGGER.info("Følgende stønad-id ble hentet: ${stonadFunnet?.stonadId}")
     SECURE_LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
@@ -66,7 +68,7 @@ class StonadController(private val stonadService: StonadService) {
 
   companion object {
     const val STONAD_NY = "/stonad"
-    const val STONAD_HENT = "/stonad/{stonadId}"
+    const val HENT_STONAD = "/hent-stonad"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
   }
 }

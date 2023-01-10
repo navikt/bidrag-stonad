@@ -1,7 +1,6 @@
 package no.nav.bidrag.stonad.controller
 
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.Innkreving
@@ -135,9 +134,9 @@ class StonadControllerTest {
 
     // Henter forekomst
     val response = securedTestRestTemplate.exchange(
-      "/stonad/${stonadOpprettetStonadId}",
-      HttpMethod.GET,
-      null,
+      "/hent-stonad/",
+      HttpMethod.POST,
+      byggStonadResponse(),
       StonadDto::class.java
     )
 
@@ -162,7 +161,7 @@ class StonadControllerTest {
   }
 
   private fun fullUrlForSokStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_HENT).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.HENT_STONAD).toUriString()
   }
 
   private fun makeFullContextPath(): String {
@@ -171,6 +170,10 @@ class StonadControllerTest {
 
   private fun byggStonadRequest(): HttpEntity<OpprettStonadRequestDto> {
     return initHttpEntity(TestUtil.byggStonadRequest())
+  }
+
+  private fun byggStonadResponse(): HttpEntity<StonadDto> {
+    return initHttpEntity(TestUtil.byggStonadDto())
   }
 
   private fun <T> initHttpEntity(body: T): HttpEntity<T> {
