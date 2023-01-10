@@ -5,6 +5,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.bo.OppdatertPeriode
 import no.nav.bidrag.stonad.bo.PeriodeBo
@@ -88,12 +89,13 @@ class StonadService(val persistenceService: PersistenceService) {
 
     return StonadDto(
       stonad.stonadId,
-      StonadType.valueOf(stonad.stonadType),
+      StonadType.valueOf(stonad.type),
       stonad.sakId,
       stonad.skyldnerId,
       stonad.kravhaverId,
       stonad.mottakerId,
       stonad.indeksreguleringAar,
+      Innkreving.valueOf(stonad.innkreving),
       stonad.opprettetAv,
       stonad.opprettetTimestamp,
       stonad.endretAv,

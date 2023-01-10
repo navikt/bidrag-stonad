@@ -4,6 +4,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.AlleMottakerIdHistorikkForSton
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.stonad.BidragStonadTest
@@ -91,12 +92,13 @@ class MottakerIdHistorikkControllerTest {
 
 
     val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(OpprettStonadRequestDto(
-      stonadType = StonadType.BIDRAG,
+      type = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      innkreving = Innkreving.JA,
       opprettetAv = "X123456",
       periodeListe
     ))

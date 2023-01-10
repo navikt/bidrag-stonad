@@ -8,7 +8,8 @@ import org.springframework.data.repository.CrudRepository
 interface StonadRepository : CrudRepository<Stonad, Int?>{
 
   @Query(
-    "select st from Stonad st where st.stonadType = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId and st.sakId = :sakId")
+    "select st from Stonad st where st.type = :stonadType and st.skyldnerId = :skyldnerId and st.kravhaverId = :kravhaverId and st.sakId = :sakId"
+  )
   fun finnStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): Stonad?
 
   @Query(

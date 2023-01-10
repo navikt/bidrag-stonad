@@ -2,6 +2,7 @@ package no.nav.bidrag.stonad
 
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.bo.PeriodeBo
 import java.math.BigDecimal
@@ -12,12 +13,13 @@ class TestUtil {
   companion object {
 
     fun byggStonadRequest() = OpprettStonadRequestDto(
-      stonadType = StonadType.BIDRAG,
+      type = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      innkreving = Innkreving.JA,
       opprettetAv = "X123456",
       periodeListe = listOf(
         OpprettStonadPeriodeRequestDto(
@@ -41,12 +43,13 @@ class TestUtil {
 
 
     fun byggStonadDto() = OpprettStonadRequestDto(
-      stonadType = StonadType.BIDRAG,
+      type = StonadType.BIDRAG,
       sakId = "SAK-001",
       skyldnerId = "01018011111",
       kravhaverId = "01010511111",
       mottakerId = "01018211111",
       indeksreguleringAar = "2024",
+      innkreving = Innkreving.JA,
       opprettetAv = "X123456",
       listOf(
         OpprettStonadPeriodeRequestDto(

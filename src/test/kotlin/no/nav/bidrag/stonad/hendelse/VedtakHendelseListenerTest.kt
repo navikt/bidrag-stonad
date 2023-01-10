@@ -30,19 +30,21 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
             """
             {
-              "vedtakType":"MANUELT",
-              "vedtakId":"1",
-              "vedtakDato":"2022-01-11",              
+              "kilde":"MANUELT",
+              "type":"ALDERSJUSTERING",
+              "id":"1",
+              "dato":"2022-01-11",              
               "enhetId":"Enhet1",
               "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stonadsendringListe": [
                 {
-                 "stonadType": "BIDRAG",
+                 "type": "BIDRAG",
                  "sakId": "",
                  "skyldnerId": "",
                  "kravhaverId": "",
                  "mottakerId": "",
+                 "innkreving": "JA",
                  "periodeListe": []             
               }        
               ]
@@ -56,19 +58,21 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
           """
             {
-              "vedtakType":"MANUELT",
-              "vedtakId":"1",
-              "vedtakDato":"2022-01-11",              
+              "kilde":"MANUELT",
+              "type":"ALDERSJUSTERING",
+              "id":"1",
+              "dato":"2022-01-11",              
               "enhetId":"Enhet1",
               "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stonadsendringListe": [
                 {
-                 "stonadType": "BIDRAG",
+                 "type": "BIDRAG",
                  "sakId": "",
                  "skyldnerId": "",
                  "kravhaverId": "",
                  "mottakerId": "",
+                 "innkreving": "JA",
                  "periodeListe": []             
               }        
               ]
@@ -84,19 +88,21 @@ class VedtakHendelseListenerTest {
         vedtakHendelseListener.lesHendelse(
           """
             {
-              "vedtakType":"MANUELT",
-              "vedtakId":"1",
-              "vedtakDato":"2022-01-11",              
+              "kilde":"MANUELT",
+              "type":"ALDERSJUSTERING",
+              "id":"1",
+              "dato":"2022-01-11",               
               "enhetId":"Enhet1",
               "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stonadsendringListe": [
                 {
-                 "stonadType": "FORSKUDD",
+                 "type": "FORSKUDD",
                  "sakId": "",
                  "skyldnerId": "",
                  "kravhaverId": "",
                  "mottakerId": "",
+                 "innkreving": "JA",
                  "periodeListe": []             
               }        
               ]

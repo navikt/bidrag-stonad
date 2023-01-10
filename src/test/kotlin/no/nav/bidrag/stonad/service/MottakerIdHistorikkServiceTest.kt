@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.persistence.repository.MottakerIdHistorikkRepository
@@ -68,9 +69,9 @@ class MottakerIdHistorikkServiceTest {
     )
     val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
       OpprettStonadRequestDto(
-      stonadType = StonadType.BIDRAG, sakId = "SAK-001",
+      type = StonadType.BIDRAG, sakId = "SAK-001",
       skyldnerId = "01018011111", kravhaverId = "01010511111", mottakerId = "01018211111",
-      opprettetAv = "X123456", indeksreguleringAar = "2024", periodeListe = periodeListe)
+      opprettetAv = "X123456", indeksreguleringAar = "2024", innkreving = Innkreving.JA, periodeListe = periodeListe)
     )
 
     val endreMottakerIdRequest = EndreMottakerIdRequestDto(

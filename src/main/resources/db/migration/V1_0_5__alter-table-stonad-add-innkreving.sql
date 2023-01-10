@@ -1,0 +1,1 @@
+ALTER TABLE stonad ADD COLUMN innkreving varchar(20) NOT NULL;
