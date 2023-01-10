@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.ISSUER
@@ -56,11 +57,8 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun hentStonad(@NotNull @RequestBody type: String,
-                 @NotNull @RequestBody skyldnerId: String,
-                 @NotNull @RequestBody kravhaverId: String,
-                 @NotNull @RequestBody sakId: String): ResponseEntity<StonadDto> {
-    val stonadFunnet = stonadService.hentStonad(type, skyldnerId, kravhaverId, sakId)
+  fun hentStonad(@NotNull @RequestBody request: HentStonadRequest): ResponseEntity<StonadDto> {
+    val stonadFunnet = stonadService.hentStonad(request)
     LOGGER.info("Følgende stønad-id ble hentet: ${stonadFunnet?.stonadId}")
     SECURE_LOGGER.info("Følgende stønad ble funnet: $stonadFunnet")
     return ResponseEntity(stonadFunnet, HttpStatus.OK)

@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.enums.Innkreving
@@ -118,8 +119,9 @@ class StonadServiceTest {
 
     stonadService.opprettStonad(opprettStonadRequest)
 
-    val opprettetStonad = stonadService.hentStonad(opprettStonadRequest.type.toString(),
-      opprettStonadRequest.skyldnerId, opprettStonadRequest.kravhaverId, opprettStonadRequest.sakId!!)
+    val opprettetStonad = stonadService.hentStonad(
+      HentStonadRequest(opprettStonadRequest.type, opprettStonadRequest.sakId,
+      opprettStonadRequest.skyldnerId, opprettStonadRequest.kravhaverId))
 
     assertAll(
       Executable { assertThat(opprettetStonad).isNotNull() },
@@ -214,11 +216,11 @@ class StonadServiceTest {
     val nyStonadOpprettet = persistenceService.hentStonadFraId(nyStonadOpprettetStonadId)
 
     // Finner stønaden som akkurat ble opprettet
-    val stonadFunnet = stonadService.hentStonad(
-      nyStonadOpprettet!!.type,
+    val stonadFunnet = stonadService.hentStonad(HentStonadRequest(
+      StonadType.valueOf(nyStonadOpprettet!!.type),
+      nyStonadOpprettet.sakId,
       nyStonadOpprettet.skyldnerId,
-      nyStonadOpprettet.kravhaverId,
-      nyStonadOpprettet.sakId
+      nyStonadOpprettet.kravhaverId)
     )
 
     assertAll(

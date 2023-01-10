@@ -1,10 +1,10 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.bo.OppdatertPeriode
@@ -47,8 +47,8 @@ class StonadService(val persistenceService: PersistenceService) {
   }
 
   // Henter stønad ut fra unik nøkkel for stønad
-  fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): StonadDto? {
-    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
+  fun hentStonad(request: HentStonadRequest): StonadDto? {
+    val stonad = persistenceService.hentStonad(request.type.toString(), request.skyldnerId, request.kravhaverId, request.sakId)
     if (stonad != null) {
       val periodeListe = persistenceService.hentPerioderForStonad(stonad.stonadId)
       return lagStonadDto(stonad, periodeListe)

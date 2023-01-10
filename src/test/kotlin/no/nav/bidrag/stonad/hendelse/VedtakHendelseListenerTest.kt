@@ -1,5 +1,7 @@
 package no.nav.bidrag.stonad.hendelse
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.service.StonadService
@@ -80,7 +82,7 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).hentStonad("BIDRAG", "", "", "")
+        verify(stonadServiceMock).hentStonad(HentStonadRequest(StonadType.BIDRAG, "", "", ""))
     }
 
     @Test
@@ -110,6 +112,6 @@ class VedtakHendelseListenerTest {
             """.trimIndent()
         )
 
-        verify(stonadServiceMock).hentStonad("FORSKUDD", "", "", "")
+        verify(stonadServiceMock).hentStonad(HentStonadRequest(StonadType.FORSKUDD, "", "", ""))
     }
 }

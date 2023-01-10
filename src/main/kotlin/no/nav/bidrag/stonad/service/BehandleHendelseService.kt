@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -33,11 +34,7 @@ class DefaultBehandleHendelseService(
 
   private fun behandleVedtakHendelse(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
     val eksisterendeStonad = stonadService.hentStonad(
-      stonadsendring.type.toString(),
-      stonadsendring.skyldnerId,
-      stonadsendring.kravhaverId,
-      stonadsendring.sakId
-    )
+      HentStonadRequest(stonadsendring.type, stonadsendring.sakId, stonadsendring.skyldnerId, stonadsendring.kravhaverId))
 
     if (eksisterendeStonad != null) {
       // Mottatt Hendelse skal oppdatere eksisterende stønad

@@ -1,8 +1,6 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
-import no.nav.bidrag.behandling.felles.dto.stonad.MottakerIdHistorikkDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.bo.PeriodeBo
@@ -87,18 +85,8 @@ class PersistenceService(
     return periodeRepository.hentPerioderForStonad(id)
   }
 
-
   fun hentPerioderForStonadInkludertUgyldiggjorte(id: Int): List<Periode> {
     return periodeRepository.hentPerioderForStonadInkludertUgyldiggjorte(id)
-  }
-
-  fun endreMottakerId(request: EndreMottakerIdRequestDto) {
-    stonadRepository.findById(request.stonadId)
-      .orElseThrow {
-        IllegalArgumentException(String.format("Fant ikke stønad med id %d i databasen", request.stonadId)
-        )
-      }
-    stonadRepository.endreMottakerIdForStonad(request.stonadId, request.nyMottakerId, request.opprettetAv)
   }
 
   fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int) {
