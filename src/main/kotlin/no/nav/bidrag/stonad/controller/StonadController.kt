@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import no.nav.bidrag.behandling.felles.dto.stonad.EndreMottakerIdRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.ISSUER
@@ -65,29 +64,9 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
-
-  @PostMapping(STONAD_ENDRE_MOTTAKER_ID)
-  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Endrer mottaker-id på en eksisterende stønad")
-  @ApiResponses(
-    value = [
-      ApiResponse(responseCode = "200", description = "Mottaker-id endret"),
-      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))])
-    ]
-  )
-
-  fun endreMottakerIdOgOpprettHistorikk(@RequestBody request: EndreMottakerIdRequestDto): ResponseEntity<Int> {
-    val stonadIdEndretStonad = stonadService.endreMottakerIdOgOpprettHistorikk(request)
-    LOGGER.info("Følgende forekomst på mottaker-id-historikk ble opprettet: $stonadIdEndretStonad")
-    return ResponseEntity(stonadIdEndretStonad, HttpStatus.OK)
-  }
-
   companion object {
     const val STONAD_NY = "/stonad"
     const val STONAD_HENT = "/stonad/{stonadId}"
-    const val STONAD_ENDRE_MOTTAKER_ID = "/stonad/endre-mottaker-id"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
   }
 }

@@ -195,9 +195,4 @@ class StonadService(val persistenceService: PersistenceService) {
       resultatkode = periode.resultatkode
     )
   }
-
-  fun endreMottakerIdOgOpprettHistorikk(request: EndreMottakerIdRequestDto): Int {
-    persistenceService.endreMottakerId(request)
-    return persistenceService.opprettNyMottakerIdHistorikk(request)
-  }
 }
