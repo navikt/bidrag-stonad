@@ -157,7 +157,7 @@ class StonadControllerTest {
       Executable { assertThat(response?.body?.kravhaverId).isEqualTo(stonadOpprettet?.kravhaverId) },
       Executable { assertThat(response?.body?.mottakerId).isEqualTo(stonadOpprettet?.mottakerId) },
       Executable { assertThat(response?.body?.opprettetAv).isEqualTo(stonadOpprettet?.opprettetAv) },
-      Executable { assertThat(response?.body?.innkreving).isEqualTo(stonadOpprettet?.innkreving) },
+      Executable { assertThat(response?.body?.innkreving.toString()).isEqualTo(stonadOpprettet?.innkreving) },
     )
     mottakerIdHistorikkRepository.deleteAll()
     periodeRepository.deleteAll()
