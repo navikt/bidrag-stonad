@@ -176,4 +176,43 @@ internal class DefaultBehandleHendelseServiceTest {
 
     )
   }
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  // Tester at mottakerId blir oppdatert på eksisterende stønad
+  fun `skal oppdatere mottakerId på eksisterende stønad`() {
+    // Oppretter ny hendelse som etterpå skal oppdateres
+
+    val originalStonadsendringListe = mutableListOf<Stonadsendring>()
+    originalStonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, emptyList())
+    )
+
+    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
+
+    behandleHendelseService.behandleHendelse(originalHendelse)
+    val originalStonad = stonadService.hentStonad(HentStonadRequest(
+      originalHendelse.stonadsendringListe!![0].type, originalHendelse.stonadsendringListe!![0].sakId,
+      originalHendelse.stonadsendringListe!![0].skyldnerId, originalHendelse.stonadsendringListe!![0].kravhaverId))
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, emptyList())
+    )
+
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDate.now(), "enhetId1",  null, null,
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
+
+    behandleHendelseService.behandleHendelse(hendelse)
+    val oppdatertStonad = stonadService.hentStonad(HentStonadRequest(
+      hendelse.stonadsendringListe!![0].type, hendelse.stonadsendringListe!![0].sakId,
+      hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+      Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
+      Executable { Assertions.assertThat(originalStonad!!.mottakerId).isEqualTo("Mottaker1") },
+      Executable { Assertions.assertThat(oppdatertStonad!!.mottakerId).isEqualTo("Mottaker2") }
+    )
+  }
 }
