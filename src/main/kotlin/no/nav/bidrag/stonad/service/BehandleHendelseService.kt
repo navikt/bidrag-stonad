@@ -6,7 +6,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
-import no.nav.bidrag.behandling.felles.enums.StonadType
+import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -28,17 +28,22 @@ class DefaultBehandleHendelseService(
     SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
     vedtakHendelse.stonadsendringListe?.forEach() { stonadsendring ->
-      behandleVedtakHendelse(stonadsendring, vedtakHendelse.id, vedtakHendelse.opprettetAv)
+      behandleVedtakHendelse(stonadsendring, vedtakHendelse.type, vedtakHendelse.id, vedtakHendelse.opprettetAv)
     }
   }
 
-  private fun behandleVedtakHendelse(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
+  private fun behandleVedtakHendelse(stonadsendring: Stonadsendring, vedtakType: VedtakType, vedtakId: Int, opprettetAv: String) {
     val eksisterendeStonad = stonadService.hentStonad(
       HentStonadRequest(stonadsendring.type, stonadsendring.sakId, stonadsendring.skyldnerId, stonadsendring.kravhaverId))
 
     if (eksisterendeStonad != null) {
-      // Mottatt Hendelse skal oppdatere eksisterende stønad
-      endreStonad(eksisterendeStonad, stonadsendring, vedtakId, opprettetAv)
+      if (vedtakType == VedtakType.ENDRING_MOTTAKER) {
+        // Mottatt hendelse skal oppdatere mottakerId for alle stønader i stonadsendringListe. Ingen perioder skal oppdateres.
+        persistenceService.endreMottakerId(eksisterendeStonad.stonadId, stonadsendring.mottakerId, opprettetAv)
+      } else {
+        // Mottatt Hendelse skal oppdatere eksisterende stønad
+        endreStonad(eksisterendeStonad, stonadsendring, vedtakId, opprettetAv)
+      }
     } else {
       opprettStonad(stonadsendring, vedtakId, opprettetAv)
     }

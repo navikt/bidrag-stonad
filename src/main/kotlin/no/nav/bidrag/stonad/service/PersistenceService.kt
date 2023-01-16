@@ -3,6 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.bo.PeriodeBo
 import no.nav.bidrag.stonad.bo.toPeriodeEntity
 import no.nav.bidrag.stonad.persistence.entity.Periode
@@ -87,6 +88,11 @@ class PersistenceService(
 
   fun hentPerioderForStonadInkludertUgyldiggjorte(id: Int): List<Periode> {
     return periodeRepository.hentPerioderForStonadInkludertUgyldiggjorte(id)
+  }
+
+  fun endreMottakerId(stonadId: Int, nyMottakerId: String, opprettetAv: String) {
+    SECURE_LOGGER.info("Oppdaterer mottakerId for stonadId: $stonadId")
+    stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)
   }
 
   fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int) {
