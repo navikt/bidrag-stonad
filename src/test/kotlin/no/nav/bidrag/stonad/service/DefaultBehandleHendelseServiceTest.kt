@@ -215,4 +215,57 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(oppdatertStonad!!.mottakerId).isEqualTo("Mottaker2") }
     )
   }
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  // Tester at perioder på mottatt hendelse blir sortert etter fomdato og at periodeTil på lagret periode blir satt til lik
+  // neste fomDato hvis mottatt periodeTil = null og det ikke er siste periode
+  fun `test sortering av perioder på hendelse og justering av periodeTil på lagret periode hvis den er null`() {
+    // Oppretter ny hendelse som etterpå skal oppdateres
+    val originalPeriodeliste = mutableListOf<Periode>()
+    originalPeriodeliste.add(Periode(LocalDate.parse("2017-01-01"), null,
+      BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2014-02-01"), null,
+      BigDecimal.valueOf(17.02), "NOK", "Hunky Dory", "referanse2"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-06-01"), null,
+      BigDecimal.valueOf(17.03), "NOK", "Hunky Dory", "referanse3"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-03-01"), null,
+      BigDecimal.valueOf(17.04), "NOK", "Hunky Dory", "referanse4"))
+    originalPeriodeliste.add(Periode(LocalDate.parse("2010-03-01"), null,
+      BigDecimal.valueOf(17.05), "NOK", "Hunky Dory", "referanse5"))
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, originalPeriodeliste)
+    )
+
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
+
+    behandleHendelseService.behandleHendelse(hendelse)
+    val opprettetStonad = stonadService.hentStonad(HentStonadRequest(
+      hendelse.stonadsendringListe!![0].type, hendelse.stonadsendringListe!![0].sakId,
+      hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+      Executable { Assertions.assertThat(opprettetStonad!!).isNotNull() },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe.size).isEqualTo(5) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2010-03-01")) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2014-02-01")) },
+
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2014-02-01")) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2017-01-01")) },
+
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2017-01-01")) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[3].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[3].periodeTil).isEqualTo(LocalDate.parse("2021-06-01")) },
+
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[4].periodeFom).isEqualTo(LocalDate.parse("2021-06-01")) },
+      Executable { Assertions.assertThat(opprettetStonad!!.periodeListe[4].periodeTil).isNull() },
+    )
+  }
+
+
 }

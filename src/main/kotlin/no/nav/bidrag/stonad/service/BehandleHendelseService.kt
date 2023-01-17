@@ -4,12 +4,14 @@ import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
 import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 private val LOGGER = LoggerFactory.getLogger(DefaultBehandleHendelseService::class.java)
 
@@ -51,11 +53,13 @@ class DefaultBehandleHendelseService(
 
   private fun endreStonad(eksisterendeStonad: StonadDto, stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
-    stonadsendring.periodeListe.forEach {
+    val hendelsePeriodeListe = stonadsendring.periodeListe.sortedBy { it.fomDato }
+    var i = 1
+    hendelsePeriodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
           periodeFom = it.fomDato,
-          periodeTil = it.tilDato,
+          periodeTil = finnPeriodeTil(it.tilDato, hendelsePeriodeListe, i),
           vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
@@ -63,6 +67,7 @@ class DefaultBehandleHendelseService(
           resultatkode = it.resultatkode
         )
       )
+      i++
     }
 
     val oppdatertStonad =
@@ -83,13 +88,14 @@ class DefaultBehandleHendelseService(
   }
 
   private fun opprettStonad(stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String) {
-
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
-    stonadsendring.periodeListe.forEach {
+    val hendelsePeriodeListe = stonadsendring.periodeListe.sortedBy { it.fomDato }
+    var i = 1
+    hendelsePeriodeListe.forEach {
       periodeListe.add(
         OpprettStonadPeriodeRequestDto(
           periodeFom = it.fomDato,
-          periodeTil = it.tilDato,
+          periodeTil = finnPeriodeTil(it.tilDato, hendelsePeriodeListe, i),
           vedtakId = vedtakId,
           periodeGjortUgyldigAvVedtakId = null,
           belop = it.belop,
@@ -97,6 +103,7 @@ class DefaultBehandleHendelseService(
           resultatkode = it.resultatkode
         )
       )
+      i++
     }
 
     stonadService.opprettStonad(
@@ -112,6 +119,14 @@ class DefaultBehandleHendelseService(
         periodeListe = periodeListe
       )
     )
+  }
 
+  private fun finnPeriodeTil(periodeTil: LocalDate?, periodeListe: List<Periode>, i: Int) : LocalDate? {
+    return if (i == periodeListe.size) {
+      // Siste element i listen, periodeTil skal ikke justeres
+      periodeTil
+    } else {
+      periodeTil ?: periodeListe[i].fomDato
+    }
   }
 }
