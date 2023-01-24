@@ -73,7 +73,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  periodeliste)
     )
 
-    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null, "R153961",
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
       LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(nyHendelse)
@@ -123,7 +123,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, originalPeriodeliste)
     )
 
-    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
       "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(originalHendelse)
@@ -145,7 +145,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, periodeliste)
     )
 
-    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
       "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
@@ -188,7 +188,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, emptyList())
     )
 
-    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
       "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(originalHendelse)
@@ -201,7 +201,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, emptyList())
     )
 
-    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDate.now(), "enhetId1",  null, null,
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1",  null, null,
       "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
@@ -239,7 +239,7 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, originalPeriodeliste)
     )
 
-    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDate.now(), "enhetId1",  null, null,
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
       "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
 
     behandleHendelseService.behandleHendelse(hendelse)
