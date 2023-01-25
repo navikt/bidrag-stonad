@@ -7,6 +7,8 @@ kafka-topic-vedtak: bidrag.vedtak-feature
 spec:
   replicas:
     min: 1
+    max: 1
   gcp:
     sqlInstances:
       tier: db-f1-micro
+      diskAutoresize: false
