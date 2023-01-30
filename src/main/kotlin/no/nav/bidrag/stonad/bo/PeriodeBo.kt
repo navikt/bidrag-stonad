@@ -7,6 +7,7 @@ import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.reflect.full.memberProperties
 
 data class PeriodeBo(
@@ -25,6 +26,12 @@ data class PeriodeBo(
 
   @Schema(description = "Vedtak-id")
   val vedtakId: Int = 0,
+
+  @Schema(description = "Perioden er gyldig fra angitt tidspunkt (vedtakstidspunkt)")
+  val gyldigFra: LocalDateTime = LocalDateTime.now(),
+
+  @Schema(description = "Angir tidspunkt perioden eventuelt er ugyldig fra (tidspunkt for vedtak med periode som erstattet denne)")
+  val gyldigTil: LocalDateTime? = null,
 
   @Schema(description = "Periode-gjort-ugyldig-av-vedtak-id")
   val periodeGjortUgyldigAvVedtakId: Int? = 0,
