@@ -2,6 +2,7 @@ package no.nav.bidrag.stonad.service
 
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
+import no.nav.bidrag.behandling.felles.dto.vedtak.Sporingsdata
 import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
 import no.nav.bidrag.behandling.felles.enums.Innkreving
@@ -70,11 +71,12 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  true, periodeliste)
     )
 
     val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
-      LocalDateTime.now(), stonadsendringListe, emptyList())
+      LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
 
     behandleHendelseService.behandleHendelse(nyHendelse)
 
@@ -107,6 +109,37 @@ internal class DefaultBehandleHendelseServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
+  fun `skal ikke opprette ny stonad fra Hendelse når endring == false`() {
+    // Oppretter ny hendelse
+
+    val periodeliste = mutableListOf<Periode>()
+    periodeliste.add(
+      Periode(LocalDate.parse("2021-06-01"),
+        LocalDate.parse("2021-07-01"), BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1")
+    )
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+      Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  false, periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
+      LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+      nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+      nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+      Executable { Assertions.assertThat(nyStonadOpprettet).isNull() }
+    )
+  }
+
+  @Test
+  @Suppress("NonAsciiCharacters")
   // Tester at perioder som er endret i nytt vedtak blir satt til ugyldig og erstattet av nye perioder
   fun `skal oppdatere eksisterende stønad med like fra- og til-datoer og ulike beløp`() {
     // Oppretter ny hendelse som etterpå skal oppdateres
@@ -120,11 +153,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, originalPeriodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
     )
 
     val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
+      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList(), Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.hentStonad(HentStonadRequest(
@@ -142,11 +175,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
     )
 
     val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.hentStonad(HentStonadRequest(
@@ -185,11 +218,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, emptyList())
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, emptyList())
     )
 
     val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList())
+      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList(), Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.hentStonad(HentStonadRequest(
@@ -198,11 +231,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, emptyList())
+      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
     )
 
     val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.hentStonad(HentStonadRequest(
@@ -236,11 +269,11 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, originalPeriodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
     )
 
     val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList())
+      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(hendelse)
     val opprettetStonad = stonadService.hentStonad(HentStonadRequest(

@@ -37,24 +37,29 @@ class DefaultBehandleHendelseService(
 
   private fun behandleVedtakHendelse(
     stonadsendring: Stonadsendring, vedtakType: VedtakType, vedtakId: Int, opprettetAv: String, opprettetTidspunkt: LocalDateTime) {
-    val eksisterendeStonad = stonadService.hentStonad(
-      HentStonadRequest(stonadsendring.type, stonadsendring.sakId, stonadsendring.skyldnerId, stonadsendring.kravhaverId))
+//    Sjekker om stonad skal oppdateres
+    if (stonadsendring.endring) {
+      val eksisterendeStonad = stonadService.hentStonad(
+        HentStonadRequest(stonadsendring.type, stonadsendring.sakId, stonadsendring.skyldnerId, stonadsendring.kravhaverId)
+      )
 
-    if (eksisterendeStonad != null) {
-      if (vedtakType == VedtakType.ENDRING_MOTTAKER) {
-        // Mottatt hendelse skal oppdatere mottakerId for alle stønader i stonadsendringListe. Ingen perioder skal oppdateres.
-        persistenceService.endreMottakerId(eksisterendeStonad.stonadId, stonadsendring.mottakerId, opprettetAv)
+      if (eksisterendeStonad != null) {
+        if (vedtakType == VedtakType.ENDRING_MOTTAKER) {
+          // Mottatt hendelse skal oppdatere mottakerId for alle stønader i stonadsendringListe. Ingen perioder skal oppdateres.
+          persistenceService.endreMottakerId(eksisterendeStonad.stonadId, stonadsendring.mottakerId, opprettetAv)
+        } else {
+          // Mottatt Hendelse skal oppdatere eksisterende stønad
+          endreStonad(eksisterendeStonad, stonadsendring, vedtakId, opprettetAv, opprettetTidspunkt)
+        }
       } else {
-        // Mottatt Hendelse skal oppdatere eksisterende stønad
-        endreStonad(eksisterendeStonad, stonadsendring, vedtakId, opprettetAv, opprettetTidspunkt)
+        opprettStonad(stonadsendring, vedtakId, opprettetAv, opprettetTidspunkt)
       }
-    } else {
-      opprettStonad(stonadsendring, vedtakId, opprettetAv, opprettetTidspunkt)
     }
   }
 
   private fun endreStonad(
-    eksisterendeStonad: StonadDto, stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String, opprettetTidspunkt: LocalDateTime) {
+    eksisterendeStonad: StonadDto, stonadsendring: Stonadsendring, vedtakId: Int, opprettetAv: String, opprettetTidspunkt: LocalDateTime
+  ) {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     val hendelsePeriodeListe = stonadsendring.periodeListe.sortedBy { it.fomDato }
     var i = 1
@@ -128,7 +133,7 @@ class DefaultBehandleHendelseService(
     )
   }
 
-  private fun finnPeriodeTil(periodeTil: LocalDate?, periodeListe: List<Periode>, i: Int) : LocalDate? {
+  private fun finnPeriodeTil(periodeTil: LocalDate?, periodeListe: List<Periode>, i: Int): LocalDate? {
     return if (i == periodeListe.size) {
       // Siste element i listen, periodeTil skal ikke justeres
       periodeTil
