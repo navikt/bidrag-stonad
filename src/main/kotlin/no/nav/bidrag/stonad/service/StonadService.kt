@@ -70,6 +70,21 @@ class StonadService(val persistenceService: PersistenceService) {
     } else return null
   }
 
+  fun hentStonadForAngittTidspunkt(
+    stonadType: String,
+    skyldnerId: String,
+    kravhaverId: String,
+    sakId: String,
+    gyldigTidspunkt: LocalDateTime
+  ): StonadDto? {
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
+    if (stonad != null) {
+      val periodeListe =
+        persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
+      return lagStonadDto(stonad, periodeListe)
+    } else return null
+  }
+
   fun lagStonadDto(stonad: Stonad, periodeListe: List<Periode>): StonadDto {
     val hentStonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
     periodeListe.forEach {
