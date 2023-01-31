@@ -41,14 +41,14 @@ data class Stonad(
   @Column(nullable = false, name = "opprettet_av")
   val opprettetAv: String = "",
 
-  @Column(nullable = false, name = "opprettet_timestamp")
-  val opprettetTimestamp: LocalDateTime = LocalDateTime.now(),
+  @Column(nullable = false, name = "opprettet_tidspunkt")
+  val opprettetTidspunkt: LocalDateTime = LocalDateTime.now(),
 
   @Column(nullable = true, name = "endret_av")
   val endretAv: String? = null,
 
-  @Column(nullable = true, name = "endret_timestamp")
-  val endretTimestamp: LocalDateTime? = null
+  @Column(nullable = true, name = "endret_tidspunkt")
+  val endretTidspunkt: LocalDateTime? = null
 )
 
 fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
@@ -58,7 +58,7 @@ fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
       Stonad::stonadId.name -> 0
       Stonad::type.name -> type.toString()
       Stonad::innkreving.name -> innkreving.toString()
-      Stonad::opprettetTimestamp.name -> LocalDateTime.now()
+      Stonad::opprettetTidspunkt.name -> LocalDateTime.now()
       Stonad::endretAv.name -> opprettetAv
       else -> propertiesByName[parameter.name]?.get(this@toStonadEntity)
     }

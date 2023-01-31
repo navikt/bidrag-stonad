@@ -21,6 +21,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.context.ActiveProfiles
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @DisplayName("stonadServiceTest")
 @ActiveProfiles(BidragStonadTest.TEST_PROFILE)
@@ -61,6 +62,8 @@ class StonadServiceTest {
         periodeFom = LocalDate.parse("2021-02-01"),
         periodeTil = LocalDate.parse("2021-03-01"),
         vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
         periodeGjortUgyldigAvVedtakId = null,
         belop = BigDecimal.valueOf(17.01),
         valutakode = "NOK",
@@ -88,26 +91,54 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"
+        periodeFom = LocalDate.parse("2021-02-01"),
+        periodeTil = LocalDate.parse("2021-03-01"),
+        vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
+        periodeGjortUgyldigAvVedtakId = null,
+        belop = BigDecimal.valueOf(17.01),
+        valutakode = "NOK",
+        resultatkode = "Alles gut"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"
+        periodeFom = LocalDate.parse("2021-03-01"),
+        periodeTil = LocalDate.parse("2021-04-01"),
+        vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
+        periodeGjortUgyldigAvVedtakId = 1,
+        belop = BigDecimal.valueOf(17.02),
+        valutakode = "NOK",
+        resultatkode = "Alles gut"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"
+        periodeFom = LocalDate.parse("2021-03-01"),
+        periodeTil = LocalDate.parse("2021-04-01"),
+        vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
+        periodeGjortUgyldigAvVedtakId = null,
+        belop = BigDecimal.valueOf(5000.02),
+        valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"
       )
     )
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(
-        periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"
+        periodeFom = LocalDate.parse("2021-04-01"),
+        periodeTil = LocalDate.parse("2021-05-01"),
+        vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
+        periodeGjortUgyldigAvVedtakId = null,
+        belop = BigDecimal.valueOf(17.03),
+        valutakode = "NOK",
+        resultatkode = "Alles gut"
       )
     )
 
@@ -146,16 +177,20 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-02-01"), periodeTil = LocalDate.parse("2021-03-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = 1, belop = BigDecimal.valueOf(17.02), valutakode = "NOK",
+        resultatkode = "Alles gut"))
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val opprettStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
@@ -201,6 +236,8 @@ class StonadServiceTest {
         periodeFom = LocalDate.parse("2019-01-01"),
         periodeTil = LocalDate.parse("2019-07-01"),
         vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
         periodeGjortUgyldigAvVedtakId = null,
         belop = BigDecimal.valueOf(1),
         valutakode = "NOK",
@@ -237,6 +274,8 @@ class StonadServiceTest {
         periodeFom = LocalDate.parse("2019-01-01"),
         periodeTil = LocalDate.parse("2019-07-01"),
         vedtakId = 1,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
         periodeGjortUgyldigAvVedtakId = null,
         belop = BigDecimal.valueOf(1),
         valutakode = "NOK",
@@ -267,13 +306,16 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2021-03-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-03-01"), periodeTil = LocalDate.parse("2021-07-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK",
+        resultatkode = "Alles gut"))
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-07-01"), periodeTil = LocalDate.parse("2021-12-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA,"R153961", periodeListe)
@@ -286,18 +328,21 @@ class StonadServiceTest {
     val endretStonadPeriodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-06-01"), periodeTil = LocalDate.parse("2021-08-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-08-01"), periodeTil = LocalDate.parse("2021-10-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.03), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.03), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", endretStonadPeriodeListe)
 
-    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.type.toString(),
       endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId, endretStonadRequest.sakId)
 
@@ -362,7 +407,8 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2022-01-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
@@ -375,12 +421,13 @@ class StonadServiceTest {
     val endretStonadPeriodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", endretStonadPeriodeListe)
 
-    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.type.toString(),
       endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId, endretStonadRequest.sakId)
 
@@ -426,7 +473,8 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2022-01-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
@@ -439,12 +487,13 @@ class StonadServiceTest {
     val endretStonadPeriodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = null, vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024",Innkreving.JA,  "R153961", endretStonadPeriodeListe)
 
-    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.type.toString(),
       endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId, endretStonadRequest.sakId)
 
@@ -483,7 +532,8 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = null, vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
@@ -496,12 +546,13 @@ class StonadServiceTest {
     val endretStonadPeriodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", endretStonadPeriodeListe)
 
-    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.type.toString(),
       endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId, endretStonadRequest.sakId)
 
@@ -546,15 +597,18 @@ class StonadServiceTest {
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.02), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     periodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-06-01"), periodeTil = null, vedtakId = 1,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val originalStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
@@ -568,20 +622,23 @@ class StonadServiceTest {
 
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2021-05-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-05-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK", resultatkode = "Ny periode lagt til"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(5000.01), valutakode = "NOK",
+        resultatkode = "Ny periode lagt til"))
 
     endretStonadPeriodeListe.add(
       OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-06-01"), periodeTil = null, vedtakId = 2,
-        periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK", resultatkode = "Alles gut"))
+        gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.03), valutakode = "NOK",
+        resultatkode = "Alles gut"))
 
     val endretStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
       "MottakerId123", "2024", Innkreving.JA, "R153961", endretStonadPeriodeListe)
 
-    stonadService.endreStonad(originalStonad!!, endretStonadRequest)
+    stonadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
     val endretStonad = stonadService.hentStonadInkludertUgyldiggjortePerioder(endretStonadRequest.type.toString(),
       endretStonadRequest.skyldnerId, endretStonadRequest.kravhaverId, endretStonadRequest.sakId)
 

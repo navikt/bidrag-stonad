@@ -15,6 +15,7 @@ import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class PersistenceService(
@@ -95,8 +96,8 @@ class PersistenceService(
     stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)
   }
 
-  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int) {
-    periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId)
+  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, opprettetTidspunkt: LocalDateTime) {
+    periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId, opprettetTidspunkt)
   }
 
   fun hentPeriode(id: Int): StonadPeriodeDto? {

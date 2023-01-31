@@ -40,7 +40,7 @@ open class PojoVedtakHendelseListener(
   private fun leggTilCorrelationId(hendelse: String) {
     try {
       val jsonNode = jsonMapperService.readTree(hendelse)
-      val correlationIdJsonNode = jsonNode["sporing"]?.get(CORRELATION_ID)
+      val correlationIdJsonNode = jsonNode["sporingsdata"]?.get(CORRELATION_ID)
 
       if (correlationIdJsonNode == null) {
         val unknown = "unknown-${System.currentTimeMillis().toString(16)}"

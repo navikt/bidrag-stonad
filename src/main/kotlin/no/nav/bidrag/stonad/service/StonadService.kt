@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -69,6 +70,21 @@ class StonadService(val persistenceService: PersistenceService) {
     } else return null
   }
 
+  fun hentStonadForAngittTidspunkt(
+    stonadType: String,
+    skyldnerId: String,
+    kravhaverId: String,
+    sakId: String,
+    gyldigTidspunkt: LocalDateTime
+  ): StonadDto? {
+    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
+    if (stonad != null) {
+      val periodeListe =
+        persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
+      return lagStonadDto(stonad, periodeListe)
+    } else return null
+  }
+
   fun lagStonadDto(stonad: Stonad, periodeListe: List<Periode>): StonadDto {
     val hentStonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
     periodeListe.forEach {
@@ -79,6 +95,8 @@ class StonadService(val persistenceService: PersistenceService) {
           it.periodeTil,
           stonad.stonadId,
           it.vedtakId,
+          it.gyldigFra,
+          it.gyldigTil,
           it.periodeGjortUgyldigAvVedtakId,
           it.belop,
           it.valutakode,
@@ -97,14 +115,14 @@ class StonadService(val persistenceService: PersistenceService) {
       stonad.indeksreguleringAar,
       Innkreving.valueOf(stonad.innkreving),
       stonad.opprettetAv,
-      stonad.opprettetTimestamp,
+      stonad.opprettetTidspunkt,
       stonad.endretAv,
-      stonad.endretTimestamp,
+      stonad.endretTidspunkt,
       hentStonadPeriodeDtoListe
     )
   }
 
-  fun endreStonad(eksisterendeStonad: StonadDto, oppdatertStonad: OpprettStonadRequestDto) {
+  fun endreStonad(eksisterendeStonad: StonadDto, oppdatertStonad: OpprettStonadRequestDto, opprettetTidspunkt: LocalDateTime) {
 
     val stonadId = eksisterendeStonad.stonadId
     val endretAvSaksbehandlerId = oppdatertStonad.opprettetAv
@@ -117,7 +135,7 @@ class StonadService(val persistenceService: PersistenceService) {
       val justertPeriode = finnOverlappPeriode(periode.toPeriodeBo(), oppdatertStonad)
       if (justertPeriode.settPeriodeSomUgyldig) {
         // Setter opprinnelige periode som ugyldig
-        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId)
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId, opprettetTidspunkt)
       }
       // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
       if (justertPeriode.oppdaterPerioder) {

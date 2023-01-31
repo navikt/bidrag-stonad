@@ -34,6 +34,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @DisplayName("StonadControllerTest")
 @ActiveProfiles(TEST_PROFILE)
@@ -98,6 +99,8 @@ class StonadControllerTest {
         periodeFom = LocalDate.parse("2019-01-01"),
         periodeTil = LocalDate.parse("2019-07-01"),
         vedtakId = 321,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
         periodeGjortUgyldigAvVedtakId = 246,
         belop = BigDecimal.valueOf(3490),
         valutakode = "NOK",
@@ -106,6 +109,8 @@ class StonadControllerTest {
         periodeFom = LocalDate.parse("2019-07-01"),
         periodeTil = LocalDate.parse("2020-01-01"),
         vedtakId = 323,
+        gyldigFra = LocalDateTime.now(),
+        gyldigTil = null,
         periodeGjortUgyldigAvVedtakId = 22,
         belop = BigDecimal.valueOf(3520),
         valutakode = "NOK",

@@ -47,9 +47,14 @@ class VedtakHendelseListenerTest {
                  "kravhaverId": "",
                  "mottakerId": "",
                  "innkreving": "JA",
+                 "endring": "true",
                  "periodeListe": []             
               }        
-              ]
+              ],
+              "sporingsdata":
+                {
+                "correlationId":""            
+                }
             }
             """.trimIndent()
         )
@@ -75,9 +80,14 @@ class VedtakHendelseListenerTest {
                  "kravhaverId": "",
                  "mottakerId": "",
                  "innkreving": "JA",
+                 "endring": "true",
                  "periodeListe": []             
               }        
-              ]
+              ],
+              "sporingsdata":
+                {
+                "correlationId":""            
+                }           
             }
             """.trimIndent()
         )
@@ -105,9 +115,14 @@ class VedtakHendelseListenerTest {
                  "kravhaverId": "",
                  "mottakerId": "",
                  "innkreving": "JA",
+                 "endring": "true",                 
                  "periodeListe": []             
               }        
-              ]
+              ],
+              "sporingsdata":
+                {
+                "correlationId":""            
+                }
             }
             """.trimIndent()
         )
