@@ -117,7 +117,7 @@ class StonadControllerTest {
         resultatkode = "KOSTNADSBEREGNET_BIDRAG")
     )
 
-    val stonadOpprettetStonadId = persistenceService.opprettNyStonad(
+    val stonadOpprettetStonadId = persistenceService.opprettStonad(
       OpprettStonadRequestDto(
         type = StonadType.BIDRAG,
         sakId = "SAK-001",
@@ -132,7 +132,7 @@ class StonadControllerTest {
     )
 
     periodeListe.forEach {
-      persistenceService.opprettNyPeriode(it.toPeriodeBo(), stonadOpprettetStonadId)
+      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId)
     }
 
     val stonadOpprettet = persistenceService.hentStonadFraId(stonadOpprettetStonadId)
@@ -162,7 +162,7 @@ class StonadControllerTest {
   }
 
   private fun fullUrlForNyStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.STONAD_NY).toUriString()
+    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.OPPRETT_STONAD).toUriString()
   }
 
   private fun fullUrlForSokStonad(): String {

@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import io.micrometer.core.annotation.Timed
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -25,17 +26,19 @@ class PersistenceService(
 
   private val LOGGER = LoggerFactory.getLogger(PersistenceService::class.java)
 
-  fun opprettNyStonad(opprettStonadRequestDto: OpprettStonadRequestDto): Int {
+  @Timed
+  fun opprettStonad(opprettStonadRequestDto: OpprettStonadRequestDto): Int {
     val nyStonad = opprettStonadRequestDto.toStonadEntity()
     val stonad = stonadRepository.save(nyStonad)
     return stonad.stonadId
   }
 
+  @Timed
   fun oppdaterStonad(stonadId: Int, opprettetAv: String) {
     stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
-  fun opprettNyPeriode(periodeBo: PeriodeBo, stonadId: Int) {
+  fun opprettPeriode(periodeBo: PeriodeBo, stonadId: Int) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -49,7 +52,7 @@ class PersistenceService(
     periodeRepository.save(nyPeriode)
   }
 
-  fun opprettNyePerioder(periodeRequestListe: List<OpprettStonadPeriodeRequestDto>, stonadId: Int) {
+  fun opprettPerioder(periodeRequestListe: List<OpprettStonadPeriodeRequestDto>, stonadId: Int) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -65,6 +68,7 @@ class PersistenceService(
     }
   }
 
+  @Timed
   fun hentStonadFraId(stonadId: Int): Stonad? {
     val stonad = stonadRepository.findById(stonadId)
       .orElseThrow {
@@ -78,6 +82,7 @@ class PersistenceService(
     return stonad
   }
 
+  @Timed
   fun hentStonad(stonadType: String, skyldnerId: String, kravhaverId: String, sakId: String): Stonad? {
     return stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId, sakId)
   }

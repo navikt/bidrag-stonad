@@ -27,7 +27,7 @@ class StonadService(val persistenceService: PersistenceService) {
 
   // Opprett komplett stønad (alle tabeller)
   fun opprettStonad(stonadRequest: OpprettStonadRequestDto): Int {
-    val opprettetStonadId = persistenceService.opprettNyStonad(stonadRequest)
+    val opprettetStonadId = persistenceService.opprettStonad(stonadRequest)
     // Perioder
     stonadRequest.periodeListe.forEach { opprettPeriode(it, opprettetStonadId) }
     return opprettetStonadId
@@ -35,7 +35,7 @@ class StonadService(val persistenceService: PersistenceService) {
 
   // Opprett periode
   private fun opprettPeriode(periodeRequest: OpprettStonadPeriodeRequestDto, stonadId: Int) {
-    persistenceService.opprettNyPeriode(periodeRequest.toPeriodeBo(), stonadId)
+    persistenceService.opprettPeriode(periodeRequest.toPeriodeBo(), stonadId)
   }
 
   // Henter stønad ut fra stonadId
@@ -140,13 +140,13 @@ class StonadService(val persistenceService: PersistenceService) {
       // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
       if (justertPeriode.oppdaterPerioder) {
         justertPeriode.periodeListe.forEach {
-          persistenceService.opprettNyPeriode(it, stonadId)
+          persistenceService.opprettPeriode(it, stonadId)
         }
       }
     }
 
     oppdatertStonad.periodeListe.forEach {
-      persistenceService.opprettNyPeriode(it.toPeriodeBo(), stonadId)
+      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadId)
 
     }
   }
