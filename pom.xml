@@ -33,6 +33,7 @@
     <com.squareup.okhttp3.version>4.9.2</com.squareup.okhttp3.version>
     <bidrag-behandling-felles.version>0.0.76</bidrag-behandling-felles.version>
     <bidrag-behandling-felles-dto.version>0.0.70</bidrag-behandling-felles-dto.version>
+    <kotlin-logging-jvm.version>3.0.4</kotlin-logging-jvm.version>
   </properties>
 
   <dependencyManagement>
@@ -67,6 +68,12 @@
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+      <version>${kotlin-logging-jvm.version}</version>
     </dependency>
 
     <!-- kotlin -->
