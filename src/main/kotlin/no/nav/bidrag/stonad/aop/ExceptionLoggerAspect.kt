@@ -1,3 +1,4 @@
+/*
 package no.nav.bidrag.stonad.aop
 
 import no.nav.bidrag.commons.ExceptionLogger
@@ -14,3 +15,4 @@ class ExceptionLoggerAspect(private val exceptionLogger: ExceptionLogger) {
         exceptionLogger.logException(exception, "${joinPoint.sourceLocation.withinType}")
     }
 }
+*/

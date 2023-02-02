@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.controller
 
+import io.micrometer.core.annotation.Timed
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -9,10 +10,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.stonad.ISSUER
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.service.StonadService
-import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.constraints.NotNull
 
 @RestController
-@ProtectedWithClaims(issuer = ISSUER)
+@Protected
+@Timed
 class StonadController(private val stonadService: StonadService) {
 
-  @PostMapping(STONAD_NY)
+  @PostMapping(OPPRETT_STONAD)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Oppretter stønad")
   @ApiResponses(
     value = [
@@ -37,7 +38,7 @@ class StonadController(private val stonadService: StonadService) {
     ]
   )
 
-  fun opprettNyStonad(@RequestBody request: OpprettStonadRequestDto): ResponseEntity<Int>? {
+  fun opprettStonad(@RequestBody request: OpprettStonadRequestDto): ResponseEntity<Int>? {
     val stonadOpprettet = stonadService.opprettStonad(request)
     LOGGER.info("Stønad opprettet med stønadId: $stonadOpprettet")
     return ResponseEntity(stonadOpprettet, HttpStatus.OK)
@@ -65,7 +66,7 @@ class StonadController(private val stonadService: StonadService) {
   }
 
   companion object {
-    const val STONAD_NY = "/stonad"
+    const val OPPRETT_STONAD = "/stonad"
     const val HENT_STONAD = "/hent-stonad"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
   }

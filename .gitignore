@@ -11,3 +11,7 @@
 .settings/
 .vscode/
 .DS_Store
+/.dcignore
+
+
+**secrets**

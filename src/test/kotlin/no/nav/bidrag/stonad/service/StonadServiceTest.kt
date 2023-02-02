@@ -244,7 +244,7 @@ class StonadServiceTest {
         resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
     )
 
-    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
+    val nyStonadOpprettetStonadId = persistenceService.opprettStonad(
       OpprettStonadRequestDto(
         StonadType.BIDRAG, "SAK-001", "Skyldner123",
     "Kravhaver123", "MottakerId123",  "2024", Innkreving.JA, "R153961", periodeListe)
@@ -282,7 +282,7 @@ class StonadServiceTest {
         resultatkode = "KOSTNADSBEREGNET_BIDRAG"),
     )
 
-    val nyStonadOpprettetStonadId = persistenceService.opprettNyStonad(
+    val nyStonadOpprettetStonadId = persistenceService.opprettStonad(
       OpprettStonadRequestDto(
         StonadType.BIDRAG, "SAK-001", "Skyldner123",
         "Kravhaver123", "MottakerId123", "2024", Innkreving.JA,"R153961",

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.InjectMocks
@@ -42,9 +41,9 @@ class StonadServiceMockTest {
   @Test
   fun `skal opprette ny komplett stonad`() {
 
-    Mockito.`when`(persistenceServiceMock.opprettNyStonad(MockitoHelper.capture(opprettStonadRequestDto)))
+    Mockito.`when`(persistenceServiceMock.opprettStonad(MockitoHelper.capture(opprettStonadRequestDto)))
       .thenReturn(1)
-      doNothing().`when`(persistenceServiceMock).opprettNyPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1))
+      doNothing().`when`(persistenceServiceMock).opprettPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1))
 
     val nyStonadOpprettetStonadId = stonadService.opprettStonad(byggStonadRequest())
 
@@ -52,7 +51,7 @@ class StonadServiceMockTest {
     val periodeDtoListe = periodeBoCaptor.allValues
 
     Mockito.verify(persistenceServiceMock, Mockito.times(1))
-      .opprettNyStonad(MockitoHelper.any(OpprettStonadRequestDto::class.java))
+      .opprettStonad(MockitoHelper.any(OpprettStonadRequestDto::class.java))
 
 /*    Mockito.verify(persistenceServiceMock, Mockito.times(2))
       .opprettNyPeriode(MockitoHelper.any(PeriodeBo::class.java), nyStonadOpprettetStonadId)*/
