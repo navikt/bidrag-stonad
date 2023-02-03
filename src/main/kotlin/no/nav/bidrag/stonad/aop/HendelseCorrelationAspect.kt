@@ -1,4 +1,4 @@
-/*
+
 package no.nav.bidrag.stonad.aop
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -13,14 +13,15 @@ import org.aspectj.lang.annotation.Before
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.util.*
+private const val CORRELATION_ID = "correlationId"
 
 private val LOGGER = KotlinLogging.logger {}
 @Component
 @Aspect
 class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
 
-    @Before(value = "execution(* no.nav.bidrag.stonad.hendelse.vedtakhendelselistener(..)) && args(hendelse)")
-    fun leggSporingFraVedtakHendelseTilMDC(joinPoint: JoinPoint, hendelse: ConsumerRecord<String, String>) {
+    @Before(value = "execution(* no.nav.bidrag.stonad.hendelse.PojoVedtakHendelseListener.lesHendelse(..)) && args(hendelse)")
+    fun leggSporingFraVedtakHendelseTilMDC(joinPoint: JoinPoint, hendelse: String) {
         hentSporingFraHendelse(hendelse)?.let {
             val correlationId = CorrelationId.existing(it)
             MDC.put(CORRELATION_ID_HEADER, correlationId.get())
@@ -32,17 +33,18 @@ class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
 
     }
 
-    private fun hentSporingFraHendelse(hendelse: ConsumerRecord<String, String>): String? {
+    private fun hentSporingFraHendelse(hendelse: String): String? {
         return try {
-            val jsonNode = objectMapper.readTree(hendelse.value())
-            jsonNode["sporingId"].asText()
+            val jsonNode = objectMapper.readTree(hendelse)
+            val correlationId = jsonNode["sporingsdata"]?.get(CORRELATION_ID)?.asText()
+            if (correlationId.isNullOrEmpty()) null else correlationId
         } catch (e: Exception){
             LOGGER.error("Det skjedde en feil ved konverting av melding fra hendelse: ", e)
             null
         }
     }
-    @After(value = "execution(* no.nav.bidrag.stonad.hendelse.vedtakhendelselistener.*(..))")
+    @After(value = "execution(* no.nav.bidrag.stonad.hendelse.PojoVedtakHendelseListener.*(..))")
     fun clearCorrelationIdFromScheduler(joinPoint: JoinPoint) {
         MDC.clear()
     }
-}*/
+}

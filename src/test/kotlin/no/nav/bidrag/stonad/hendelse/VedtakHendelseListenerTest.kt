@@ -12,12 +12,14 @@ import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [BidragStonadTest::class])
 @DisplayName("VedtakHendelseListener (test av forretningslogikk)")
 @ActiveProfiles(TEST_PROFILE)
 @EnableMockOAuth2Server
+@EnableAspectJAutoProxy
 
 class VedtakHendelseListenerTest {
 
@@ -121,7 +123,7 @@ class VedtakHendelseListenerTest {
               ],
               "sporingsdata":
                 {
-                "correlationId":""            
+                "correlationId":"korrelasjon_id-123213123213"            
                 }
             }
             """.trimIndent()
