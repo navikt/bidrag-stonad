@@ -8,7 +8,7 @@ interface VedtakHendelseListener {
   fun lesHendelse(hendelse: String)
 }
 
-class KafkaVedtakHendelseListener(
+open class KafkaVedtakHendelseListener(
   jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
 ) : PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService) {
 

@@ -20,7 +20,7 @@ private val LOGGER = KotlinLogging.logger {}
 @Aspect
 class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
 
-    @Before(value = "execution(* no.nav.bidrag.stonad.hendelse.PojoVedtakHendelseListener.lesHendelse(..)) && args(hendelse)")
+    @Before(value = "execution(* no.nav.bidrag.stonad.hendelse.VedtakHendelseListener.lesHendelse(..)) && args(hendelse)")
     fun leggSporingFraVedtakHendelseTilMDC(joinPoint: JoinPoint, hendelse: String) {
         hentSporingFraHendelse(hendelse)?.let {
             val correlationId = CorrelationId.existing(it)
@@ -43,7 +43,7 @@ class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
             null
         }
     }
-    @After(value = "execution(* no.nav.bidrag.stonad.hendelse.PojoVedtakHendelseListener.*(..))")
+    @After(value = "execution(* no.nav.bidrag.stonad.hendelse.VedtakHendelseListener.*(..))")
     fun clearCorrelationIdFromScheduler(joinPoint: JoinPoint) {
         MDC.clear()
     }
