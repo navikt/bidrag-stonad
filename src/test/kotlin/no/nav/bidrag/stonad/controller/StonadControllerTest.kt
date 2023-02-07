@@ -132,7 +132,7 @@ class StonadControllerTest {
     )
 
     periodeListe.forEach {
-      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId)
+      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId, LocalDateTime.now())
     }
 
     val stonadOpprettet = persistenceService.hentStonadFraId(stonadOpprettetStonadId)

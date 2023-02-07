@@ -25,6 +25,7 @@ class StonadService(val persistenceService: PersistenceService) {
 
   private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
 
+  // Disse metodene brukes av endepunktet for å opprette en stønad. Bør vel fjernes siden alt kommer via Kafka
   // Opprett komplett stønad (alle tabeller)
   fun opprettStonad(stonadRequest: OpprettStonadRequestDto): Int {
     val opprettetStonadId = persistenceService.opprettStonad(stonadRequest)
@@ -35,7 +36,7 @@ class StonadService(val persistenceService: PersistenceService) {
 
   // Opprett periode
   private fun opprettPeriode(periodeRequest: OpprettStonadPeriodeRequestDto, stonadId: Int) {
-    persistenceService.opprettPeriode(periodeRequest.toPeriodeBo(), stonadId)
+    persistenceService.opprettPeriode(periodeRequest.toPeriodeBo(), stonadId, LocalDateTime.now())
   }
 
   // Henter stønad ut fra stonadId
@@ -122,7 +123,7 @@ class StonadService(val persistenceService: PersistenceService) {
     )
   }
 
-  fun endreStonad(eksisterendeStonad: StonadDto, oppdatertStonad: OpprettStonadRequestDto, opprettetTidspunkt: LocalDateTime) {
+  fun endreStonad(eksisterendeStonad: StonadDto, oppdatertStonad: OpprettStonadRequestDto, vedtakTidspunkt: LocalDateTime) {
 
     val stonadId = eksisterendeStonad.stonadId
     val endretAvSaksbehandlerId = oppdatertStonad.opprettetAv
@@ -135,18 +136,18 @@ class StonadService(val persistenceService: PersistenceService) {
       val justertPeriode = finnOverlappPeriode(periode.toPeriodeBo(), oppdatertStonad)
       if (justertPeriode.settPeriodeSomUgyldig) {
         // Setter opprinnelige periode som ugyldig
-        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId, opprettetTidspunkt)
+        persistenceService.settPeriodeSomUgyldig(periode.periodeId, oppdatertStonadVedtakId, vedtakTidspunkt)
       }
       // Sjekker om det skal opprettes en ny periode med justerte datoer tilpasset perioder i nytt vedtak
       if (justertPeriode.oppdaterPerioder) {
         justertPeriode.periodeListe.forEach {
-          persistenceService.opprettPeriode(it, stonadId)
+          persistenceService.opprettPeriode(it, stonadId, vedtakTidspunkt)
         }
       }
     }
 
     oppdatertStonad.periodeListe.forEach {
-      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadId)
+      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadId, vedtakTidspunkt)
 
     }
   }

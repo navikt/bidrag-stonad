@@ -19,8 +19,10 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.doNothing
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @DisplayName("stonadServiceMockTest")
 @ExtendWith(MockitoExtension::class)
@@ -43,7 +45,7 @@ class StonadServiceMockTest {
 
     Mockito.`when`(persistenceServiceMock.opprettStonad(MockitoHelper.capture(opprettStonadRequestDto)))
       .thenReturn(1)
-      doNothing().`when`(persistenceServiceMock).opprettPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1))
+      doNothing().`when`(persistenceServiceMock).opprettPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1), any())
 
     val nyStonadOpprettetStonadId = stonadService.opprettStonad(byggStonadRequest())
 

@@ -38,7 +38,7 @@ class PersistenceService(
     stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
-  fun opprettPeriode(periodeBo: PeriodeBo, stonadId: Int) {
+  fun opprettPeriode(periodeBo: PeriodeBo, stonadId: Int, vedtakTidspunkt: LocalDateTime) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -48,7 +48,7 @@ class PersistenceService(
           )
         )
       }
-    val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad)
+    val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad, vedtakTidspunkt)
     periodeRepository.save(nyPeriode)
   }
 
@@ -101,8 +101,8 @@ class PersistenceService(
     stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)
   }
 
-  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, opprettetTidspunkt: LocalDateTime) {
-    periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId, opprettetTidspunkt)
+  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, vedtakTidspunkt: LocalDateTime) {
+    periodeRepository.settPeriodeSomUgyldig(periodeId, periodeGjortUgyldigAvVedtakId, vedtakTidspunkt)
   }
 
   fun hentPeriode(id: Int): StonadPeriodeDto? {
