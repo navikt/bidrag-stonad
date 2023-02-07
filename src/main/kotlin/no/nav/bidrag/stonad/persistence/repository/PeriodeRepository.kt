@@ -21,7 +21,7 @@ interface PeriodeRepository : CrudRepository<Periode, Int?>{
   fun hentGyldigePerioderForStonadForAngittTidspunkt(stonadId: Int, gyldigTidspunkt: LocalDateTime): List<Periode>
 
   @Query(
-  "update Periode pe set pe.gyldigTil = :opprettetTidspunkt, pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.periodeId = :periodeId")
+  "update Periode pe set pe.gyldigTil = :vedtakTidspunkt, pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.periodeId = :periodeId")
   @Modifying
-  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, opprettetTidspunkt: LocalDateTime)
+  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, vedtakTidspunkt: LocalDateTime)
 }
