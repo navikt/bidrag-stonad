@@ -7,6 +7,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
 import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
 import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
+import no.nav.bidrag.behandling.felles.enums.Innkreving
 import no.nav.bidrag.behandling.felles.enums.VedtakType
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import org.slf4j.LoggerFactory
@@ -37,8 +38,8 @@ class DefaultBehandleHendelseService(
 
   private fun behandleVedtakHendelse(
       stonadsendring: Stonadsendring, vedtakType: VedtakType, vedtakId: Int, opprettetAv: String, vedtakTidspunkt: LocalDateTime) {
-//    Sjekker om stonad skal oppdateres
-    if (stonadsendring.endring) {
+//    Sjekker om stønad skal oppdateres
+    if (stonadsendring.endring && stonadsendring.innkreving == Innkreving.JA) {
       val eksisterendeStonad = stonadService.hentStonad(
         HentStonadRequest(stonadsendring.type, stonadsendring.sakId, stonadsendring.skyldnerId, stonadsendring.kravhaverId)
       )

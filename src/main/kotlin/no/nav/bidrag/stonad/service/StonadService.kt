@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -71,17 +72,11 @@ class StonadService(val persistenceService: PersistenceService) {
     } else return null
   }
 
-  fun hentStonadForAngittTidspunkt(
-    stonadType: String,
-    skyldnerId: String,
-    kravhaverId: String,
-    sakId: String,
-    gyldigTidspunkt: LocalDateTime
-  ): StonadDto? {
-    val stonad = persistenceService.hentStonad(stonadType, skyldnerId, kravhaverId, sakId)
+  fun hentStonadHistorisk(request: HentStonadHistoriskRequest): StonadDto? {
+    val stonad = persistenceService.hentStonad(request.type.toString(), request.skyldnerId, request.kravhaverId, request.sakId)
     if (stonad != null) {
       val periodeListe =
-        persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(stonad.stonadId)
+        persistenceService.hentPerioderForStonadForAngittTidspunkt(stonad.stonadId, request.gyldigTidspunkt)
       return lagStonadDto(stonad, periodeListe)
     } else return null
   }

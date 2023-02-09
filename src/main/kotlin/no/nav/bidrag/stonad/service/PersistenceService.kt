@@ -96,6 +96,10 @@ class PersistenceService(
     return periodeRepository.hentPerioderForStonadInkludertUgyldiggjorte(id)
   }
 
+  fun hentPerioderForStonadForAngittTidspunkt(id: Int, gyldigTidspunkt: LocalDateTime): List<Periode> {
+    return periodeRepository.hentGyldigePerioderForStonadForAngittTidspunkt(id, gyldigTidspunkt)
+  }
+
   fun endreMottakerId(stonadId: Int, nyMottakerId: String, opprettetAv: String) {
     SECURE_LOGGER.info("Oppdaterer mottakerId for stonadId: $stonadId")
     stonadRepository.endreMottakerIdForStonad(stonadId, nyMottakerId, opprettetAv)

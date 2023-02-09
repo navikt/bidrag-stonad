@@ -6,6 +6,8 @@
 # Mocks OIDC.
 #
 ####################################################################
+#logging.level.org.hibernate:sql=debug
+#logging.level.org.hibernate:type=trace
 
 no.nav.security.jwt:
   issuer:
@@ -20,6 +22,9 @@ spring:
   datasource.url: jdbc:h2:mem:default
   h2.console.enabled: true
   jpa.hibernate.hbmddl-auto: create-drop
+#  logging:
+#    level:
+#      org.hibernate.sql=debug, org.hibernate.type.descriptor.sql.BasicBinder=trace
 
 spring.kafka:
   properties:
