@@ -27,25 +27,6 @@ import javax.validation.constraints.NotNull
 @Timed
 class StonadController(private val stonadService: StonadService) {
 
-  @PostMapping(OPPRETT_STONAD)
-  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Oppretter stønad")
-  @ApiResponses(
-    value = [
-      ApiResponse(responseCode = "200", description = "Mottaker-id endret"),
-      ApiResponse(responseCode = "400", description = "Feil opplysinger oppgitt", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "401", description = "Sikkerhetstoken mangler, er utløpt, eller av andre årsaker ugyldig", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
-      ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))])
-    ]
-  )
-
-  fun opprettStonad(@RequestBody request: OpprettStonadRequestDto): ResponseEntity<Int>? {
-    val stonadOpprettet = stonadService.opprettStonad(request)
-    LOGGER.info("Stønad opprettet med stønadId: $stonadOpprettet")
-    return ResponseEntity(stonadOpprettet, HttpStatus.OK)
-  }
-
-
   @PostMapping(HENT_STONAD)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad")
   @ApiResponses(
@@ -87,7 +68,6 @@ class StonadController(private val stonadService: StonadService) {
   }
 
   companion object {
-    const val OPPRETT_STONAD = "/stonad"
     const val HENT_STONAD = "/hent-stonad"
     const val HENT_STONAD_HISTORISK = "/hent-stonad-historisk"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)

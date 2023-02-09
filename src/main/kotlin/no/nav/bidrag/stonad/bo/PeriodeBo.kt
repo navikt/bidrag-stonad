@@ -69,13 +69,23 @@ fun StonadPeriodeDto.toPeriodeBo() = with(::PeriodeBo) {
   })
 }
 
-fun PeriodeBo.toPeriodeEntity(eksisterendeStonad: Stonad, vedtakTidspunkt: LocalDateTime) = with(::Periode) {
+fun PeriodeBo.toPeriodeEntity(eksisterendeStonad: Stonad) = with(::Periode) {
+  val propertiesByName = PeriodeBo::class.memberProperties.associateBy { it.name }
+  callBy(parameters.associateWith { parameter ->
+    when (parameter.name) {
+      Periode::stonad.name -> eksisterendeStonad
+      else -> propertiesByName[parameter.name]?.get(this@toPeriodeEntity)
+    }
+  })
+}
+
+fun PeriodeBo.toJustertPeriodeEntity(eksisterendeStonad: Stonad, vedtakTidspunkt: LocalDateTime) = with(::Periode) {
   val propertiesByName = PeriodeBo::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
       Periode::stonad.name -> eksisterendeStonad
       Periode::gyldigFra.name -> vedtakTidspunkt
-      else -> propertiesByName[parameter.name]?.get(this@toPeriodeEntity)
+      else -> propertiesByName[parameter.name]?.get(this@toJustertPeriodeEntity)
     }
   })
 }

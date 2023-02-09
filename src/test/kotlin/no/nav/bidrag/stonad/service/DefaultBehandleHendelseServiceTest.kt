@@ -141,7 +141,7 @@ internal class DefaultBehandleHendelseServiceTest {
   @Test
   @Suppress("NonAsciiCharacters")
   // Tester at perioder som er endret i nytt vedtak blir satt til ugyldig og erstattet av nye perioder
-  fun `skal oppdatere eksisterende stønad med like fra- og til-datoer og ulike beløp`() {
+  fun `skal oppdatere eksisterende stønad med like fra- og til-datoer og ulike beløp, tester også på gyldigFra og gyldigTil`() {
     // Oppretter ny hendelse som etterpå skal oppdateres
     val originalPeriodeliste = mutableListOf<Periode>()
     originalPeriodeliste.add(Periode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-02-01"),
@@ -156,8 +156,10 @@ internal class DefaultBehandleHendelseServiceTest {
       Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
     )
 
-    val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList(), Sporingsdata(""))
+    val originalHendelse = VedtakHendelse(kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
+        vedtakTidspunkt = LocalDateTime.parse("2020-10-17T10:12:14.169121000"), enhetId = "enhetId1",
+        eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+        stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(originalHendelse)
     val originalStonad = stonadService.hentStonad(HentStonadRequest(
@@ -175,37 +177,49 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+      Stonadsendring(StonadType.BIDRAG, "Sak1","Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
     )
 
-    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
-      "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata(""))
+    val hendelse = VedtakHendelse(kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
+        vedtakTidspunkt = LocalDateTime.parse("2020-10-20T20:12:14.246785000"), enhetId = "enhetId1",
+        eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+        stonadsendringListe = stonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata(""))
 
     behandleHendelseService.behandleHendelse(hendelse)
     val oppdatertStonad = stonadService.hentStonad(HentStonadRequest(
       hendelse.stonadsendringListe!![0].type, hendelse.stonadsendringListe!![0].sakId,
       hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId))
 
+    val allePerioderInkludertUgyldiggjorte = persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(oppdatertStonad!!.stonadId)
+
     assertAll(
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
       Executable { Assertions.assertThat(originalStonad!!.periodeListe.size).isEqualTo(3) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-02-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].valutakode).isEqualTo("NOK") },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[0].resultatkode).isEqualTo("Hunky Dory") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].valutakode).isEqualTo("NOK") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].resultatkode).isEqualTo("Hunky Dory") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[0].gyldigFra).isEqualTo(LocalDateTime.parse("2020-10-20T20:12:14.246785")) },
 
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(100.02)) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].valutakode).isEqualTo("NOK") },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[1].resultatkode).isEqualTo("Hunky Dory") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-02-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(100.02)) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].valutakode).isEqualTo("NOK") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].resultatkode).isEqualTo("Hunky Dory") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[1].gyldigFra).isEqualTo(LocalDateTime.parse("2020-10-20T20:12:14.246785")) },
 
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].valutakode).isEqualTo("NOK") },
-      Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe[2].resultatkode).isEqualTo("Hunky Dory") }
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-03-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(17.03)) },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].valutakode).isEqualTo("NOK") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].resultatkode).isEqualTo("Hunky Dory") },
+      Executable { Assertions.assertThat(oppdatertStonad.periodeListe[2].gyldigFra).isEqualTo(LocalDateTime.parse("2020-10-20T20:12:14.246785")) },
+
+      Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte.size).isEqualTo(6) },
+      Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte[3].gyldigFra).isEqualTo(LocalDateTime.parse("2020-10-17T10:12:14.169121000")) },
+      Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte[3].gyldigTil).isEqualTo(LocalDateTime.parse("2020-10-20T20:12:14.246785000")) },
+      Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte[3].periodeGjortUgyldigAvVedtakId).isEqualTo(2) },
 
     )
   }

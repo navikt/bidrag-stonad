@@ -70,25 +70,6 @@ class StonadControllerTest {
     assertThat(makeFullContextPath()).isEqualTo("http://localhost:$port")
   }
 
-  @Test
-  fun `skal opprette ny stonad`() {
-
-    // Oppretter ny forekomst av stønad
-    val response = securedTestRestTemplate.exchange(
-      fullUrlForNyStonad(),
-      HttpMethod.POST,
-      byggStonadRequest(),
-      String::class.java
-    )
-
-    assertAll(
-      Executable { assertThat(response).isNotNull() },
-      Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
-      Executable { assertThat(response?.body).isNotNull() },
-    )
-    periodeRepository.deleteAll()
-    stonadRepository.deleteAll()
-  }
 
   @Test
   fun `skal finne data for en stonad`() {
@@ -132,7 +113,7 @@ class StonadControllerTest {
     )
 
     periodeListe.forEach {
-      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId, LocalDateTime.now())
+      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId)
     }
 
     val stonadOpprettet = persistenceService.hentStonadFraId(stonadOpprettetStonadId)
@@ -161,9 +142,6 @@ class StonadControllerTest {
     stonadRepository.deleteAll()
   }
 
-  private fun fullUrlForNyStonad(): String {
-    return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.OPPRETT_STONAD).toUriString()
-  }
 
   private fun fullUrlForSokStonad(): String {
     return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StonadController.HENT_STONAD).toUriString()
