@@ -1,5 +1,6 @@
 package no.nav.bidrag.stonad.service
 
+import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
@@ -689,5 +690,58 @@ class StonadServiceTest {
       Executable { assertThat(endretStonad!!.periodeListe[5].periodeGjortUgyldigAvVedtakId).isEqualTo(2) },
 
       )
+  }
+
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne historiske perioder for en stønad`() {
+    // Oppretter ny stønad
+    val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
+    //Legger først til periode som ikke skal returneres
+    periodeListe.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2022-01-01"), vedtakId = 2,
+            gyldigFra = LocalDateTime.parse("2021-01-17T17:17:17.179121094"), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    periodeListe.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-01-01"), periodeTil = LocalDate.parse("2021-04-01"), vedtakId = 1,
+            gyldigFra = LocalDateTime.parse("2020-10-17T10:12:14.169121094"), gyldigTil = LocalDateTime.parse("2021-01-17T17:17:17.179121094"), periodeGjortUgyldigAvVedtakId = 2, belop = BigDecimal.valueOf(17.02), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    periodeListe.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-04-01"), periodeTil = LocalDate.parse("2021-06-01"), vedtakId = 1,
+            gyldigFra = LocalDateTime.parse("2020-10-17T10:12:14.169121094"), gyldigTil = LocalDateTime.parse("2021-01-17T17:17:17.179121094"), periodeGjortUgyldigAvVedtakId = 2, belop = BigDecimal.valueOf(5000.02), valutakode = "NOK",
+            resultatkode = "Ny periode lagt til"))
+    periodeListe.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.parse("2021-06-01"), periodeTil = LocalDate.parse("2022-01-01"), vedtakId = 1,
+            gyldigFra = LocalDateTime.parse("2020-10-17T10:12:14.169121094"), gyldigTil = LocalDateTime.parse("2021-01-17T17:17:17.179121094"), periodeGjortUgyldigAvVedtakId = 2, belop = BigDecimal.valueOf(17.03), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+
+    val opprettStonadRequest = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner123","Kravhaver123",
+        "MottakerId123", "2024", Innkreving.JA, "R153961", periodeListe)
+
+    val stonadId = stonadService.opprettStonad(opprettStonadRequest)
+
+    val funnetStonad = stonadService.hentStonadHistorisk(HentStonadHistoriskRequest(opprettStonadRequest.type,
+        opprettStonadRequest.sakId, opprettStonadRequest.skyldnerId, opprettStonadRequest.kravhaverId, LocalDateTime.parse("2020-12-31T23:00:00.169121094")))
+
+    assertAll(
+        Executable { assertThat(funnetStonad).isNotNull() },
+        Executable { assertThat(funnetStonad!!.periodeListe.size).isEqualTo(3) },
+        Executable { assertThat(funnetStonad!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-04-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[0].periodeGjortUgyldigAvVedtakId).isEqualTo(2) },
+        Executable { assertThat(funnetStonad!!.periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.02)) },
+
+        Executable { assertThat(funnetStonad!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-04-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[1].periodeTil).isEqualTo(LocalDate.parse("2021-06-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[1].periodeGjortUgyldigAvVedtakId).isEqualTo(2) },
+        Executable { assertThat(funnetStonad!!.periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(5000.02)) },
+
+        Executable { assertThat(funnetStonad!!.periodeListe[2].periodeFom).isEqualTo(LocalDate.parse("2021-06-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[2].periodeTil).isEqualTo(LocalDate.parse("2022-01-01")) },
+        Executable { assertThat(funnetStonad!!.periodeListe[2].periodeGjortUgyldigAvVedtakId).isEqualTo(2) },
+        Executable { assertThat(funnetStonad!!.periodeListe[2].belop).isEqualTo(BigDecimal.valueOf(17.03)) }
+
+        )
   }
 }

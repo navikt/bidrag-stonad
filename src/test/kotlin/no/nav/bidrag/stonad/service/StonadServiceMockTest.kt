@@ -45,7 +45,7 @@ class StonadServiceMockTest {
 
     Mockito.`when`(persistenceServiceMock.opprettStonad(MockitoHelper.capture(opprettStonadRequestDto)))
       .thenReturn(1)
-      doNothing().`when`(persistenceServiceMock).opprettPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1), any())
+      doNothing().`when`(persistenceServiceMock).opprettPeriode(MockitoHelper.capture(periodeBoCaptor), eq(1))
 
     val nyStonadOpprettetStonadId = stonadService.opprettStonad(byggStonadRequest())
 

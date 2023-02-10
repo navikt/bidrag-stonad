@@ -6,6 +6,7 @@ import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.bo.PeriodeBo
+import no.nav.bidrag.stonad.bo.toJustertPeriodeEntity
 import no.nav.bidrag.stonad.bo.toPeriodeEntity
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
@@ -38,7 +39,7 @@ class PersistenceService(
     stonadRepository.oppdaterStonadMedEndretAvOgTimestamp(stonadId, opprettetAv)
   }
 
-  fun opprettPeriode(periodeBo: PeriodeBo, stonadId: Int, vedtakTidspunkt: LocalDateTime) {
+  fun opprettPeriode(periodeBo: PeriodeBo, stonadId: Int) {
     val eksisterendeStonad = stonadRepository.findById(stonadId)
       .orElseThrow {
         IllegalArgumentException(
@@ -48,7 +49,21 @@ class PersistenceService(
           )
         )
       }
-    val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad, vedtakTidspunkt)
+    val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad)
+    periodeRepository.save(nyPeriode)
+  }
+
+  fun opprettJustertPeriode(periodeBo: PeriodeBo, stonadId: Int, vedtakTidspunkt: LocalDateTime) {
+    val eksisterendeStonad = stonadRepository.findById(stonadId)
+        .orElseThrow {
+          IllegalArgumentException(
+              String.format(
+                  "Fant ikke stønad med id %d i databasen",
+                  stonadId
+              )
+          )
+        }
+    val nyPeriode = periodeBo.toJustertPeriodeEntity(eksisterendeStonad, vedtakTidspunkt)
     periodeRepository.save(nyPeriode)
   }
 
@@ -117,6 +132,11 @@ class PersistenceService(
       }
     return periode.toStonadPeriodeDto()
   }
+
+  fun hentPerioderForStonadForAngittTidspunkt(id: Int, gyldigTidspunkt: LocalDateTime): List<Periode> {
+    return periodeRepository.hentGyldigePerioderForStonadForAngittTidspunkt(id, gyldigTidspunkt)
+  }
+
 
 
 
