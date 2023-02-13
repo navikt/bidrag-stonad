@@ -12,7 +12,10 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: {{ name }}
+      {{#each azureAccessInbound}}
+          - application: {{this.application}}
+            namespace: {{this.namespace}}
+            cluster: {{this.cluster}}
   image: {{ image }}
   kafka:
     pool: {{ kafka.pool }}
