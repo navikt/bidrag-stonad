@@ -55,6 +55,9 @@ class DefaultBehandleHendelseService(
       } else {
         opprettStonad(stonadsendring, vedtakId, opprettetAv, vedtakTidspunkt)
       }
+    } else {
+      LOGGER.info("Stønad ikke oppdatert pga innkreving = nei eller endring = false: $vedtakId")
+      SECURE_LOGGER.info("Stønad ikke oppdatert pga innkreving = nei eller endring = false: $vedtakId")
     }
   }
 
