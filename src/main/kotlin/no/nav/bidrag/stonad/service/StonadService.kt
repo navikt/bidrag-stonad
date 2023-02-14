@@ -142,8 +142,11 @@ class StonadService(val persistenceService: PersistenceService) {
     }
 
     oppdatertStonad.periodeListe.forEach {
-      persistenceService.opprettPeriode(it.toPeriodeBo(), stonadId)
-
+      // Sjekk om beløp for ny periode = null, det er da et opphørsvedtak og periode skal ikke lagres.
+      // Sjekken må gjøres etter at de eksisterende periodene er behandlet
+      if (it.belop != null) {
+        persistenceService.opprettPeriode(it.toPeriodeBo(), stonadId)
+      }
     }
   }
 
