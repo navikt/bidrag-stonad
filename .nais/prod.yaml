@@ -4,6 +4,10 @@ dbname: bidrag-stonad-prod
 kafka:
   pool: nav-prod
 kafka-topic-vedtak: bidrag.vedtak
+azureAccessInbound:
+  - application: bidrag-stonad
+    namespace: bidrag
+    cluster: prod-gcp
 spec:
   replicas:
     min: 2
