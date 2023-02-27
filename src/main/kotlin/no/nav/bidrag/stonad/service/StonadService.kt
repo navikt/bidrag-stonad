@@ -81,6 +81,18 @@ class StonadService(val persistenceService: PersistenceService) {
     } else return null
   }
 
+/*  // Henter alle stønad for angitt sakId
+  fun hentStonaderForSakId(sakId: String): List<StonadDto>? {
+    val stonadListe = persistenceService.hentStonaderForSakId(sakId)
+    if (stonadListe != null) {
+      stonadListe.forEach {
+        val periodeListe = persistenceService.hentPerioderForStonad(it.stonadId)
+        stonadListe.ad
+      }
+      return lagStonadDto(stonadListe, periodeListe)
+    } else return null
+  }*/
+
   fun lagStonadDto(stonad: Stonad, periodeListe: List<Periode>): StonadDto {
     val hentStonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
     periodeListe.forEach {
@@ -89,7 +101,7 @@ class StonadService(val persistenceService: PersistenceService) {
           it.periodeId,
           it.periodeFom,
           it.periodeTil,
-          stonad.stonadId,
+          it.stonad.stonadId,
           it.vedtakId,
           it.gyldigFra,
           it.gyldigTil,

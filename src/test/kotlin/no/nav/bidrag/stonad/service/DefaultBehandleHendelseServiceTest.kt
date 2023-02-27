@@ -109,6 +109,34 @@ internal class DefaultBehandleHendelseServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
+  fun `skal opprette ny stonad fra Hendelse med ingen perioder`() {
+    // Oppretter ny hendelse
+
+    val periodeliste = mutableListOf<Periode>()
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+        Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  true, periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
+        LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+        nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+        nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+        Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
+    )
+  }
+
+
+  @Test
+  @Suppress("NonAsciiCharacters")
   fun `skal ikke opprette ny stonad fra Hendelse når endring = false eller Innkreving = nei`() {
     // Oppretter ny hendelse
 
