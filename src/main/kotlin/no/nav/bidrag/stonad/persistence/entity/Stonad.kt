@@ -2,6 +2,9 @@ package no.nav.bidrag.stonad.persistence.entity
 
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
+import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
+import no.nav.bidrag.behandling.felles.enums.Innkreving
+import no.nav.bidrag.behandling.felles.enums.StonadType
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -65,10 +68,13 @@ fun OpprettStonadRequestDto.toStonadEntity() = with(::Stonad) {
   })
 }
 
-fun Stonad.toStonadDto() = with(::StonadDto) {
+fun Stonad.toStonadDto(stonadPeriodeDtoListe: List<StonadPeriodeDto>) = with(::StonadDto) {
   val propertiesByName = Stonad::class.memberProperties.associateBy { it.name }
   callBy(parameters.associateWith { parameter ->
     when (parameter.name) {
+      StonadDto::type.name -> StonadType.valueOf(type)
+      StonadDto::innkreving.name -> Innkreving.valueOf(innkreving)
+      StonadDto::periodeListe.name -> stonadPeriodeDtoListe
       else -> propertiesByName[parameter.name]?.get(this@toStonadDto)
     }
   })

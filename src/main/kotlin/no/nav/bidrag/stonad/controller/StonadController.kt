@@ -17,6 +17,8 @@ import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -67,9 +69,30 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
+  @GetMapping(HENT_STONADER_FOR_SAKID)
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad for angitt tidspunkt")
+  @ApiResponses(
+      value = [
+        ApiResponse(responseCode = "200", description = "Stønad funnet"),
+        ApiResponse(responseCode = "401", description = "Manglende eller utløpt id-token", content = [Content(schema = Schema(hidden = true))]),
+        ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuell stønad", content = [Content(schema = Schema(hidden = true))]),
+        ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+        ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
+        ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))])
+      ]
+  )
+
+  fun hentStonaderForSakId(@PathVariable @NotNull sakId: String): ResponseEntity<List<StonadDto>> {
+    val stonadFunnet = stonadService.hentStonaderForSakId(sakId)
+    SECURE_LOGGER.info("Stønader ble hentet for sakId: $sakId")
+    SECURE_LOGGER.info("Følgende stønader ble funnet: $stonadFunnet")
+    return ResponseEntity(stonadFunnet, HttpStatus.OK)
+  }
+
   companion object {
     const val HENT_STONAD = "/hent-stonad"
     const val HENT_STONAD_HISTORISK = "/hent-stonad-historisk"
+    const val HENT_STONADER_FOR_SAKID = "/hent-stonader-for-sakid/{sakId}"
     private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
   }
 }

@@ -102,7 +102,7 @@ class PersistenceService(
     return stonadRepository.finnStonad(stonadType, skyldnerId, kravhaverId, sakId)
   }
 
-  fun hentStonaderForSakId(sakId: String): List<Stonad>? {
+  fun hentStonaderForSakId(sakId: String): List<Stonad> {
     return stonadRepository.finnStonaderForSakId(sakId)
   }
 
