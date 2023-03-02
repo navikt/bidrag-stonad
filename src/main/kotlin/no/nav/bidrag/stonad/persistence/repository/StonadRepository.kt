@@ -23,4 +23,9 @@ interface StonadRepository : CrudRepository<Stonad, Int?>{
   )
   @Modifying
   fun endreMottakerIdForStonad(stonadId: Int, mottakerId: String, opprettetAv: String)
+
+  @Query(
+      "select st from Stonad st where st.sakId = :sakId order by st.stonadId"
+  )
+  fun finnStonaderForSakId(sakId: String): List<Stonad>
 }

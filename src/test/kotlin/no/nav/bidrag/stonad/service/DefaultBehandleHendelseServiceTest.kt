@@ -109,6 +109,34 @@ internal class DefaultBehandleHendelseServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
+  fun `skal opprette ny stonad fra Hendelse med ingen perioder`() {
+    // Oppretter ny hendelse
+
+    val periodeliste = mutableListOf<Periode>()
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+        Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  true, periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
+        LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+        nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+        nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+        Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
+    )
+  }
+
+
+  @Test
+  @Suppress("NonAsciiCharacters")
   fun `skal ikke opprette ny stonad fra Hendelse når endring = false eller Innkreving = nei`() {
     // Oppretter ny hendelse
 
@@ -556,9 +584,6 @@ internal class DefaultBehandleHendelseServiceTest {
         )
   }
 
-
-
-
   @Test
   @Suppress("NonAsciiCharacters")
   // Tester at mottakerId blir oppdatert på eksisterende stønad
@@ -580,7 +605,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
     val stonadsendringListe = mutableListOf<Stonadsendring>()
     stonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
+      Stonadsendring(StonadType.BIDRAG, "Sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
     )
 
     val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1",  null, null,
@@ -595,6 +620,30 @@ internal class DefaultBehandleHendelseServiceTest {
       Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
       Executable { Assertions.assertThat(originalStonad!!.mottakerId).isEqualTo("Mottaker1") },
       Executable { Assertions.assertThat(oppdatertStonad!!.mottakerId).isEqualTo("Mottaker2") }
+    )
+  }
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  // Tester at mottakerId blir oppdatert på eksisterende stønad
+  fun `test på at forsøk på å oppdatere mottakerId på ikke-eksisterende stønad ikke forårsaker exceptions eller opprettelse av stønad`() {
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+        Stonadsendring(StonadType.BIDRAG, "sak1","Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
+    )
+
+    val hendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1",  null, null,
+        "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata(""))
+
+    behandleHendelseService.behandleHendelse(hendelse)
+
+    val stonad = stonadService.hentStonad(HentStonadRequest(
+        hendelse.stonadsendringListe!![0].type, hendelse.stonadsendringListe!![0].sakId,
+        hendelse.stonadsendringListe!![0].skyldnerId, hendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+        Executable { Assertions.assertThat(stonad).isNull() }
     )
   }
 
