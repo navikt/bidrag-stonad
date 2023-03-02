@@ -744,4 +744,79 @@ class StonadServiceTest {
 
         )
   }
+
+  @Test
+  @Suppress("NonAsciiCharacters")
+  fun `skal finne alle stønader for angitt sakId`() {
+    // Oppretter ny stønad
+    val periodeListe1 = mutableListOf<OpprettStonadPeriodeRequestDto>()
+    val periodeListe2 = mutableListOf<OpprettStonadPeriodeRequestDto>()
+    val periodeListe3 = mutableListOf<OpprettStonadPeriodeRequestDto>()
+    // Oppretter stønad 1
+    periodeListe1.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.now(), periodeTil = LocalDate.now().plusDays(30), vedtakId = 1,
+            gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(17.01), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    periodeListe1.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.now(), periodeTil = LocalDate.now().plusDays(30), vedtakId = 1,
+            gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(100.01), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    val opprettStonadRequest1 = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-001", "Skyldner001","Kravhaver001",
+        "MottakerId001", "2024", Innkreving.JA, "R153961", periodeListe1)
+    stonadService.opprettStonad(opprettStonadRequest1)
+
+    // Oppretter stønad 2, ligger på en annen sak og skal ikke hentes
+    periodeListe2.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.now(), periodeTil = LocalDate.now().plusDays(30), vedtakId = 2,
+            gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(998.02), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    val opprettStonadRequest2 = OpprettStonadRequestDto(StonadType.BIDRAG, "SAK-002", "Skyldner002","Kravhaver002",
+        "MottakerId002", "2024", Innkreving.JA, "R153961", periodeListe2)
+    stonadService.opprettStonad(opprettStonadRequest2)
+
+    // Oppretter stønad 3, ligger på samme sak og skal hentes
+    periodeListe3.add(
+        OpprettStonadPeriodeRequestDto(periodeFom = LocalDate.now(), periodeTil = LocalDate.now().plusDays(30), vedtakId = 3,
+            gyldigFra = LocalDateTime.now(), gyldigTil = null, periodeGjortUgyldigAvVedtakId = null, belop = BigDecimal.valueOf(4477.03), valutakode = "NOK",
+            resultatkode = "Alles gut"))
+    val opprettStonadRequest3 = OpprettStonadRequestDto(StonadType.FORSKUDD, "SAK-001", "Skyldner001","Kravhaver001",
+        "MottakerId001", "2024", Innkreving.JA, "R153961", periodeListe3)
+    stonadService.opprettStonad(opprettStonadRequest3)
+
+
+    val funnedeStonaderListe = stonadService.hentStonaderForSakId(opprettStonadRequest1.sakId)
+
+    assertAll(
+        Executable { assertThat(funnedeStonaderListe).size().isEqualTo(2) },
+        Executable { assertThat(funnedeStonaderListe[0].type).isEqualTo(StonadType.BIDRAG) },
+        Executable { assertThat(funnedeStonaderListe[0].sakId).isEqualTo("SAK-001") },
+        Executable { assertThat(funnedeStonaderListe[0].skyldnerId).isEqualTo("Skyldner001") },
+
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe.size).isEqualTo(2) },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[0].periodeFom).isEqualTo(LocalDate.now()) },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[0].periodeTil).isEqualTo(LocalDate.now().plusDays(30)) },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[0].periodeGjortUgyldigAvVedtakId).isNull() },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(17.01)) },
+
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[1].periodeFom).isEqualTo(LocalDate.now()) },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[1].periodeTil).isEqualTo(LocalDate.now().plusDays(30)) },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[1].periodeGjortUgyldigAvVedtakId).isNull() },
+        Executable { assertThat(funnedeStonaderListe[0].periodeListe[1].belop).isEqualTo(BigDecimal.valueOf(100.01)) },
+
+        Executable { assertThat(funnedeStonaderListe[1].type).isEqualTo(StonadType.FORSKUDD) },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe.size).isEqualTo(1) },
+
+        Executable { assertThat(funnedeStonaderListe[1].sakId).isEqualTo("SAK-001") },
+        Executable { assertThat(funnedeStonaderListe[1].skyldnerId).isEqualTo("Skyldner001") },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe.size).isEqualTo(1) },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periodeFom).isEqualTo(LocalDate.now()) },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periodeTil).isEqualTo(LocalDate.now().plusDays(30)) },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periodeGjortUgyldigAvVedtakId).isNull() },
+        Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].belop).isEqualTo(BigDecimal.valueOf(4477.03)) },
+
+
+    )
+  }
+
+
 }

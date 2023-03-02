@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.service.StonadService
@@ -49,6 +48,7 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
+
   @PostMapping(HENT_STONAD_HISTORISK)
   @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad for angitt tidspunkt")
   @ApiResponses(
@@ -69,25 +69,27 @@ class StonadController(private val stonadService: StonadService) {
     return ResponseEntity(stonadFunnet, HttpStatus.OK)
   }
 
+
   @GetMapping(HENT_STONADER_FOR_SAKID)
-  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad for angitt tidspunkt")
+  @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finner alle stønader innenfor angitt sakId")
   @ApiResponses(
       value = [
-        ApiResponse(responseCode = "200", description = "Stønad funnet"),
+        ApiResponse(responseCode = "200", description = "SakId funnet"),
         ApiResponse(responseCode = "401", description = "Manglende eller utløpt id-token", content = [Content(schema = Schema(hidden = true))]),
         ApiResponse(responseCode = "403", description = "Saksbehandler mangler tilgang til å lese data for aktuell stønad", content = [Content(schema = Schema(hidden = true))]),
-        ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+        ApiResponse(responseCode = "404", description = "Stønader ikke funnet", content = [Content(schema = Schema(hidden = true))]),
         ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
         ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))])
       ]
   )
 
   fun hentStonaderForSakId(@PathVariable @NotNull sakId: String): ResponseEntity<List<StonadDto>> {
-    val stonadFunnet = stonadService.hentStonaderForSakId(sakId)
+    val stonaderFunnet = stonadService.hentStonaderForSakId(sakId)
     SECURE_LOGGER.info("Stønader ble hentet for sakId: $sakId")
-    SECURE_LOGGER.info("Følgende stønader ble funnet: $stonadFunnet")
-    return ResponseEntity(stonadFunnet, HttpStatus.OK)
+    SECURE_LOGGER.info("Følgende stønader ble funnet for sakId: $stonaderFunnet")
+    return ResponseEntity(stonaderFunnet, HttpStatus.OK)
   }
+
 
   companion object {
     const val HENT_STONAD = "/hent-stonad"

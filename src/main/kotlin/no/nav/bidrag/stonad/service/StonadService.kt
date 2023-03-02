@@ -104,8 +104,8 @@ class StonadService(val persistenceService: PersistenceService) {
     val stonadListe = persistenceService.hentStonaderForSakId(sakId)
     if (stonadListe.isNotEmpty()) {
       val stonadsendringDtoListe = mutableListOf<StonadDto>()
-      val stonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
       stonadListe.forEach { stonad ->
+        val stonadPeriodeDtoListe = mutableListOf<StonadPeriodeDto>()
         val periodeListe = persistenceService.hentPerioderForStonad(stonad.stonadId)
         periodeListe.forEach { periode ->
           stonadPeriodeDtoListe.add(periode.toStonadPeriodeDto())
