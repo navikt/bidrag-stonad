@@ -1,5 +1,6 @@
 name: bidrag-stonad-feature
-ingress: https://bidrag-stonad-feature.dev.intern.nav.no
+ingressDeprecated: https://bidrag-stonad-feature.dev.intern.nav.no
+ingress: https://bidrag-stonad-feature.intern.dev.nav.no
 dbname: bidrag-stonad-feature
 kafka:
   pool: nav-dev
