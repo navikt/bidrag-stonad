@@ -1,6 +1,7 @@
 name: bidrag-stonad
-ingressDeprecated: https://bidrag-stonad.dev.intern.nav.no
-ingress: https://bidrag-stonad.intern.dev.nav.no
+ingresses:
+  - https://bidrag-stonad.intern.dev.nav.no
+  - https://bidrag-stonad.dev.intern.nav.no
 dbname: bidrag-stonad-main
 kafka:
   pool: nav-dev

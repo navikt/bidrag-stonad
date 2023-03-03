@@ -47,8 +47,9 @@ spec:
       max: 4
       min: {{ spec.replicas.min }}
   ingresses:
-    - {{ ingressDeprecated }}
-    - {{ ingress }}
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
   gcp:
     sqlInstances:
       - name: {{ dbname }}
