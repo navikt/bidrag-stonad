@@ -1,5 +1,6 @@
 name: bidrag-stonad
-ingress: https://bidrag-stonad.intern.nav.no
+ingresses:
+  - https://bidrag-stonad.intern.nav.no
 dbname: bidrag-stonad-prod
 kafka:
   pool: nav-prod
