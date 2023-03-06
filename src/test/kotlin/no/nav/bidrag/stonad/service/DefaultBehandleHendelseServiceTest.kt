@@ -109,7 +109,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
   @Test
   @Suppress("NonAsciiCharacters")
-  fun `skal opprette ny stonad fra Hendelse med ingen perioder`() {
+  fun `skal ikke opprette ny stonad fra Hendelse med ingen perioder`() {
     // Oppretter ny hendelse
 
     val periodeliste = mutableListOf<Periode>()
@@ -130,7 +130,7 @@ internal class DefaultBehandleHendelseServiceTest {
         nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
 
     assertAll(
-        Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
+        Executable { Assertions.assertThat(nyStonadOpprettet).isNull() },
     )
   }
 
@@ -590,9 +590,13 @@ internal class DefaultBehandleHendelseServiceTest {
   fun `skal oppdatere mottakerId på eksisterende stønad`() {
     // Oppretter ny hendelse som etterpå skal oppdateres
 
+    val originalPeriodeliste = mutableListOf<Periode>()
+    originalPeriodeliste.add(Periode(LocalDate.parse("2021-01-01"), null,
+        BigDecimal.valueOf(17.01), "NOK", "Hunky Dory", "referanse1"))
+
     val originalStonadsendringListe = mutableListOf<Stonadsendring>()
     originalStonadsendringListe.add(
-      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, emptyList())
+      Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
     )
 
     val originalHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null,
