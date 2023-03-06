@@ -699,4 +699,35 @@ internal class DefaultBehandleHendelseServiceTest {
   }
 
 
+  @Test
+  @Suppress("NonAsciiCharacters")
+  fun `skal ikke opprette ny stonad fra Hendelse når beløp = null på alle perioder`() {
+    // Oppretter ny hendelse
+
+    val periodeliste = mutableListOf<Periode>()
+    periodeliste.add(
+        Periode(LocalDate.parse("2021-06-01"),
+            LocalDate.parse("2021-07-01"), null, "NOK", "AHI", "referanse1"))
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+        Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  true, periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
+        LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+        nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+        nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+        Executable { Assertions.assertThat(nyStonadOpprettet).isNull() }
+    )
+  }
+
+
 }
