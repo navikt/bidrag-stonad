@@ -110,36 +110,41 @@ class DefaultBehandleHendelseService(
     val periodeListe = mutableListOf<OpprettStonadPeriodeRequestDto>()
     val hendelsePeriodeListe = stonadsendring.periodeListe.sortedBy { it.fomDato }
     var i = 1
-    hendelsePeriodeListe.forEach {
-      periodeListe.add(
-          OpprettStonadPeriodeRequestDto(
-              periodeFom = it.fomDato,
-              periodeTil = finnPeriodeTil(it.tilDato, hendelsePeriodeListe, i),
-              vedtakId = vedtakId,
-              gyldigFra = vedtakTidspunkt,
-              gyldigTil = null,
-              periodeGjortUgyldigAvVedtakId = null,
-              belop = it.belop,
-              valutakode = it.valutakode,
-              resultatkode = it.resultatkode
+    hendelsePeriodeListe.forEach { periode ->
+      // Kun perioder med beløp skal lagres
+      if (periode.belop != null) {
+        periodeListe.add(
+            OpprettStonadPeriodeRequestDto(
+                periodeFom = periode.fomDato,
+                periodeTil = finnPeriodeTil(periode.tilDato, hendelsePeriodeListe, i),
+                vedtakId = vedtakId,
+                gyldigFra = vedtakTidspunkt,
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtakId = null,
+                belop = periode.belop,
+                valutakode = periode.valutakode,
+                resultatkode = periode.resultatkode
+            )
+        )
+        i++
+      }
+    }
+    // Hvis periodelisten er tom (kun perioder med beløp = null) så skal stønaden ikke opprettes
+    if (periodeListe.isNotEmpty()) {
+      stonadService.opprettStonad(
+          OpprettStonadRequestDto(
+              type = stonadsendring.type,
+              sakId = stonadsendring.sakId,
+              skyldnerId = stonadsendring.skyldnerId,
+              kravhaverId = stonadsendring.kravhaverId,
+              mottakerId = stonadsendring.mottakerId,
+              indeksreguleringAar = stonadsendring.indeksreguleringAar,
+              innkreving = stonadsendring.innkreving,
+              opprettetAv = opprettetAv,
+              periodeListe = periodeListe
           )
       )
-      i++
     }
-
-    stonadService.opprettStonad(
-        OpprettStonadRequestDto(
-            type = stonadsendring.type,
-            sakId = stonadsendring.sakId,
-            skyldnerId = stonadsendring.skyldnerId,
-            kravhaverId = stonadsendring.kravhaverId,
-            mottakerId = stonadsendring.mottakerId,
-            indeksreguleringAar = stonadsendring.indeksreguleringAar,
-            innkreving = stonadsendring.innkreving,
-            opprettetAv = opprettetAv,
-            periodeListe = periodeListe
-        )
-    )
   }
 
   private fun finnPeriodeTil(periodeTil: LocalDate?, periodeListe: List<Periode>, i: Int): LocalDate? {

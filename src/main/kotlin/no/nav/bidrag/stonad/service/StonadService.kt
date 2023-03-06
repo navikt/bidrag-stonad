@@ -28,7 +28,6 @@ class StonadService(val persistenceService: PersistenceService) {
 
   private val LOGGER = LoggerFactory.getLogger(StonadController::class.java)
 
-  // Disse metodene brukes av endepunktet for å opprette en stønad. Bør vel fjernes siden alt kommer via Kafka
   // Opprett komplett stønad (alle tabeller)
   fun opprettStonad(stonadRequest: OpprettStonadRequestDto): Int {
     val opprettetStonadId = persistenceService.opprettStonad(stonadRequest)
