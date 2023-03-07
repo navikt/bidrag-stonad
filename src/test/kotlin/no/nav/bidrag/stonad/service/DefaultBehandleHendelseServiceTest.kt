@@ -734,4 +734,45 @@ internal class DefaultBehandleHendelseServiceTest {
   }
 
 
+  @Test
+  @Suppress("NonAsciiCharacters")
+  fun `sjekk at justering av periodeTil bruker fomdato for neste periode selv om neste periode har beløp = null`() {
+    // Oppretter ny hendelse
+
+    val periodeliste = mutableListOf<Periode>()
+    periodeliste.add(
+        Periode(LocalDate.parse("2021-06-01"), null, BigDecimal.valueOf(17.01), "NOK", "Alles gut", null))
+    periodeliste.add(
+        Periode(LocalDate.parse("2021-09-01"), null, null, "NOK", "AHI", null))
+    periodeliste.add(
+        Periode(LocalDate.parse("2021-12-01"), null, BigDecimal.valueOf(17.02), "NOK", "Alles gut", null))
+
+    val stonadsendringListe = mutableListOf<Stonadsendring>()
+    stonadsendringListe.add(
+        Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA,  true, periodeliste)
+    )
+
+    val nyHendelse = VedtakHendelse(VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1",  null, null, "R153961",
+        LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+    )
+
+    behandleHendelseService.behandleHendelse(nyHendelse)
+
+    val nyStonadOpprettet = stonadService.hentStonad(HentStonadRequest(
+        nyHendelse.stonadsendringListe!![0].type, nyHendelse.stonadsendringListe!![0].sakId,
+        nyHendelse.stonadsendringListe!![0].skyldnerId, nyHendelse.stonadsendringListe!![0].kravhaverId))
+
+    assertAll(
+        Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe.size).isEqualTo(2) },
+        Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeFom).isEqualTo(LocalDate.parse("2021-06-01")) },
+        Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[0].periodeTil).isEqualTo(LocalDate.parse("2021-09-01")) },
+
+        Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[1].periodeFom).isEqualTo(LocalDate.parse("2021-12-01")) },
+        Executable { Assertions.assertThat(nyStonadOpprettet!!.periodeListe[1].periodeTil).isNull() },
+
+
+    )
+  }
+
+
 }

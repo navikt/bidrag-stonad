@@ -126,9 +126,10 @@ class DefaultBehandleHendelseService(
                 resultatkode = periode.resultatkode
             )
         )
-        i++
       }
+      i++
     }
+
     // Hvis periodelisten er tom (kun perioder med beløp = null) så skal stønaden ikke opprettes
     if (periodeListe.isNotEmpty()) {
       stonadService.opprettStonad(
