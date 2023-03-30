@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Profile
 
-
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @EnableMockOAuth2Server
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
@@ -18,8 +17,7 @@ import org.springframework.context.annotation.Profile
 @Profile("lokal-nais")
 class BidragStonadLokalNais
 fun main(args: Array<String>) {
-
-  val app = SpringApplication(BidragStonadLokalNais::class.java)
-  app.setAdditionalProfiles("lokal-nais", "lokal-nais-secrets")
-  app.run(*args)
+    val app = SpringApplication(BidragStonadLokalNais::class.java)
+    app.setAdditionalProfiles("lokal-nais", "lokal-nais-secrets")
+    app.run(*args)
 }

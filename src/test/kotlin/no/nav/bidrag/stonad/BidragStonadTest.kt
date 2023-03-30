@@ -13,13 +13,13 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles(TEST_PROFILE)
 @ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class, BidragStonadLocal::class])])
 class BidragStonadTest {
-  companion object {
-    const val TEST_PROFILE = "test"
-  }
+    companion object {
+        const val TEST_PROFILE = "test"
+    }
 }
 fun main(args: Array<String>) {
-  val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
-  val app = SpringApplication(BidragStonadTest::class.java)
-  app.setAdditionalProfiles(profile)
-  app.run(*args)
+    val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
+    val app = SpringApplication(BidragStonadTest::class.java)
+    app.setAdditionalProfiles(profile)
+    app.run(*args)
 }

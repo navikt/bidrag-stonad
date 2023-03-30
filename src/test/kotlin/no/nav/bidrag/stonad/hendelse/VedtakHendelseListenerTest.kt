@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles(TEST_PROFILE)
 @EnableMockOAuth2Server
 @EnableAspectJAutoProxy
-
 class VedtakHendelseListenerTest {
 
     @Autowired
@@ -65,7 +64,7 @@ class VedtakHendelseListenerTest {
     @Test
     fun `skal behandle barnebidrag`() {
         vedtakHendelseListener.lesHendelse(
-          """
+            """
             {
               "kilde":"MANUELT",
               "type":"ALDERSJUSTERING",
@@ -100,7 +99,7 @@ class VedtakHendelseListenerTest {
     @Test
     fun `skal behandle forskudd`() {
         vedtakHendelseListener.lesHendelse(
-          """
+            """
             {
               "kilde":"MANUELT",
               "type":"ALDERSJUSTERING",

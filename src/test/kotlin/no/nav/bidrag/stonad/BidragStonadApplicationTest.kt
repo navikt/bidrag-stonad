@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @EnableMockOAuth2Server
 class BidragStonadApplicationTest {
 
-  @Test
-  fun `skal laste spring-context`() {
-  }
+    @Test
+    fun `skal laste spring-context`() {
+    }
 }
