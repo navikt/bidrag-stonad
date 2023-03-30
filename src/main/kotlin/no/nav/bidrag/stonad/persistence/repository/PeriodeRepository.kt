@@ -6,22 +6,26 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 
-interface PeriodeRepository : CrudRepository<Periode, Int?>{
+interface PeriodeRepository : CrudRepository<Periode, Int?> {
 
-  @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.periodeGjortUgyldigAvVedtakId IS NULL order by pe.periodeFom")
-  fun hentPerioderForStonad(stonadId: Int): List<Periode>
+    @Query(
+        "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.periodeGjortUgyldigAvVedtakId IS NULL order by pe.periodeFom"
+    )
+    fun hentPerioderForStonad(stonadId: Int): List<Periode>
 
-  @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId asc, pe.periodeFom ")
-  fun hentPerioderForStonadInkludertUgyldiggjorte(stonadId: Int): List<Periode>
+    @Query(
+        "select pe from Periode pe where pe.stonad.stonadId = :stonadId order by pe.periodeGjortUgyldigAvVedtakId asc, pe.periodeFom "
+    )
+    fun hentPerioderForStonadInkludertUgyldiggjorte(stonadId: Int): List<Periode>
 
-  @Query(
-    "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.gyldigFra <= :gyldigTidspunkt and (pe.gyldigTil IS NULL or pe.gyldigTil >= :gyldigTidspunkt) order by pe.periodeFom")
-  fun hentGyldigePerioderForStonadForAngittTidspunkt(stonadId: Int, gyldigTidspunkt: LocalDateTime): List<Periode>
+    @Query(
+        "select pe from Periode pe where pe.stonad.stonadId = :stonadId and pe.gyldigFra <= :gyldigTidspunkt and (pe.gyldigTil IS NULL or pe.gyldigTil >= :gyldigTidspunkt) order by pe.periodeFom"
+    )
+    fun hentGyldigePerioderForStonadForAngittTidspunkt(stonadId: Int, gyldigTidspunkt: LocalDateTime): List<Periode>
 
-  @Query(
-  "update Periode pe set pe.gyldigTil = :vedtakTidspunkt, pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.periodeId = :periodeId")
-  @Modifying
-  fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, vedtakTidspunkt: LocalDateTime)
+    @Query(
+        "update Periode pe set pe.gyldigTil = :vedtakTidspunkt, pe.periodeGjortUgyldigAvVedtakId = :periodeGjortUgyldigAvVedtakId where pe.periodeId = :periodeId"
+    )
+    @Modifying
+    fun settPeriodeSomUgyldig(periodeId: Int, periodeGjortUgyldigAvVedtakId: Int, vedtakTidspunkt: LocalDateTime)
 }

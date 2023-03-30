@@ -10,11 +10,11 @@ import org.springframework.web.client.RestTemplate
 @Configuration
 class RestTemplateConfiguration {
 
-  @Bean
-  @Scope("prototype")
-  fun  restTemplate(): RestTemplate {
-    val httpHeaderRestTemplate = HttpHeaderRestTemplate()
-    httpHeaderRestTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER) { CorrelationIdFilter.fetchCorrelationIdForThread() }
-    return httpHeaderRestTemplate
-  }
+    @Bean
+    @Scope("prototype")
+    fun restTemplate(): RestTemplate {
+        val httpHeaderRestTemplate = HttpHeaderRestTemplate()
+        httpHeaderRestTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER) { CorrelationIdFilter.fetchCorrelationIdForThread() }
+        return httpHeaderRestTemplate
+    }
 }

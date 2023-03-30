@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.security.SecurityScheme
-import no.nav.bidrag.commons.CorrelationId
-import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.CorrelationIdFilter
-import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.commons.web.UserMdcFilter
 import no.nav.bidrag.stonad.hendelse.KafkaVedtakHendelseListener
 import no.nav.bidrag.stonad.service.BehandleHendelseService
@@ -22,7 +19,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Profile
-import org.springframework.context.annotation.Scope
 import org.springframework.kafka.listener.KafkaListenerErrorHandler
 import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.messaging.Message
@@ -59,7 +55,8 @@ val LOGGER = LoggerFactory.getLogger(KafkaConfig::class.java)
 class KafkaConfig {
     @Bean
     fun vedtakHendelseListener(
-        jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService
+        jsonMapperService: JsonMapperService,
+        behandeHendelseService: BehandleHendelseService
     ) = KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
 
     @Bean
