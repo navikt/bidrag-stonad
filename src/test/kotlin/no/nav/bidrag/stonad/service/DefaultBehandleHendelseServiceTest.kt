@@ -315,7 +315,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val hendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-20T20:12:14.246785000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = stonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -391,7 +391,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-17T10:12:14.169121000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -423,7 +423,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val foersteEndringHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-20T20:12:14.246785000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = foersteEndringStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -455,7 +455,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val andreEndringHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 3,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-30T01:22:17.246755000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = andreEndringStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -579,7 +579,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-12-17T10:12:14.169121000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -601,7 +601,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val opphoerHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2021-05-20T20:12:14.246785000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = opphoerStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -643,7 +643,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val gjenopptagelseHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 3,
             vedtakTidspunkt = LocalDateTime.parse("2022-01-30T01:22:17.246755000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = gjenopptagelseStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -742,7 +742,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-12-17T10:12:14.169121000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -764,7 +764,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val opphoerHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2021-05-20T20:12:14.246785000"), enhetId = "enhetId1",
-            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = opphoerStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
