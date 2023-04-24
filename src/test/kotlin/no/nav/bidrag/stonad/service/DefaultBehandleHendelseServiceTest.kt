@@ -73,11 +73,13 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, null, null, periodeliste
+            )
         )
 
         val nyHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null, "R153961",
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, "R153961", null,
             LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
@@ -134,11 +136,14 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, periodeliste
+            )
         )
 
         val nyHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null, "R153961",
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, "R153961", null,
             LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
@@ -177,11 +182,14 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, false, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, false, null, null, periodeliste
+            )
         )
 
         val nyHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null, "R153961",
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, "R153961", null,
             LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
@@ -240,13 +248,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val originalStonadsendringListe = mutableListOf<Stonadsendring>()
         originalStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-17T10:12:14.169121000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = "Sigge Saksbehandler", opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -295,13 +306,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, periodeliste
+            )
         )
 
         val hendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-20T20:12:14.246785000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = stonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -368,13 +382,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val originalStonadsendringListe = mutableListOf<Stonadsendring>()
         originalStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-17T10:12:14.169121000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -397,13 +414,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val foersteEndringStonadsendringListe = mutableListOf<Stonadsendring>()
         foersteEndringStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, foersteEndringPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, foersteEndringPeriodeliste
+            )
         )
 
         val foersteEndringHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-20T20:12:14.246785000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = foersteEndringStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -426,13 +446,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val andreEndringStonadsendringListe = mutableListOf<Stonadsendring>()
         andreEndringStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, andreEndringPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, andreEndringPeriodeliste
+            )
         )
 
         val andreEndringHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 3,
             vedtakTidspunkt = LocalDateTime.parse("2020-10-30T01:22:17.246755000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = andreEndringStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -450,7 +473,7 @@ internal class DefaultBehandleHendelseServiceTest {
         val allePerioderInkludertUgyldiggjorte = persistenceService.hentPerioderForStonadInkludertUgyldiggjorte(oppdatertStonad!!.stonadId)
 
         assertAll(
-            Executable { Assertions.assertThat(oppdatertStonad!!.periodeListe.size).isEqualTo(5) },
+            Executable { Assertions.assertThat(oppdatertStonad.periodeListe.size).isEqualTo(5) },
 
             Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte[0].periodeFom).isEqualTo(LocalDate.parse("2021-01-01")) },
             Executable { Assertions.assertThat(allePerioderInkludertUgyldiggjorte[0].periodeTil).isEqualTo(LocalDate.parse("2021-06-01")) },
@@ -547,13 +570,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val originalStonadsendringListe = mutableListOf<Stonadsendring>()
         originalStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-12-17T10:12:14.169121000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -562,17 +588,20 @@ internal class DefaultBehandleHendelseServiceTest {
         // Oppretter hendelse for vedtak om opphør på samme stønad, stønaden over skal da oppdateres. Den originale perioden skal få satt periodeTil = periodeFra på opphørsperiode
         val opphoerPeriodeliste = mutableListOf<Periode>()
 
-        opphoerPeriodeliste.add(Periode(fomDato = LocalDate.parse("2021-06-01"), tilDato = null, belop = null, valutakode = null, resultatkode = "Opphoer", referanse = null))
+        opphoerPeriodeliste.add(Periode(fomDato = LocalDate.parse("2021-06-01"), tilDato = null, belop = null, valutakode = null, resultatkode = "Opphoer", delytelseId = null))
 
         val opphoerStonadsendringListe = mutableListOf<Stonadsendring>()
         opphoerStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, opphoerPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, opphoerPeriodeliste
+            )
         )
 
         val opphoerHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2021-05-20T20:12:14.246785000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = opphoerStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -605,13 +634,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val gjenopptagelseStonadsendringListe = mutableListOf<Stonadsendring>()
         gjenopptagelseStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, gjenopptagelsePeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, gjenopptagelsePeriodeliste
+            )
         )
 
         val gjenopptagelseHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 3,
             vedtakTidspunkt = LocalDateTime.parse("2022-01-30T01:22:17.246755000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = gjenopptagelseStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -630,7 +662,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
         assertAll(
 
-            Executable { Assertions.assertThat(gjenopptattStonad!!.periodeListe.size).isEqualTo(2) },
+            Executable { Assertions.assertThat(gjenopptattStonad.periodeListe.size).isEqualTo(2) },
 
             Executable { Assertions.assertThat(allePerioderEtterGjenopptagelse.size).isEqualTo(4) },
 
@@ -701,13 +733,16 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val originalStonadsendringListe = mutableListOf<Stonadsendring>()
         originalStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val originalHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 1,
             vedtakTidspunkt = LocalDateTime.parse("2020-12-17T10:12:14.169121000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = originalStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -716,17 +751,20 @@ internal class DefaultBehandleHendelseServiceTest {
         // Oppretter hendelse for vedtak om opphør på samme stønad, stønaden over skal da oppdateres. Den originale perioden skal få satt periodeTil = periodeFra på opphørsperiode
         val opphoerPeriodeliste = mutableListOf<Periode>()
 
-        opphoerPeriodeliste.add(Periode(fomDato = LocalDate.parse("2021-11-01"), tilDato = null, belop = null, valutakode = null, resultatkode = "Opphoer", referanse = null))
+        opphoerPeriodeliste.add(Periode(fomDato = LocalDate.parse("2021-11-01"), tilDato = null, belop = null, valutakode = null, resultatkode = "Opphoer", delytelseId = null))
 
         val opphoerStonadsendringListe = mutableListOf<Stonadsendring>()
         opphoerStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, opphoerPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, opphoerPeriodeliste
+            )
         )
 
         val opphoerHendelse = VedtakHendelse(
             kilde = VedtakKilde.MANUELT, type = VedtakType.ALDERSJUSTERING, id = 2,
             vedtakTidspunkt = LocalDateTime.parse("2021-05-20T20:12:14.246785000"), enhetId = "enhetId1",
-            eksternReferanse = null, utsattTilDato = null, opprettetAv = "R153961", opprettetTidspunkt = LocalDateTime.now(),
+            utsattTilDato = null, opprettetAv = "R153961", opprettetAvNavn = null, opprettetTidspunkt = LocalDateTime.now(),
             stonadsendringListe = opphoerStonadsendringListe, engangsbelopListe = emptyList(), sporingsdata = Sporingsdata("")
         )
 
@@ -745,7 +783,7 @@ internal class DefaultBehandleHendelseServiceTest {
 
         assertAll(
 
-            Executable { Assertions.assertThat(oppdatertStonadEtterOpphoer!!.periodeListe.size).isEqualTo(2) },
+            Executable { Assertions.assertThat(oppdatertStonadEtterOpphoer.periodeListe.size).isEqualTo(2) },
 
             Executable { Assertions.assertThat(allePerioderEtterOpphoer.size).isEqualTo(3) },
 
@@ -799,12 +837,15 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val originalStonadsendringListe = mutableListOf<Stonadsendring>()
         originalStonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val originalHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null,
-            "R153961", LocalDateTime.now(), originalStonadsendringListe, emptyList(), Sporingsdata("")
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null,
+            "R153961", null, LocalDateTime.now(), originalStonadsendringListe, emptyList(), Sporingsdata("")
         )
 
         behandleHendelseService.behandleHendelse(originalHendelse)
@@ -819,12 +860,15 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker2", "2024",
+                Innkreving.JA, true, null, null, emptyList()
+            )
         )
 
         val hendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1", null, null,
-            "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+            VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1", null,
+            "R153961", null, LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
         behandleHendelseService.behandleHendelse(hendelse)
@@ -850,12 +894,15 @@ internal class DefaultBehandleHendelseServiceTest {
     fun `test på at forsøk på å oppdatere mottakerId på ikke-eksisterende stønad ikke forårsaker exceptions eller opprettelse av stønad`() {
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "sak1", "Skyldner1", "Kravhaver1", "Mottaker2", "2024", Innkreving.JA, true, emptyList())
+            Stonadsendring(
+                StonadType.BIDRAG, "sak1", "Skyldner1", "Kravhaver1", "Mottaker2", "2024",
+                Innkreving.JA, true, null, null, emptyList()
+            )
         )
 
         val hendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1", null, null,
-            "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+            VedtakKilde.MANUELT, VedtakType.ENDRING_MOTTAKER, 1, LocalDateTime.now(), "enhetId1", null,
+            "R153961", null, LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
         behandleHendelseService.behandleHendelse(hendelse)
@@ -934,12 +981,15 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, originalPeriodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "Sak1", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, originalPeriodeliste
+            )
         )
 
         val hendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null,
-            "R153961", LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null,
+            "R153961", null, LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
         behandleHendelseService.behandleHendelse(hendelse)
@@ -991,11 +1041,14 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, periodeliste
+            )
         )
 
         val nyHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null, "R153961",
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, "R153961", null,
             LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
@@ -1033,11 +1086,14 @@ internal class DefaultBehandleHendelseServiceTest {
 
         val stonadsendringListe = mutableListOf<Stonadsendring>()
         stonadsendringListe.add(
-            Stonadsendring(StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024", Innkreving.JA, true, periodeliste)
+            Stonadsendring(
+                StonadType.BIDRAG, "SAK-001", "Skyldner1", "Kravhaver1", "Mottaker1", "2024",
+                Innkreving.JA, true, null, null, periodeliste
+            )
         )
 
         val nyHendelse = VedtakHendelse(
-            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, null, "R153961",
+            VedtakKilde.MANUELT, VedtakType.ALDERSJUSTERING, 1, LocalDateTime.now(), "enhetId1", null, "R153961", null,
             LocalDateTime.now(), stonadsendringListe, emptyList(), Sporingsdata("")
         )
 
