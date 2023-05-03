@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import jakarta.validation.constraints.NotNull
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
 import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.constraints.NotNull
 
 @RestController
 @Protected
