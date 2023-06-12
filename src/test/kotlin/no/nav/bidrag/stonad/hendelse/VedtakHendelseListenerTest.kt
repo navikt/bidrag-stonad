@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [BidragStonadTest::class])
+@SpringBootTest(classes = [BidragStonadTest::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("VedtakHendelseListener (test av forretningslogikk)")
 @ActiveProfiles(TEST_PROFILE)
 @EnableMockOAuth2Server
