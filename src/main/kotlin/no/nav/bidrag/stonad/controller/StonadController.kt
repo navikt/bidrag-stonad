@@ -8,11 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.constraints.NotNull
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.service.StonadService
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadHistoriskRequest
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

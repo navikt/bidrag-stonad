@@ -1,9 +1,6 @@
 package no.nav.bidrag.stonad.service
 
 import io.micrometer.core.annotation.Timed
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.bo.PeriodeBo
 import no.nav.bidrag.stonad.bo.toJustertPeriodeEntity
@@ -15,6 +12,9 @@ import no.nav.bidrag.stonad.persistence.entity.toStonadEntity
 import no.nav.bidrag.stonad.persistence.entity.toStonadPeriodeDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

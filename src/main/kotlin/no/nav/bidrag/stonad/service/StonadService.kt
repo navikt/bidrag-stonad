@@ -1,17 +1,17 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.stonad.bo.OppdatertPeriode
 import no.nav.bidrag.stonad.bo.PeriodeBo
 import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.controller.StonadController
 import no.nav.bidrag.stonad.persistence.entity.toStonadDto
 import no.nav.bidrag.stonad.persistence.entity.toStonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadHistoriskRequest
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
