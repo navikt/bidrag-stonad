@@ -1,6 +1,6 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadPeriodeDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

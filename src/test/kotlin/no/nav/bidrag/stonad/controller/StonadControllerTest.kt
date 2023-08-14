@@ -10,7 +10,7 @@ import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
@@ -114,8 +114,6 @@ class StonadControllerTest {
             persistenceService.opprettPeriode(it.toPeriodeBo(), stonadOpprettetStonadId)
         }
 
-        val stonadOpprettet = persistenceService.hentStonadFraId(stonadOpprettetStonadId)
-
         // Henter forekomst
         val response = securedTestRestTemplate.postForEntity<StonadDto>(
             "/hent-stonad",
@@ -124,8 +122,8 @@ class StonadControllerTest {
 
         assertAll(
             Executable { assertThat(response).isNotNull() },
-            Executable { assertThat(response?.statusCode).isEqualTo(HttpStatus.OK) },
-            Executable { assertThat(response?.body).isNotNull }
+            Executable { assertThat(response.statusCode).isEqualTo(HttpStatus.OK) },
+            Executable { assertThat(response.body).isNotNull }
 //            Executable { assertThat(response?.body?.type.toString()).isEqualTo(stonadOpprettet?.type) },
 //            Executable { assertThat(response?.body?.sakId).isEqualTo(stonadOpprettet?.sakId) },
 //            Executable { assertThat(response?.body?.skyldnerId).isEqualTo(stonadOpprettet?.skyldnerId) },

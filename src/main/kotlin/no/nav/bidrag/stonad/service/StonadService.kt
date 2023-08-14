@@ -6,8 +6,8 @@ import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.controller.StonadController
 import no.nav.bidrag.stonad.persistence.entity.toStonadDto
 import no.nav.bidrag.stonad.persistence.entity.toStonadPeriodeDto
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStonadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
