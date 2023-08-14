@@ -3,7 +3,7 @@ package no.nav.bidrag.stonad.service
 import no.nav.bidrag.domain.enums.Innkreving
 import no.nav.bidrag.domain.enums.VedtakType
 import no.nav.bidrag.stonad.SECURE_LOGGER
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto

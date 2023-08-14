@@ -3,8 +3,8 @@ package no.nav.bidrag.stonad
 import no.nav.bidrag.domain.enums.Innkreving
 import no.nav.bidrag.domain.enums.StonadType
 import no.nav.bidrag.stonad.bo.PeriodeBo
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import java.math.BigDecimal

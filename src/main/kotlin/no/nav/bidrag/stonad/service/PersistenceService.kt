@@ -12,7 +12,7 @@ import no.nav.bidrag.stonad.persistence.entity.toStonadEntity
 import no.nav.bidrag.stonad.persistence.entity.toStonadPeriodeDto
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import org.slf4j.LoggerFactory

@@ -3,7 +3,7 @@ package no.nav.bidrag.stonad.bo
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.stonad.persistence.entity.Periode
 import no.nav.bidrag.stonad.persistence.entity.Stonad
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
 import java.math.BigDecimal
 import java.time.LocalDate

@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.constraints.NotNull
 import no.nav.bidrag.stonad.SECURE_LOGGER
 import no.nav.bidrag.stonad.service.StonadService
-import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StonadDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStonadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
 import no.nav.security.token.support.core.api.Protected
