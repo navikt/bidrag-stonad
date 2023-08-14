@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadPeriodeDto
 import no.nav.bidrag.stonad.bo.PeriodeBo
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadPeriodeDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime

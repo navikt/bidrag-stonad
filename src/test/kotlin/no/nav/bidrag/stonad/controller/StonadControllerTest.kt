@@ -1,11 +1,8 @@
 package no.nav.bidrag.stonad.controller
 
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.enums.Innkreving
-import no.nav.bidrag.behandling.felles.enums.StonadType
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
+import no.nav.bidrag.domain.enums.Innkreving
+import no.nav.bidrag.domain.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.TestUtil
@@ -13,6 +10,8 @@ import no.nav.bidrag.stonad.bo.toPeriodeBo
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
 import no.nav.bidrag.stonad.service.PersistenceService
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -33,6 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto as OpprettStonadPeriodeRequestDto1
 
 @ActiveProfiles(TEST_PROFILE)
 @SpringBootTest(classes = [BidragStonadTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -72,7 +72,7 @@ class StonadControllerTest {
         // Oppretter ny forekomst av stonad
 
         val periodeListe = listOf(
-            OpprettStonadPeriodeRequestDto(
+            OpprettStonadPeriodeRequestDto1(
                 periodeFom = LocalDate.parse("2019-01-01"),
                 periodeTil = LocalDate.parse("2019-07-01"),
                 vedtakId = 321,
@@ -83,7 +83,7 @@ class StonadControllerTest {
                 valutakode = "NOK",
                 resultatkode = "KOSTNADSBEREGNET_BIDRAG"
             ),
-            OpprettStonadPeriodeRequestDto(
+            OpprettStonadPeriodeRequestDto1(
                 periodeFom = LocalDate.parse("2019-07-01"),
                 periodeTil = LocalDate.parse("2020-01-01"),
                 vedtakId = 323,

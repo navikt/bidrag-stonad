@@ -1,10 +1,10 @@
 package no.nav.bidrag.stonad.hendelse
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.enums.StonadType
+import no.nav.bidrag.domain.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.BidragStonadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stonad.service.StonadService
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

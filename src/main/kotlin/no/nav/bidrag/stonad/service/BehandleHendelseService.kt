@@ -1,15 +1,15 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.StonadDto
-import no.nav.bidrag.behandling.felles.dto.vedtak.Periode
-import no.nav.bidrag.behandling.felles.dto.vedtak.Stonadsendring
-import no.nav.bidrag.behandling.felles.dto.vedtak.VedtakHendelse
-import no.nav.bidrag.behandling.felles.enums.Innkreving
-import no.nav.bidrag.behandling.felles.enums.VedtakType
+import no.nav.bidrag.domain.enums.Innkreving
+import no.nav.bidrag.domain.enums.VedtakType
 import no.nav.bidrag.stonad.SECURE_LOGGER
+import no.nav.bidrag.transport.behandling.stonad.reponse.StonadDto
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
+import no.nav.bidrag.transport.behandling.vedtak.Periode
+import no.nav.bidrag.transport.behandling.vedtak.Stonadsendring
+import no.nav.bidrag.transport.behandling.vedtak.VedtakHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

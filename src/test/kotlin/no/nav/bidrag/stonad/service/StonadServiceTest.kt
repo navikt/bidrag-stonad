@@ -1,14 +1,14 @@
 package no.nav.bidrag.stonad.service
 
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadHistoriskRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.HentStonadRequest
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadPeriodeRequestDto
-import no.nav.bidrag.behandling.felles.dto.stonad.OpprettStonadRequestDto
-import no.nav.bidrag.behandling.felles.enums.Innkreving
-import no.nav.bidrag.behandling.felles.enums.StonadType
+import no.nav.bidrag.domain.enums.Innkreving
+import no.nav.bidrag.domain.enums.StonadType
 import no.nav.bidrag.stonad.BidragStonadTest
 import no.nav.bidrag.stonad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stonad.persistence.repository.StonadRepository
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadHistoriskRequest
+import no.nav.bidrag.transport.behandling.stonad.request.HentStonadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadPeriodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.OpprettStonadRequestDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
