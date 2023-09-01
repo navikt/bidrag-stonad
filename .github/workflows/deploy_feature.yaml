@@ -1,91 +1,91 @@
-name: continuous integration
+name: Deploy feature
 on:
   push:
     branches:
       - '**'
-      - '!release'
 
 env:
-  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  GITHUB_USERNAME: x-access-token
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-
   build:
+    permissions:
+      contents: "read"
+      id-token: "write"
     name: Build with maven and docker
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'temurin'
+      - uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - run: mvn -Dmaven.test.skip=true -B -e --settings .m2/maven-settings.xml clean install
+      - uses: nais/docker-build-push@v0
+        id: docker-push
+        with:
+          team: bidrag
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
+      tag: ${{ steps.docker-push.outputs.tag }}
+
+  run-tests:
+    runs-on: ubuntu-latest
+    name: Run tests
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-maven/setup@v7.0.5
-        with:
-          repositories: maven-central=https://repo.maven.apache.org/maven2,github-packages=https://maven.pkg.github.com/navikt/maven-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: mvn install -B -e
-      - name: Build and publish Docker image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker image build --tag ${IMAGE} .
-          echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
-          docker image push ${IMAGE}
+      - run: mvn -B -e --settings .m2/maven-settings.xml clean install
 
-  deploy:
+  deploy-feature:
     runs-on: ubuntu-latest
-    name: Deploy docker image to dev
-    if: github.ref != 'refs/heads/release'
+    name: Deploy feature
     needs: build
 
     steps:
       - uses: actions/checkout@v3
         with:
           path: deploy
-      - name: Deploy to dev-gcp, for main.yaml
-        if: github.ref == 'refs/heads/main'
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: deploy/.nais/nais.yaml
-          VARS: deploy/.nais/main.yaml
-
       - name: Deploy to dev-gcp for feature.yaml
-        if: github.ref != 'refs/heads/main'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: deploy/.nais/nais.yaml
           VARS: deploy/.nais/feature.yaml
+          IMAGE: ${{ needs.build.outputs.image }}
 
   run_cucumber_tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
-    needs: deploy
+    needs: deploy-feature
 
 
     env:
-      INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
-      INGRESS_STONAD: https://bidrag-stonad.intern.dev.nav.no
-      INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
+      INGRESS_CUCUMBER: https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
+      INGRESS_STONAD: https://bidrag-stonad-feature.intern.dev.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak-feature.intern.dev.nav.no
 
     steps:
-      - name: feature ingresses
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "INGRESS_STONAD=https://bidrag-stonad-feature.intern.dev.nav.no" >> $GITHUB_ENV
-          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.intern.dev.nav.no" >> $GITHUB_ENV
-          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
               -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
@@ -104,13 +104,3 @@ jobs:
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-
-  bump_dev_version:
-    runs-on: ubuntu-latest
-    name: Bump SNAPSHOT version
-    if: github.ref == 'refs/heads/main'
-    needs: run_cucumber_tests
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: navikt/bidrag-git/tag-snap@v1-tag-snap
