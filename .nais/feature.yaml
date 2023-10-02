@@ -1,7 +1,6 @@
 name: bidrag-stonad-feature
 ingresses:
   - https://bidrag-stonad-feature.intern.dev.nav.no
-  - https://bidrag-stonad-feature.dev.intern.nav.no
 dbname: bidrag-stonad-feature
 kafka:
   pool: nav-dev
