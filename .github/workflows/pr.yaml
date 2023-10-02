@@ -2,9 +2,6 @@ name: Deploy to dev
 on:
   pull_request:
     types: [ ready_for_review, opened, synchronize ]
-  push:
-    branches:
-      - 'main'
 
 env:
   GITHUB_USERNAME: x-access-token
@@ -12,6 +9,7 @@ env:
 
 jobs:
   build:
+    if: github.event.pull_request.draft == false
     permissions:
       contents: "read"
       id-token: "write"
@@ -59,6 +57,7 @@ jobs:
       - run: mvn -B -e clean install
 
   deploy-main:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     name: Deploy main
     needs: build
