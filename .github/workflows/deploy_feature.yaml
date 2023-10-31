@@ -6,24 +6,20 @@ on:
       - '!main'
       - '!dependabot/**'
 
-env:
-  GITHUB_USERNAME: x-access-token
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   build_and_deploy:
     name: "Build and deploy to feature"
     permissions:
       contents: "read"
       id-token: "write"
-    uses: navikt/bidrag-workflow/.github/workflows/deploy_feature.yaml@main
+    uses: navikt/bidrag-workflow/.github/workflows/deploy.yaml@main
     secrets: inherit
 
   run_cucumber_tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
     needs: build_and_deploy
-
+    if: ${{ always()  && needs.build_and_deploy.outputs.deploy_suksess == 'true' }}
 
     env:
       INGRESS_CUCUMBER: https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
