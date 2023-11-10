@@ -27,4 +27,4 @@ kubectl config use dev-gcp
 Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git
 
 ```bash
-kubectl exec --tty deployment/bidrag-stønad-feature printenv | grep -E 'AZURE_|_URL|SCOPE|TOPIC' > src/test/resources/application-lokal-nais-secrets.properties
+kubectl exec --tty deployment/bidrag-stonad-feature printenv | grep -E 'AZURE_|_URL|SCOPE|TOPIC' > src/test/resources/application-lokal-nais-secrets.properties
