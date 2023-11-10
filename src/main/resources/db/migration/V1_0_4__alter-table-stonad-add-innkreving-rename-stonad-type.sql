@@ -1,1 +1,0 @@
-ALTER TABLE stonad RENAME COLUMN stonad_type TO type;

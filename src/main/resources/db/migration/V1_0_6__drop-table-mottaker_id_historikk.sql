@@ -1,1 +1,0 @@
-DROP TABLE mottaker_id_historikk;

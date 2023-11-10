@@ -1,1 +1,0 @@
-CREATE INDEX idx_stonad_2 ON stonad(sak_id);
