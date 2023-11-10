@@ -1,4 +1,4 @@
-name: bidrag-stønad
+name: bidrag-stonad
 ingresses:
   - https://bidrag-stonad.intern.dev.nav.no
 dbname: bidrag-stonad-main
