@@ -55,7 +55,7 @@ class StønadService(val persistenceService: PersistenceService) {
 
     // Henter stønad ut fra unik nøkkel for stønad
     fun hentStønad(request: HentStønadRequest): StønadDto? {
-        val stønad = persistenceService.hentStønad(request.type.toString(), request.skyldner.toString(), request.kravhaver.toString(), request.sak.toString())
+        val stønad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
@@ -89,7 +89,7 @@ class StønadService(val persistenceService: PersistenceService) {
     }
 
     fun hentStønadHistorisk(request: HentStønadHistoriskRequest): StønadDto? {
-        val stonad = persistenceService.hentStønad(request.type.toString(), request.skyldner.toString(), request.kravhaver.toString(), request.sak.toString())
+        val stonad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
         if (stonad != null) {
             val stonadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe =

@@ -64,9 +64,9 @@ fun OpprettStønadRequestDto.toStønadEntity() = with(::Stønad) {
                 Stønad::stønadsid.name -> 0
                 Stønad::type.name -> type.toString()
                 Stønad::sak.name -> sak.toString()
-                Stønad::skyldner.name -> skyldner.toString()
-                Stønad::kravhaver.name -> kravhaver.toString()
-                Stønad::mottaker.name -> mottaker.toString()
+                Stønad::skyldner.name -> skyldner.verdi
+                Stønad::kravhaver.name -> kravhaver.verdi
+                Stønad::mottaker.name -> mottaker.verdi
                 Stønad::innkreving.name -> innkreving.toString()
                 Stønad::opprettetTidspunkt.name -> LocalDateTime.now()
                 Stønad::endretAv.name -> opprettetAv

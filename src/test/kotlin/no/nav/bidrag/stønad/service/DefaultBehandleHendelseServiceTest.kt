@@ -105,9 +105,9 @@ internal class DefaultBehandleHendelseServiceTest {
             Executable { Assertions.assertThat(nyStonadOpprettet!!).isNotNull() },
             Executable { Assertions.assertThat(nyStonadOpprettet!!.type).isEqualTo(Stønadstype.BIDRAG) },
             Executable { Assertions.assertThat(nyStonadOpprettet!!.sak.toString()).isEqualTo(Saksnummer("SAK-001").toString()) },
-            Executable { Assertions.assertThat(nyStonadOpprettet!!.skyldner.toString()).isEqualTo(Personident("Skyldner1").toString()) },
-            Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaver.toString()).isEqualTo(Personident("Kravhaver1").toString()) },
-            Executable { Assertions.assertThat(nyStonadOpprettet!!.mottaker.toString()).isEqualTo(Personident("Mottaker1").toString()) },
+            Executable { Assertions.assertThat(nyStonadOpprettet!!.skyldner.verdi).isEqualTo(Personident("Skyldner1").verdi) },
+            Executable { Assertions.assertThat(nyStonadOpprettet!!.kravhaver.verdi).isEqualTo(Personident("Kravhaver1").verdi) },
+            Executable { Assertions.assertThat(nyStonadOpprettet!!.mottaker.verdi).isEqualTo(Personident("Mottaker1").verdi) },
             Executable { Assertions.assertThat(nyStonadOpprettet!!.opprettetAv).isEqualTo("R153961") },
             Executable { Assertions.assertThat(nyStonadOpprettet!!.førsteIndeksreguleringsår).isEqualTo(2024) },
             Executable { Assertions.assertThat(nyStonadOpprettet!!.innkreving).isEqualTo(Innkrevingstype.MED_INNKREVING) },
@@ -876,8 +876,8 @@ internal class DefaultBehandleHendelseServiceTest {
 
         assertAll(
             Executable { Assertions.assertThat(originalStonad!!).isNotNull() },
-            Executable { Assertions.assertThat(originalStonad!!.mottaker.toString()).isEqualTo(Personident("Mottaker1").toString()) },
-            Executable { Assertions.assertThat(oppdatertStonad!!.mottaker.toString()).isEqualTo(Personident("Mottaker2").toString()) },
+            Executable { Assertions.assertThat(originalStonad!!.mottaker.verdi).isEqualTo(Personident("Mottaker1").verdi) },
+            Executable { Assertions.assertThat(oppdatertStonad!!.mottaker.verdi).isEqualTo(Personident("Mottaker2").verdi) },
         )
     }
 

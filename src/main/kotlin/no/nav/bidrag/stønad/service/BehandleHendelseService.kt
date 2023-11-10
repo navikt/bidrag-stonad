@@ -55,7 +55,7 @@ class DefaultBehandleHendelseService(
             if (eksisterendeStonad != null) {
                 if (vedtakType == Vedtakstype.ENDRING_MOTTAKER) {
                     // Mottatt hendelse skal oppdatere mottaker for alle stønader i stønadsendringListe. Ingen perioder skal oppdateres.
-                    persistenceService.endreMottaker(eksisterendeStonad.stønadsid, stønadsendring.mottaker.toString(), opprettetAv)
+                    persistenceService.endreMottaker(eksisterendeStonad.stønadsid, stønadsendring.mottaker.verdi, opprettetAv)
                 } else {
                     // Mottatt Hendelse skal oppdatere eksisterende stønad
                     endreStonad(eksisterendeStonad, stønadsendring, vedtaksid, opprettetAv, vedtakstidspunkt)

@@ -237,8 +237,8 @@ class StønadServiceTest {
 
         val funnetStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             opprettStønadRequest.type.toString(),
-            opprettStønadRequest.skyldner.toString(),
-            opprettStønadRequest.kravhaver.toString(),
+            opprettStønadRequest.skyldner.verdi,
+            opprettStønadRequest.kravhaver.verdi,
             opprettStønadRequest.sak.toString(),
         )
 
@@ -394,8 +394,8 @@ class StønadServiceTest {
         stønadService.opprettStonad(originalStønadRequest)
         val originalStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             originalStønadRequest.type.toString(),
-            originalStønadRequest.skyldner.toString(),
-            originalStønadRequest.kravhaver.toString(),
+            originalStønadRequest.skyldner.verdi,
+            originalStønadRequest.kravhaver.verdi,
             originalStønadRequest.sak.toString(),
         )
 
@@ -446,8 +446,8 @@ class StønadServiceTest {
         stønadService.endreStonad(originalStonad!!, endretStønadRequest, LocalDateTime.now())
         val endretStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             endretStønadRequest.type.toString(),
-            endretStønadRequest.skyldner.toString(),
-            endretStønadRequest.kravhaver.toString(),
+            endretStønadRequest.skyldner.verdi,
+            endretStønadRequest.kravhaver.verdi,
             endretStønadRequest.sak.toString(),
         )
 
@@ -530,8 +530,8 @@ class StønadServiceTest {
         stønadService.opprettStonad(originalStønadRequest)
         val originalStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             originalStønadRequest.type.toString(),
-            originalStønadRequest.skyldner.toString(),
-            originalStønadRequest.kravhaver.toString(),
+            originalStønadRequest.skyldner.verdi,
+            originalStønadRequest.kravhaver.verdi,
             originalStønadRequest.sak.toString(),
         )
 
@@ -558,8 +558,8 @@ class StønadServiceTest {
         stønadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
         val endretStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             endretStonadRequest.type.toString(),
-            endretStonadRequest.skyldner.toString(),
-            endretStonadRequest.kravhaver.toString(),
+            endretStonadRequest.skyldner.verdi,
+            endretStonadRequest.kravhaver.verdi,
             endretStonadRequest.sak.toString(),
         )
 
@@ -623,8 +623,8 @@ class StønadServiceTest {
         stønadService.opprettStonad(originalStønadRequest)
         val originalStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             originalStønadRequest.type.toString(),
-            originalStønadRequest.skyldner.toString(),
-            originalStønadRequest.kravhaver.toString(),
+            originalStønadRequest.skyldner.verdi,
+            originalStønadRequest.kravhaver.verdi,
             originalStønadRequest.sak.toString(),
         )
 
@@ -651,8 +651,8 @@ class StønadServiceTest {
         stønadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
         val endretStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             endretStonadRequest.type.toString(),
-            endretStonadRequest.skyldner.toString(),
-            endretStonadRequest.kravhaver.toString(),
+            endretStonadRequest.skyldner.verdi,
+            endretStonadRequest.kravhaver.verdi,
             endretStonadRequest.sak.toString(),
         )
 
@@ -710,8 +710,8 @@ class StønadServiceTest {
         stønadService.opprettStonad(originalStonadRequest)
         val originalStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             originalStonadRequest.type.toString(),
-            originalStonadRequest.skyldner.toString(),
-            originalStonadRequest.kravhaver.toString(),
+            originalStonadRequest.skyldner.verdi,
+            originalStonadRequest.kravhaver.verdi,
             originalStonadRequest.sak.toString(),
         )
 
@@ -738,8 +738,8 @@ class StønadServiceTest {
         stønadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
         val endretStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             endretStonadRequest.type.toString(),
-            endretStonadRequest.skyldner.toString(),
-            endretStonadRequest.kravhaver.toString(),
+            endretStonadRequest.skyldner.verdi,
+            endretStonadRequest.kravhaver.verdi,
             endretStonadRequest.sak.toString(),
         )
 
@@ -829,8 +829,8 @@ class StønadServiceTest {
         stønadService.opprettStonad(originalStonadRequest)
         val originalStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             originalStonadRequest.type.toString(),
-            originalStonadRequest.skyldner.toString(),
-            originalStonadRequest.kravhaver.toString(),
+            originalStonadRequest.skyldner.verdi,
+            originalStonadRequest.kravhaver.verdi,
             originalStonadRequest.sak.toString(),
         )
 
@@ -884,8 +884,8 @@ class StønadServiceTest {
         stønadService.endreStonad(originalStonad!!, endretStonadRequest, LocalDateTime.now())
         val endretStonad = stønadService.hentStønadInkludertUgyldiggjortePerioder(
             endretStonadRequest.type.toString(),
-            endretStonadRequest.skyldner.toString(),
-            endretStonadRequest.kravhaver.toString(),
+            endretStonadRequest.skyldner.verdi,
+            endretStonadRequest.kravhaver.verdi,
             endretStonadRequest.sak.toString(),
         )
 
@@ -1113,7 +1113,7 @@ class StønadServiceTest {
             Executable { assertThat(funnedeStonaderListe).size().isEqualTo(2) },
             Executable { assertThat(funnedeStonaderListe[0].type).isEqualTo(Stønadstype.BIDRAG) },
             Executable { assertThat(funnedeStonaderListe[0].sak.toString()).isEqualTo(Saksnummer("SAK-001").toString()) },
-            Executable { assertThat(funnedeStonaderListe[0].skyldner.toString()).isEqualTo(Personident("Skyldner001").toString()) },
+            Executable { assertThat(funnedeStonaderListe[0].skyldner.verdi).isEqualTo(Personident("Skyldner001").verdi) },
 
             Executable { assertThat(funnedeStonaderListe[0].periodeListe.size).isEqualTo(2) },
             Executable { assertThat(funnedeStonaderListe[0].periodeListe[0].periode.fom).isEqualTo(YearMonth.now()) },
@@ -1130,7 +1130,7 @@ class StønadServiceTest {
             Executable { assertThat(funnedeStonaderListe[1].periodeListe.size).isEqualTo(1) },
 
             Executable { assertThat(funnedeStonaderListe[1].sak.toString()).isEqualTo("SAK-001") },
-            Executable { assertThat(funnedeStonaderListe[1].skyldner.toString()).isEqualTo(Personident("Skyldner001").toString()) },
+            Executable { assertThat(funnedeStonaderListe[1].skyldner.verdi).isEqualTo(Personident("Skyldner001").verdi) },
             Executable { assertThat(funnedeStonaderListe[1].periodeListe.size).isEqualTo(1) },
             Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periode.fom).isEqualTo(YearMonth.now()) },
             Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periode.til).isEqualTo(YearMonth.now().plusMonths(1)) },
