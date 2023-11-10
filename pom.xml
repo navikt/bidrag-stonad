@@ -11,10 +11,10 @@
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
-  <artifactId>bidrag-stonad</artifactId>
+  <artifactId>bidrag-stønad</artifactId>
   <version>0.0.22-SNAPSHOT</version>
 
-  <name>bidrag-stonad</name>
+  <name>bidrag-stønad</name>
   <description>Behandling av stønad i Bidrag</description>
 
   <properties>

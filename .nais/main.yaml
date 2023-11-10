@@ -1,12 +1,12 @@
-name: bidrag-stonad
+name: bidrag-stønad
 ingresses:
   - https://bidrag-stonad.intern.dev.nav.no
-dbname: bidrag-stonad-main
+dbname: bidrag-stønad-main
 kafka:
   pool: nav-dev
 kafka-topic-vedtak: bidrag.vedtak
 azureAccessInbound:
-  - application: bidrag-stonad
+  - application: bidrag-stønad
     namespace: bidrag
     cluster: dev-gcp
   - application: bidrag-cucumber-cloud

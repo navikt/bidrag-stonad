@@ -1,6 +1,6 @@
 -- Table: stønad
 
--- DROP TABLE stonad;
+-- DROP TABLE stønad;
 
 CREATE TABLE IF NOT EXISTS stønad
 (

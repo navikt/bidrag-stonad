@@ -29,7 +29,7 @@ const val LOKAL_NAIS_PROFILE = "lokal-nais"
 
 @Configuration
 @OpenAPIDefinition(
-    info = Info(title = "bidrag-stonad", version = "v1"),
+    info = Info(title = "bidrag-stønad", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")],
 )
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
