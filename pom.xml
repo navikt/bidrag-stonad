@@ -11,7 +11,7 @@
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
-  <artifactId>bidrag-stønad</artifactId>
+  <artifactId>bidrag-stonad</artifactId>
   <version>0.0.22-SNAPSHOT</version>
 
   <name>bidrag-stønad</name>
