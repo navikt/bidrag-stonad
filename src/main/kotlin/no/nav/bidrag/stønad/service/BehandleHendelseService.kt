@@ -69,7 +69,7 @@ class DefaultBehandleHendelseService(
                 }
             }
         } else {
-            SECURE_LOGGER.info("Stønad ikke oppdatert pga innkreving = UTEN_INNKREVING eller beslutning = STADFESTELSE eller AVVISTfalse: $vedtaksid")
+            SECURE_LOGGER.info("Stønad ikke oppdatert pga innkreving = UTEN_INNKREVING eller beslutning = STADFESTELSE eller AVVIST. Vedtaksid: $vedtaksid")
         }
     }
 
