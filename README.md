@@ -1,4 +1,4 @@
-# bidrag-stonad
+# bidrag-stønad
 
 ![](https://github.com/navikt/bidrag-stonad/workflows/continuous%20integration/badge.svg)
 [![test build on pull request](https://github.com/navikt/bidrag-stonad/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-stonad/actions/workflows/pr.yaml)
@@ -13,7 +13,7 @@ for periodene som eventuelt ikke dekkes av det nye vedtaket.
 #### Kjøre lokalt mot sky
 For å kunne kjøre lokalt mot sky må du gjøre følgende
 
-Åpne terminal på root mappen til `bidrag-stonad`
+Åpne terminal på root mappen til `bidrag-stønad`
 Konfigurer kubectl til å gå mot kluster `dev-gcp`
 ```bash
 # Sett cluster til dev-fss
