@@ -38,7 +38,7 @@ class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
             val correlationId = jsonNode["sporingsdata"]?.get(CORRELATION_ID)?.asText()
             if (correlationId.isNullOrEmpty()) null else correlationId
         } catch (e: Exception) {
-            LOGGER.error("Det skjedde en feil ved konverting av melding fra hendelse: ", e)
+            LOGGER.error("Det skjedde en feil ved konvertering av melding fra hendelse: ", e)
             null
         }
     }
