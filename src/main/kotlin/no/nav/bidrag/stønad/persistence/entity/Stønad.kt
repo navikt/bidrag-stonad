@@ -5,10 +5,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import no.nav.bidrag.domene.enums.Innkrevingstype
-import no.nav.bidrag.domene.enums.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.domene.streng.Saksnummer
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
@@ -21,37 +21,26 @@ data class Stønad(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stønadsid")
     val stønadsid: Int = 0,
-
     @Column(nullable = false, name = "type")
     val type: String = "",
-
     @Column(nullable = false, name = "sak")
     val sak: String = "",
-
     @Column(nullable = false, name = "skyldner")
     val skyldner: String = "",
-
     @Column(nullable = false, name = "kravhaver")
     val kravhaver: String = "",
-
     @Column(nullable = false, name = "mottaker")
     val mottaker: String = "",
-
     @Column(nullable = true, name = "første_indeksreguleringsår")
     val førsteIndeksreguleringsår: Int? = 0,
-
     @Column(nullable = false, name = "innkreving")
     val innkreving: String = "",
-
     @Column(nullable = false, name = "opprettet_av")
     val opprettetAv: String = "",
-
     @Column(nullable = false, name = "opprettet_tidspunkt")
     val opprettetTidspunkt: LocalDateTime = LocalDateTime.now(),
-
     @Column(nullable = true, name = "endret_av")
     val endretAv: String? = null,
-
     @Column(nullable = true, name = "endret_tidspunkt")
     val endretTidspunkt: LocalDateTime? = null,
 )

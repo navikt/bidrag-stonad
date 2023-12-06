@@ -1,4 +1,3 @@
-
 package no.nav.bidrag.stønad.aop
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -12,6 +11,7 @@ import org.aspectj.lang.annotation.Before
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.util.*
+
 private const val CORRELATION_ID = "correlationId"
 
 private val LOGGER = KotlinLogging.logger {}
@@ -19,7 +19,6 @@ private val LOGGER = KotlinLogging.logger {}
 @Component
 @Aspect
 class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
-
     @Before(value = "execution(* no.nav.bidrag.stønad.hendelse.VedtakHendelseListener.lesHendelse(..)) && args(hendelse)")
     fun leggSporingFraVedtakHendelseTilMDC(joinPoint: JoinPoint, hendelse: String) {
         hentSporingFraHendelse(hendelse)?.let {

@@ -1,9 +1,9 @@
 package no.nav.bidrag.stønad.service
 
-import no.nav.bidrag.domene.enums.Innkrevingstype
-import no.nav.bidrag.domene.enums.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.domene.streng.Saksnummer
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.stønad.TestUtil.Companion.byggStonadRequest
 import no.nav.bidrag.stønad.bo.PeriodeBo
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
@@ -27,7 +27,6 @@ import java.time.YearMonth
 @DisplayName("stønadServiceMockTest")
 @ExtendWith(MockitoExtension::class)
 class StønadServiceMockTest {
-
     @InjectMocks
     private lateinit var stønadService: StønadService
 
@@ -59,7 +58,6 @@ class StønadServiceMockTest {
 
         assertAll(
             Executable { assertThat(nyStonadOpprettetStonadId).isNotNull() },
-
             // Sjekk stønadDto
             Executable { assertThat(stønadDto).isNotNull() },
             Executable { assertThat(stønadDto.type).isEqualTo(Stønadstype.BIDRAG) },
@@ -70,7 +68,6 @@ class StønadServiceMockTest {
             Executable { assertThat(stønadDto.opprettetAv).isEqualTo("X123456") },
             Executable { assertThat(stønadDto.førsteIndeksreguleringsår).isEqualTo(2024) },
             Executable { assertThat(stønadDto.innkreving).isEqualTo(Innkrevingstype.MED_INNKREVING) },
-
             // Sjekk PeriodeDto
             Executable { assertThat(periodeDtoListe).isNotNull() },
             Executable { assertThat(periodeDtoListe.size).isEqualTo(2) },
@@ -80,20 +77,19 @@ class StønadServiceMockTest {
             Executable { assertThat(periodeDtoListe[0].beløp).isEqualTo(BigDecimal.valueOf(3490)) },
             Executable { assertThat(periodeDtoListe[0].valutakode).isEqualTo("NOK") },
             Executable { assertThat(periodeDtoListe[0].resultatkode).isEqualTo("KOSTNADSBEREGNET_BIDRAG") },
-
             Executable { assertThat(periodeDtoListe[1].periode.fom).isEqualTo(YearMonth.parse("2019-07")) },
             Executable { assertThat(periodeDtoListe[1].periode.til).isEqualTo(YearMonth.parse("2020-01")) },
             Executable { assertThat(periodeDtoListe[1].vedtaksid).isEqualTo(323) },
             Executable { assertThat(periodeDtoListe[1].beløp).isEqualTo(BigDecimal.valueOf(3520)) },
             Executable { assertThat(periodeDtoListe[1].valutakode).isEqualTo("NOK") },
             Executable { assertThat(periodeDtoListe[1].resultatkode).isEqualTo("KOSTNADSBEREGNET_BIDRAG") },
-
         )
     }
 
     object MockitoHelper {
         // use this in place of captor.capture() if you are trying to capture an argument that is not nullable
         fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
+
         fun <T> any(type: Class<T>): T = Mockito.any(type)
     }
 }

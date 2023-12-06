@@ -1,10 +1,10 @@
 package no.nav.bidrag.stønad.controller
 
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.domene.enums.Innkrevingstype
-import no.nav.bidrag.domene.enums.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.domene.streng.Saksnummer
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.BidragStønadTest
 import no.nav.bidrag.stønad.BidragStønadTest.Companion.TEST_PROFILE
@@ -42,7 +42,6 @@ import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeR
 @EnableMockOAuth2Server
 @AutoConfigureWireMock(port = 0)
 class StønadControllerTest {
-
     @Autowired
     private lateinit var securedTestRestTemplate: HttpHeaderTestRestTemplate
 
@@ -74,52 +73,55 @@ class StønadControllerTest {
     fun `skal finne data for en stønad`() {
         // Oppretter ny forekomst av stønad
 
-        val periodeListe = listOf(
-            OpprettStønadsperiodeRequestDto1(
-                periode = ÅrMånedsperiode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-07-01")),
-                vedtaksid = 321,
-                gyldigFra = LocalDateTime.now(),
-                gyldigTil = null,
-                periodeGjortUgyldigAvVedtaksid = 246,
-                beløp = BigDecimal.valueOf(3490),
-                valutakode = "NOK",
-                resultatkode = "KOSTNADSBEREGNET_BIDRAG",
-            ),
-            OpprettStønadsperiodeRequestDto1(
-                periode = ÅrMånedsperiode(LocalDate.parse("2019-07-01"), LocalDate.parse("2020-01-01")),
-                vedtaksid = 323,
-                gyldigFra = LocalDateTime.now(),
-                gyldigTil = null,
-                periodeGjortUgyldigAvVedtaksid = 22,
-                beløp = BigDecimal.valueOf(3520),
-                valutakode = "NOK",
-                resultatkode = "KOSTNADSBEREGNET_BIDRAG",
-            ),
-        )
+        val periodeListe =
+            listOf(
+                OpprettStønadsperiodeRequestDto1(
+                    periode = ÅrMånedsperiode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-07-01")),
+                    vedtaksid = 321,
+                    gyldigFra = LocalDateTime.now(),
+                    gyldigTil = null,
+                    periodeGjortUgyldigAvVedtaksid = 246,
+                    beløp = BigDecimal.valueOf(3490),
+                    valutakode = "NOK",
+                    resultatkode = "KOSTNADSBEREGNET_BIDRAG",
+                ),
+                OpprettStønadsperiodeRequestDto1(
+                    periode = ÅrMånedsperiode(LocalDate.parse("2019-07-01"), LocalDate.parse("2020-01-01")),
+                    vedtaksid = 323,
+                    gyldigFra = LocalDateTime.now(),
+                    gyldigTil = null,
+                    periodeGjortUgyldigAvVedtaksid = 22,
+                    beløp = BigDecimal.valueOf(3520),
+                    valutakode = "NOK",
+                    resultatkode = "KOSTNADSBEREGNET_BIDRAG",
+                ),
+            )
 
-        val stønadOpprettetStønadsid = persistenceService.opprettStønad(
-            OpprettStønadRequestDto(
-                type = Stønadstype.BIDRAG,
-                sak = Saksnummer("SAK-001"),
-                skyldner = Personident("01018011111"),
-                kravhaver = Personident("01010511111"),
-                mottaker = Personident("01018211111"),
-                førsteIndeksreguleringsår = 2024,
-                innkreving = Innkrevingstype.MED_INNKREVING,
-                opprettetAv = "X123456",
-                periodeListe = periodeListe,
-            ),
-        )
+        val stønadOpprettetStønadsid =
+            persistenceService.opprettStønad(
+                OpprettStønadRequestDto(
+                    type = Stønadstype.BIDRAG,
+                    sak = Saksnummer("SAK-001"),
+                    skyldner = Personident("01018011111"),
+                    kravhaver = Personident("01010511111"),
+                    mottaker = Personident("01018211111"),
+                    førsteIndeksreguleringsår = 2024,
+                    innkreving = Innkrevingstype.MED_INNKREVING,
+                    opprettetAv = "X123456",
+                    periodeListe = periodeListe,
+                ),
+            )
 
         periodeListe.forEach {
             persistenceService.opprettPeriode(it.toPeriodeBo(), stønadOpprettetStønadsid)
         }
 
         // Henter forekomst
-        val response = securedTestRestTemplate.postForEntity<StønadDto>(
-            "/hent-stonad",
-            byggStønadRequest(),
-        )
+        val response =
+            securedTestRestTemplate.postForEntity<StønadDto>(
+                "/hent-stonad",
+                byggStønadRequest(),
+            )
 
         assertAll(
             Executable { assertThat(response).isNotNull() },

@@ -27,7 +27,6 @@ import org.springframework.http.HttpHeaders
 )
 @Profile(TEST_PROFILE, LOCAL_PROFILE)
 class BidragStonadTestConfig {
-
     @Autowired
     private lateinit var mockOAuth2Server: MockOAuth2Server
 
@@ -41,13 +40,23 @@ class BidragStonadTestConfig {
     private fun generateTestToken(): String {
         val iss = mockOAuth2Server.issuerUrl(ISSUER)
         val newIssuer = iss.newBuilder().host("localhost").build()
-        val token = mockOAuth2Server.issueToken(ISSUER, "aud-localhost", DefaultOAuth2TokenCallback(ISSUER, "aud-localhost", JOSEObjectType.JWT.type, listOf("aud-localhost"), mapOf("iss" to newIssuer.toString()), 3600))
+        val token =
+            mockOAuth2Server.issueToken(
+                ISSUER,
+                "aud-localhost",
+                DefaultOAuth2TokenCallback(
+                    ISSUER,
+                    "aud-localhost",
+                    JOSEObjectType.JWT.type,
+                    listOf("aud-localhost"),
+                    mapOf("iss" to newIssuer.toString()),
+                    3600,
+                ),
+            )
         return "Bearer " + token.serialize()
     }
 
     @Bean
-    fun vedtakHendelseListener(
-        jsonMapperService: JsonMapperService,
-        behandeHendelseService: BehandleHendelseService,
-    ): VedtakHendelseListener = PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService)
+    fun vedtakHendelseListener(jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService): VedtakHendelseListener =
+        PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService)
 }

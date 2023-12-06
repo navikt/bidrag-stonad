@@ -1,8 +1,8 @@
 package no.nav.bidrag.stønad.service
 
-import no.nav.bidrag.domene.enums.Beslutningstype
-import no.nav.bidrag.domene.enums.Innkrevingstype
-import no.nav.bidrag.domene.enums.Vedtakstype
+import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.SECURE_LOGGER
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
@@ -30,12 +30,17 @@ class DefaultBehandleHendelseService(
     private val stønadService: StønadService,
     private val persistenceService: PersistenceService,
 ) : BehandleHendelseService {
-
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
         SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
-        vedtakHendelse.stønadsendringListe?.forEach() { stønadsendring ->
-            behandleVedtakHendelse(stønadsendring, vedtakHendelse.type, vedtakHendelse.id, vedtakHendelse.opprettetAv, vedtakHendelse.vedtakstidspunkt)
+        vedtakHendelse.stønadsendringListe?.forEach { stønadsendring ->
+            behandleVedtakHendelse(
+                stønadsendring,
+                vedtakHendelse.type,
+                vedtakHendelse.id,
+                vedtakHendelse.opprettetAv,
+                vedtakHendelse.vedtakstidspunkt,
+            )
         }
     }
 
@@ -48,9 +53,10 @@ class DefaultBehandleHendelseService(
     ) {
 //    Sjekker om stønad skal oppdateres
         if (stønadsendring.beslutning == Beslutningstype.ENDRING && stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING) {
-            val eksisterendeStonad = stønadService.hentStønad(
-                HentStønadRequest(stønadsendring.type, stønadsendring.sak, stønadsendring.skyldner, stønadsendring.kravhaver),
-            )
+            val eksisterendeStonad =
+                stønadService.hentStønad(
+                    HentStønadRequest(stønadsendring.type, stønadsendring.sak, stønadsendring.skyldner, stønadsendring.kravhaver),
+                )
 
             if (eksisterendeStonad != null) {
                 if (vedtakType == Vedtakstype.ENDRING_MOTTAKER) {
@@ -69,7 +75,9 @@ class DefaultBehandleHendelseService(
                 }
             }
         } else {
-            SECURE_LOGGER.info("Stønad ikke oppdatert pga innkreving = UTEN_INNKREVING eller beslutning = STADFESTELSE eller AVVIST. Vedtaksid: $vedtaksid")
+            SECURE_LOGGER.info(
+                "Stønad ikke oppdatert pga innkreving = UTEN_INNKREVING eller beslutning = STADFESTELSE eller AVVIST. Vedtaksid: $vedtaksid",
+            )
         }
     }
 

@@ -22,7 +22,6 @@ import java.time.YearMonth
 @Service
 @Transactional
 class StønadService(val persistenceService: PersistenceService) {
-
     private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
 
     // Opprett komplett stønad (alle tabeller)
@@ -55,7 +54,13 @@ class StønadService(val persistenceService: PersistenceService) {
 
     // Henter stønad ut fra unik nøkkel for stønad
     fun hentStønad(request: HentStønadRequest): StønadDto? {
-        val stønad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
+        val stønad =
+            persistenceService.hentStønad(
+                request.type.toString(),
+                request.skyldner.verdi,
+                request.kravhaver.verdi,
+                request.sak.toString(),
+            )
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
@@ -68,12 +73,7 @@ class StønadService(val persistenceService: PersistenceService) {
         }
     }
 
-    fun hentStønadInkludertUgyldiggjortePerioder(
-        stønadstype: String,
-        skyldner: String,
-        kravhaver: String,
-        sak: String,
-    ): StønadDto? {
+    fun hentStønadInkludertUgyldiggjortePerioder(stønadstype: String, skyldner: String, kravhaver: String, sak: String): StønadDto? {
         val stønad = persistenceService.hentStønad(stønadstype, skyldner, kravhaver, sak)
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
@@ -89,7 +89,13 @@ class StønadService(val persistenceService: PersistenceService) {
     }
 
     fun hentStønadHistorisk(request: HentStønadHistoriskRequest): StønadDto? {
-        val stonad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
+        val stonad =
+            persistenceService.hentStønad(
+                request.type.toString(),
+                request.skyldner.verdi,
+                request.kravhaver.verdi,
+                request.sak.toString(),
+            )
         if (stonad != null) {
             val stonadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe =
@@ -161,7 +167,11 @@ class StønadService(val persistenceService: PersistenceService) {
             if (eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!.isAfter(oppdatertStønadDatoFom)) {
                 // Perioden overlapper. Eksisterende periode må settes som ugyldig og ny periode opprettes med korrigert til-dato.
                 periodeBoListe.add(lagNyPeriodeMedEndretTilDato(eksisterendePeriode, oppdatertStønadDatoFom))
-                if (oppdatertStønadDatoTil != null && (eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!.isAfter(oppdatertStønadDatoTil))) {
+                if (oppdatertStønadDatoTil != null && (
+                        eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!
+                            .isAfter(oppdatertStønadDatoTil)
+                        )
+                ) {
                     periodeBoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStønadDatoTil))
                 }
                 return OppdatertPeriode(periodeBoListe, true, true)

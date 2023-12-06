@@ -24,7 +24,6 @@ class PersistenceService(
     val stønadRepository: StønadRepository,
     val periodeRepository: PeriodeRepository,
 ) {
-
     private val LOGGER = LoggerFactory.getLogger(PersistenceService::class.java)
 
     @Timed
@@ -40,43 +39,46 @@ class PersistenceService(
     }
 
     fun opprettPeriode(periodeBo: PeriodeBo, stønadsid: Int) {
-        val eksisterendeStonad = stønadRepository.findById(stønadsid)
-            .orElseThrow {
-                IllegalArgumentException(
-                    String.format(
-                        "Fant ikke stønad med id %d i databasen",
-                        stønadsid,
-                    ),
-                )
-            }
+        val eksisterendeStonad =
+            stønadRepository.findById(stønadsid)
+                .orElseThrow {
+                    IllegalArgumentException(
+                        String.format(
+                            "Fant ikke stønad med id %d i databasen",
+                            stønadsid,
+                        ),
+                    )
+                }
         val nyPeriode = periodeBo.toPeriodeEntity(eksisterendeStonad)
         periodeRepository.save(nyPeriode)
     }
 
     fun opprettJustertPeriode(periodeBo: PeriodeBo, stønadsid: Int, vedtakstidspunkt: LocalDateTime) {
-        val eksisterendeStonad = stønadRepository.findById(stønadsid)
-            .orElseThrow {
-                IllegalArgumentException(
-                    String.format(
-                        "Fant ikke stønad med id %d i databasen",
-                        stønadsid,
-                    ),
-                )
-            }
+        val eksisterendeStonad =
+            stønadRepository.findById(stønadsid)
+                .orElseThrow {
+                    IllegalArgumentException(
+                        String.format(
+                            "Fant ikke stønad med id %d i databasen",
+                            stønadsid,
+                        ),
+                    )
+                }
         val nyPeriode = periodeBo.toJustertPeriodeEntity(eksisterendeStonad, vedtakstidspunkt)
         periodeRepository.save(nyPeriode)
     }
 
     fun opprettPerioder(periodeRequestListe: List<OpprettStønadsperiodeRequestDto>, stønadsid: Int) {
-        val eksisterendeStonad = stønadRepository.findById(stønadsid)
-            .orElseThrow {
-                IllegalArgumentException(
-                    String.format(
-                        "Fant ikke stønad med id %d i databasen",
-                        stønadsid,
-                    ),
-                )
-            }
+        val eksisterendeStonad =
+            stønadRepository.findById(stønadsid)
+                .orElseThrow {
+                    IllegalArgumentException(
+                        String.format(
+                            "Fant ikke stønad med id %d i databasen",
+                            stønadsid,
+                        ),
+                    )
+                }
         periodeRequestListe.forEach {
             val nyPeriode = it.toPeriodeEntity(eksisterendeStonad)
             periodeRepository.save(nyPeriode)
@@ -85,15 +87,16 @@ class PersistenceService(
 
     @Timed
     fun hentStønadFraId(stønadsid: Int): Stønad? {
-        val stønad = stønadRepository.findById(stønadsid)
-            .orElseThrow {
-                IllegalArgumentException(
-                    String.format(
-                        "Fant ikke stønad med id %d i databasen",
-                        stønadsid,
-                    ),
-                )
-            }
+        val stønad =
+            stønadRepository.findById(stønadsid)
+                .orElseThrow {
+                    IllegalArgumentException(
+                        String.format(
+                            "Fant ikke stønad med id %d i databasen",
+                            stønadsid,
+                        ),
+                    )
+                }
         return stønad
     }
 
@@ -124,15 +127,16 @@ class PersistenceService(
     }
 
     fun hentPeriode(id: Int): StønadPeriodeDto? {
-        val periode = periodeRepository.findById(id)
-            .orElseThrow {
-                IllegalArgumentException(
-                    String.format(
-                        "Fant ikke periode med id %d i databasen",
-                        id,
-                    ),
-                )
-            }
+        val periode =
+            periodeRepository.findById(id)
+                .orElseThrow {
+                    IllegalArgumentException(
+                        String.format(
+                            "Fant ikke periode med id %d i databasen",
+                            id,
+                        ),
+                    )
+                }
         return periode.toStønadPeriodeDto()
     }
 

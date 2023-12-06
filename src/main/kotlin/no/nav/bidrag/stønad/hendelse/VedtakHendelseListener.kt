@@ -8,9 +8,7 @@ import no.nav.bidrag.stønad.service.JsonMapperService
 import org.springframework.kafka.annotation.KafkaListener
 
 interface VedtakHendelseListener {
-    fun lesHendelse(
-        hendelse: String,
-    )
+    fun lesHendelse(hendelse: String)
 }
 
 // sporingsdata fra hendelse json
@@ -18,10 +16,7 @@ open class PojoVedtakHendelseListener(
     private val jsonMapperService: JsonMapperService,
     private val behandeHendelseService: BehandleHendelseService,
 ) : VedtakHendelseListener {
-
-    override fun lesHendelse(
-        hendelse: String,
-    ) {
+    override fun lesHendelse(hendelse: String) {
         try {
             val vedtakHendelse = jsonMapperService.mapHendelse(hendelse)
             behandeHendelseService.behandleHendelse(vedtakHendelse)
@@ -41,11 +36,8 @@ open class KafkaVedtakHendelseListener(
     jsonMapperService: JsonMapperService,
     behandeHendelseService: BehandleHendelseService,
 ) : PojoVedtakHendelseListener(jsonMapperService, behandeHendelseService) {
-
     @KafkaListener(groupId = "bidrag-stonad", topics = ["\${TOPIC_VEDTAK}"], errorHandler = "vedtakshendelseErrorHandler")
-    override fun lesHendelse(
-        hendelse: String,
-    ) {
+    override fun lesHendelse(hendelse: String) {
         super.lesHendelse(hendelse)
     }
 }

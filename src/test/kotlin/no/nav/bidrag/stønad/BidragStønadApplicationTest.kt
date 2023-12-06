@@ -18,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @AutoConfigureWireMock(port = 0)
 @EnableMockOAuth2Server
 class BidragStønadApplicationTest {
-
     @Test
     fun `skal laste spring-context`() {
     }
