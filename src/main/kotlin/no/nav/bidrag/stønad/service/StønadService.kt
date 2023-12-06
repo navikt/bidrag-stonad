@@ -4,7 +4,6 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.OppdatertPeriode
 import no.nav.bidrag.stønad.bo.PeriodeBo
 import no.nav.bidrag.stønad.bo.toPeriodeBo
-import no.nav.bidrag.stønad.controller.StønadController
 import no.nav.bidrag.stønad.persistence.entity.toStønadDto
 import no.nav.bidrag.stønad.persistence.entity.toStønadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
@@ -13,7 +12,6 @@ import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDt
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -22,7 +20,6 @@ import java.time.YearMonth
 @Service
 @Transactional
 class StønadService(val persistenceService: PersistenceService) {
-    private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
 
     // Opprett komplett stønad (alle tabeller)
     fun opprettStonad(stønadRequest: OpprettStønadRequestDto): Int {

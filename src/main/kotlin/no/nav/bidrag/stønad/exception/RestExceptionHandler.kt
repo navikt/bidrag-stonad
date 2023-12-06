@@ -33,7 +33,10 @@ class RestExceptionHandler() {
 
     @ResponseBody
     @ExceptionHandler(
-        value = [IllegalArgumentException::class, MethodArgumentTypeMismatchException::class, ConversionFailedException::class, HttpMessageNotReadableException::class],
+        value = [
+            IllegalArgumentException::class, MethodArgumentTypeMismatchException::class, ConversionFailedException::class,
+            HttpMessageNotReadableException::class,
+        ],
     )
     fun handleInvalidValueExceptions(exception: Exception): ResponseEntity<*> {
         val cause = exception.cause

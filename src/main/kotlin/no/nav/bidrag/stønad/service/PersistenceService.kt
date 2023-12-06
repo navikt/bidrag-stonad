@@ -15,7 +15,6 @@ import no.nav.bidrag.stønad.persistence.repository.StønadRepository
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -24,7 +23,6 @@ class PersistenceService(
     val stønadRepository: StønadRepository,
     val periodeRepository: PeriodeRepository,
 ) {
-    private val LOGGER = LoggerFactory.getLogger(PersistenceService::class.java)
 
     @Timed
     fun opprettStønad(opprettStønadRequestDto: OpprettStønadRequestDto): Int {
