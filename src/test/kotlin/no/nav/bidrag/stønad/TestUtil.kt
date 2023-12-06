@@ -1,9 +1,9 @@
 package no.nav.bidrag.stønad
 
-import no.nav.bidrag.domene.enums.Innkrevingstype
-import no.nav.bidrag.domene.enums.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.domene.streng.Saksnummer
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.PeriodeBo
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
@@ -15,9 +15,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class TestUtil {
-
     companion object {
-
         fun byggStonadRequest() = OpprettStønadRequestDto(
             type = Stønadstype.BIDRAG,
             sak = Saksnummer("SAK-001"),
@@ -27,7 +25,8 @@ class TestUtil {
             førsteIndeksreguleringsår = 2024,
             innkreving = Innkrevingstype.MED_INNKREVING,
             opprettetAv = "X123456",
-            periodeListe = listOf(
+            periodeListe =
+            listOf(
                 OpprettStønadsperiodeRequestDto(
                     periode = ÅrMånedsperiode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-07-01")),
                     vedtaksid = 321,

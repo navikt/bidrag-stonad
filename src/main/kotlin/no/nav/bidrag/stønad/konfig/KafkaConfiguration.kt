@@ -11,7 +11,6 @@ import org.springframework.util.backoff.ExponentialBackOff
 
 @Configuration
 class KafkaConfiguration() {
-
     @Bean
     fun defaultErrorHandler(@Value("\${KAFKA_MAX_RETRY:-1}") maxRetry: Int): DefaultErrorHandler {
         // Max retry should not be set in production
@@ -23,17 +22,18 @@ class KafkaConfiguration() {
             backoffPolicy,
             maxRetry,
         )
-        val errorHandler = DefaultErrorHandler({ rec, e ->
-            val key = rec.key()
-            val value = rec.value()
-            val offset = rec.offset()
-            val topic = rec.topic()
-            val partition = rec.partition()
-            SECURE_LOGGER.error(
-                "Kafka melding med nøkkel $key, partition $partition og topic $topic feilet på offset $offset. Melding som feilet: $value",
-                e,
-            )
-        }, backoffPolicy)
+        val errorHandler =
+            DefaultErrorHandler({ rec, e ->
+                val key = rec.key()
+                val value = rec.value()
+                val offset = rec.offset()
+                val topic = rec.topic()
+                val partition = rec.partition()
+                SECURE_LOGGER.error(
+                    "Kafka melding med nøkkel $key, partition $partition og topic $topic feilet på offset $offset. Melding som feilet: $value",
+                    e,
+                )
+            }, backoffPolicy)
         errorHandler.setRetryListeners(KafkaRetryListener())
         return errorHandler
     }

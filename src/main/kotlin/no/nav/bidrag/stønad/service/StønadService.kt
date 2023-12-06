@@ -4,7 +4,6 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.OppdatertPeriode
 import no.nav.bidrag.stønad.bo.PeriodeBo
 import no.nav.bidrag.stønad.bo.toPeriodeBo
-import no.nav.bidrag.stønad.controller.StønadController
 import no.nav.bidrag.stønad.persistence.entity.toStønadDto
 import no.nav.bidrag.stønad.persistence.entity.toStønadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
@@ -13,7 +12,6 @@ import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDt
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -22,8 +20,6 @@ import java.time.YearMonth
 @Service
 @Transactional
 class StønadService(val persistenceService: PersistenceService) {
-
-    private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
 
     // Opprett komplett stønad (alle tabeller)
     fun opprettStonad(stønadRequest: OpprettStønadRequestDto): Int {
@@ -55,7 +51,13 @@ class StønadService(val persistenceService: PersistenceService) {
 
     // Henter stønad ut fra unik nøkkel for stønad
     fun hentStønad(request: HentStønadRequest): StønadDto? {
-        val stønad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
+        val stønad =
+            persistenceService.hentStønad(
+                request.type.toString(),
+                request.skyldner.verdi,
+                request.kravhaver.verdi,
+                request.sak.toString(),
+            )
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
@@ -68,12 +70,7 @@ class StønadService(val persistenceService: PersistenceService) {
         }
     }
 
-    fun hentStønadInkludertUgyldiggjortePerioder(
-        stønadstype: String,
-        skyldner: String,
-        kravhaver: String,
-        sak: String,
-    ): StønadDto? {
+    fun hentStønadInkludertUgyldiggjortePerioder(stønadstype: String, skyldner: String, kravhaver: String, sak: String): StønadDto? {
         val stønad = persistenceService.hentStønad(stønadstype, skyldner, kravhaver, sak)
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
@@ -89,7 +86,13 @@ class StønadService(val persistenceService: PersistenceService) {
     }
 
     fun hentStønadHistorisk(request: HentStønadHistoriskRequest): StønadDto? {
-        val stonad = persistenceService.hentStønad(request.type.toString(), request.skyldner.verdi, request.kravhaver.verdi, request.sak.toString())
+        val stonad =
+            persistenceService.hentStønad(
+                request.type.toString(),
+                request.skyldner.verdi,
+                request.kravhaver.verdi,
+                request.sak.toString(),
+            )
         if (stonad != null) {
             val stonadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe =
@@ -161,7 +164,11 @@ class StønadService(val persistenceService: PersistenceService) {
             if (eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!.isAfter(oppdatertStønadDatoFom)) {
                 // Perioden overlapper. Eksisterende periode må settes som ugyldig og ny periode opprettes med korrigert til-dato.
                 periodeBoListe.add(lagNyPeriodeMedEndretTilDato(eksisterendePeriode, oppdatertStønadDatoFom))
-                if (oppdatertStønadDatoTil != null && (eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!.isAfter(oppdatertStønadDatoTil))) {
+                if (oppdatertStønadDatoTil != null && (
+                        eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!
+                            .isAfter(oppdatertStønadDatoTil)
+                        )
+                ) {
                     periodeBoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStønadDatoTil))
                 }
                 return OppdatertPeriode(periodeBoListe, true, true)

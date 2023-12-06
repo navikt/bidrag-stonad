@@ -1,8 +1,8 @@
 package no.nav.bidrag.stønad.hendelse
 
-import no.nav.bidrag.domene.enums.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.domene.streng.Saksnummer
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.stønad.BidragStønadTest
 import no.nav.bidrag.stønad.BidragStønadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stønad.service.StønadService
@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles
 @EnableMockOAuth2Server
 @EnableAspectJAutoProxy
 class VedtakHendelseListenerTest {
-
     @Autowired
     private lateinit var vedtakHendelseListener: VedtakHendelseListener
 
@@ -38,9 +37,10 @@ class VedtakHendelseListenerTest {
               "kilde":"MANUELT",
               "type":"ALDERSJUSTERING",
               "id":"1",
+              "opprettetAv":"X123456",
+              "kildeapplikasjon":"Bisys",              
               "vedtakstidspunkt":"2022-01-11T10:00:00.000001",              
               "enhetsnummer":"Enhet1",
-              "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stønadsendringListe": [
                 {
@@ -71,9 +71,10 @@ class VedtakHendelseListenerTest {
               "kilde":"MANUELT",
               "type":"ALDERSJUSTERING",
               "id":"1",
+              "opprettetAv":"X123456",
+              "kildeapplikasjon":"Bisys",
               "vedtakstidspunkt":"2022-01-11T10:00:00.000001",                     
               "enhetsnummer":"Enhet1",
-              "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stønadsendringListe": [
                 {
@@ -106,9 +107,10 @@ class VedtakHendelseListenerTest {
               "kilde":"MANUELT",
               "type":"ALDERSJUSTERING",
               "id":"1",
+              "opprettetAv":"X123456",
+              "kildeapplikasjon":"Bisys",
               "vedtakstidspunkt":"2022-01-11T10:00:00.000001",                        
               "enhetsnummer":"Enhet1",
-              "opprettetAv":"Saksbehandler1",
               "opprettetTidspunkt":"2022-01-11T10:00:00.000001",    
               "stønadsendringListe": [
                 {
@@ -130,6 +132,13 @@ class VedtakHendelseListenerTest {
             """.trimIndent(),
         )
 
-        verify(stønadServiceMock).hentStønad(HentStønadRequest(Stønadstype.FORSKUDD, Saksnummer(""), Personident(""), Personident("")))
+        verify(stønadServiceMock).hentStønad(
+            HentStønadRequest(
+                Stønadstype.FORSKUDD,
+                Saksnummer(""),
+                Personident(""),
+                Personident(""),
+            ),
+        )
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface StønadRepository : CrudRepository<Stønad, Int?> {
-
     @Query(
         "select st from Stønad st where st.type = :stønadstype and st.skyldner = :skyldner and st.kravhaver = :kravhaver and st.sak = :sak",
     )
@@ -19,7 +18,8 @@ interface StønadRepository : CrudRepository<Stønad, Int?> {
     fun oppdaterStonadMedEndretAvOgTimestamp(stønadsid: Int, opprettetAv: String)
 
     @Query(
-        "update Stønad st set st.mottaker = :mottaker, st.endretAv = :opprettetAv, st.endretTidspunkt = CURRENT_TIMESTAMP where st.stønadsid = :stønadsid",
+        "update Stønad st set st.mottaker = :mottaker, st.endretAv = :opprettetAv, st.endretTidspunkt = CURRENT_TIMESTAMP " +
+            "where st.stønadsid = :stønadsid",
     )
     @Modifying
     fun endreMottakerForStønad(stønadsid: Int, mottaker: String, opprettetAv: String)

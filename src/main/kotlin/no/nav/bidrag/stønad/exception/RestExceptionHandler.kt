@@ -32,7 +32,12 @@ class RestExceptionHandler() {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = [IllegalArgumentException::class, MethodArgumentTypeMismatchException::class, ConversionFailedException::class, HttpMessageNotReadableException::class])
+    @ExceptionHandler(
+        value = [
+            IllegalArgumentException::class, MethodArgumentTypeMismatchException::class, ConversionFailedException::class,
+            HttpMessageNotReadableException::class,
+        ],
+    )
     fun handleInvalidValueExceptions(exception: Exception): ResponseEntity<*> {
         val cause = exception.cause
         val valideringsFeil = if (cause is MissingKotlinParameterException) createMissingKotlinParameterViolation(cause) else null
@@ -46,10 +51,11 @@ class RestExceptionHandler() {
 
     private fun createMissingKotlinParameterViolation(ex: MissingKotlinParameterException): String {
         val errorFieldRegex = Regex("\\.([^.]*)\\[\\\"(.*)\"\\]\$")
-        val paths = ex.path.map { errorFieldRegex.find(it.description)!! }.map {
-            val (objectName, field) = it.destructured
-            "$objectName.$field"
-        }
+        val paths =
+            ex.path.map { errorFieldRegex.find(it.description)!! }.map {
+                val (objectName, field) = it.destructured
+                "$objectName.$field"
+            }
         return "${paths.joinToString("->")} kan ikke være null"
     }
 }

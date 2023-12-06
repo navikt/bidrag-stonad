@@ -12,13 +12,16 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @ActiveProfiles(TEST_PROFILE)
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class, BidragStonadLocal::class])])
+@ComponentScan(
+    excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class, BidragStonadLocal::class])],
+)
 @EntityScan("no.nav.bidrag.stønad")
 class BidragStønadTest {
     companion object {
         const val TEST_PROFILE = "test"
     }
 }
+
 fun main(args: Array<String>) {
     val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
     val app = SpringApplication(BidragStønadTest::class.java)

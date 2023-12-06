@@ -54,21 +54,26 @@ val LOGGER = LoggerFactory.getLogger(KafkaConfig::class.java)
 @Profile(LIVE_PROFILE)
 class KafkaConfig {
     @Bean
-    fun vedtakHendelseListener(
-        jsonMapperService: JsonMapperService,
-        behandeHendelseService: BehandleHendelseService,
-    ) = KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
+    fun vedtakHendelseListener(jsonMapperService: JsonMapperService, behandeHendelseService: BehandleHendelseService) =
+        KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
 
     @Bean
     fun vedtakshendelseErrorHandler(): KafkaListenerErrorHandler {
         return KafkaListenerErrorHandler { message: Message<*>, e: ListenerExecutionFailedException ->
-            val messagePayload: Any = try {
-                message.payload
-            } catch (re: RuntimeException) {
-                "Unable to read message payload"
-            }
+            val messagePayload: Any =
+                try {
+                    message.payload
+                } catch (re: RuntimeException) {
+                    "Unable to read message payload"
+                }
 
-            LOGGER.error("Message {} cause error: {} - {} - headers: {}", messagePayload, e.javaClass.simpleName, e.message, message.headers)
+            LOGGER.error(
+                "Message {} cause error: {} - {} - headers: {}",
+                messagePayload,
+                e.javaClass.simpleName,
+                e.message,
+                message.headers,
+            )
             Optional.empty<Any>()
         }
     }
