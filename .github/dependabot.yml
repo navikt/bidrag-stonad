@@ -11,7 +11,7 @@ updates:
     registries:
       - "maven-github"
     ignore:
-      - dependency-name: "no.nav.bidrag:bidrag-stonad"
+      - dependency-name: "no.nav.bidrag:bidrag-commons"
         versions: ["0.x.x"]
     schedule:
       interval: "weekly"
