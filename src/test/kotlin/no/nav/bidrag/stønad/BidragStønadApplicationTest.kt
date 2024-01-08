@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [BidragStønadTest::class])
 @ActiveProfiles(TEST_PROFILE)
-@DisplayName("BidragStonad")
+@DisplayName("BidragStønad")
 @AutoConfigureWireMock(port = 0)
 @EnableMockOAuth2Server
 class BidragStønadApplicationTest {

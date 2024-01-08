@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.stønad.BidragStonadLocal.Companion.LOCAL_PROFILE
+import no.nav.bidrag.stønad.BidragStønadLocal.Companion.LOCAL_PROFILE
 import no.nav.bidrag.stønad.BidragStønadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stønad.hendelse.PojoVedtakHendelseListener
 import no.nav.bidrag.stønad.hendelse.VedtakHendelseListener
@@ -26,7 +26,7 @@ import org.springframework.http.HttpHeaders
     security = [SecurityRequirement(name = "bearer-key")],
 )
 @Profile(TEST_PROFILE, LOCAL_PROFILE)
-class BidragStonadTestConfig {
+class BidragStønadTestConfig {
     @Autowired
     private lateinit var mockOAuth2Server: MockOAuth2Server
 
