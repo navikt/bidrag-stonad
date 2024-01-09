@@ -118,8 +118,8 @@ class StønadController(private val stønadService: StønadService) {
     }
 
     companion object {
-        const val HENT_STØNAD = "/hent-stonad"
-        const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk"
+        const val HENT_STØNAD = "/hent-stonad/"
+        const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
