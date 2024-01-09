@@ -1,4 +1,4 @@
-NAIS_APP_NAME: bidrag-stønad-local
+NAIS_APP_NAME: bidrag-stonad-local
 spring:
   flyway.enabled: false
   datasource:
