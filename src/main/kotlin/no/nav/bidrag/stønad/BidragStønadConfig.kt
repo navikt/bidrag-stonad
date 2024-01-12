@@ -41,7 +41,7 @@ const val LOKAL_NAIS_PROFILE = "lokal-nais"
 )
 @EnableAspectJAutoProxy
 @Import(CorrelationIdFilter::class, UserMdcFilter::class)
-class BidragStonadConfig {
+class BidragStønadConfig {
     @Bean
     fun timedAspect(registry: MeterRegistry): TimedAspect {
         return TimedAspect(registry)

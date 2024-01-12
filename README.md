@@ -16,7 +16,7 @@ For å kunne kjøre lokalt mot sky må du gjøre følgende
 Åpne terminal på root mappen til `bidrag-stønad`
 Konfigurer kubectl til å gå mot kluster `dev-gcp`
 ```bash
-# Sett cluster til dev-fss
+# Sett cluster til dev-gcp
 kubectx dev-gcp
 # Sett namespace til bidrag
 kubens bidrag 

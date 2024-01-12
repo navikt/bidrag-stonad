@@ -119,7 +119,7 @@ class StønadControllerTest {
         // Henter forekomst
         val response =
             securedTestRestTemplate.postForEntity<StønadDto>(
-                "/hent-stonad",
+                "/hent-stonad/",
                 byggStønadRequest(),
             )
 

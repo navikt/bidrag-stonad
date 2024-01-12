@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @ActiveProfiles(TEST_PROFILE)
 @ComponentScan(
-    excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStonad::class, BidragStonadLocal::class])],
+    excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStønad::class, BidragStønadLocal::class])],
 )
 @EntityScan("no.nav.bidrag.stønad")
 class BidragStønadTest {

@@ -1,23 +1,22 @@
 package no.nav.bidrag.stønad
 
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
+import org.springframework.context.annotation.Profile
 
-@EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
-class BidragStonad
-
-const val ISSUER = "aad"
-val SECURE_LOGGER: Logger = LoggerFactory.getLogger("secureLogger")
+@EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
+@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStønad::class])])
+@Profile("lokal-nais")
+class BidragStønadLokalNais
 
 fun main(args: Array<String>) {
-    val profile = if (args.isEmpty()) LIVE_PROFILE else args[0]
-    val app = SpringApplication(BidragStonad::class.java)
-    app.setAdditionalProfiles(profile)
+    val app = SpringApplication(BidragStønadLokalNais::class.java)
+    app.setAdditionalProfiles("lokal-nais", "lokal-nais-secrets")
     app.run(*args)
 }

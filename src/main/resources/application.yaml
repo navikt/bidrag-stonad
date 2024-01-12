@@ -12,7 +12,7 @@ management:
     web:
       exposure:
         include: "*"
-springdoc.packages-to-scan: no.nav.bidrag.stonad.controller
+springdoc.packages-to-scan: no.nav.bidrag.stønad.controller
 
 ---
 
