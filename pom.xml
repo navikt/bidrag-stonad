@@ -24,9 +24,7 @@
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
     <token-support.version>3.2.0</token-support.version>
     <!-- dependencies -->
-    <bidrag-commons.version>20231201131246_f719b2b</bidrag-commons.version>
-    <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
-    <bidrag-transport.version>20240108123646_ef524f0</bidrag-transport.version>
+    <bidrag-felles.version>2024.0115.052337</bidrag-felles.version>
     <bidrag-tilgangskontroll.version>1.9.21</bidrag-tilgangskontroll.version>
     <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
     <springdoc-openapi-ui.version>2.3.0</springdoc-openapi-ui.version>
@@ -116,19 +114,14 @@
 
     <!-- nav -->
     <dependency>
-      <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-transport</artifactId>
-      <version>${bidrag-transport.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
       <version>${nimbus-jose-jwt.version}</version>
     </dependency>
     <dependency>
       <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-commons</artifactId>
-      <version>${bidrag-commons.version}</version>
+      <artifactId>bidrag-commons-felles</artifactId>
+      <version>${bidrag-felles.version}</version>
     </dependency>
     <dependency>
       <groupId>no.nav.security</groupId>
@@ -207,8 +200,8 @@
     </dependency>
     <dependency>
       <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-commons-test</artifactId>
-      <version>${bidrag-commons-test.version}</version>
+      <artifactId>bidrag-commons-test-felles</artifactId>
+      <version>${bidrag-felles.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -258,7 +251,7 @@
           <args>
             <arg>-Xjsr305=strict</arg>
           </args>
-          <jvmTarget>17</jvmTarget>
+          <jvmTarget>21</jvmTarget>
           <compilerPlugins>
             <plugin>spring</plugin>
             <plugin>jpa</plugin>
