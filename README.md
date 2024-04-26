@@ -24,7 +24,7 @@ kubens bidrag
 # (da må -n=bidrag legges til etter exec i neste kommando)
 kubectl config use dev-gcp
 ```
-Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git
+Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git.
 
 ```bash
 kubectl exec --tty deployment/bidrag-stonad-feature printenv | grep -E 'AZURE_|_URL|SCOPE|TOPIC' > src/test/resources/application-lokal-nais-secrets.properties
