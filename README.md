@@ -1,4 +1,4 @@
-# bidrag-stønad
+# Bidrag-stønad
 
 ![](https://github.com/navikt/bidrag-stonad/workflows/continuous%20integration/badge.svg)
 [![test build on pull request](https://github.com/navikt/bidrag-stonad/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-stonad/actions/workflows/pr.yaml)
