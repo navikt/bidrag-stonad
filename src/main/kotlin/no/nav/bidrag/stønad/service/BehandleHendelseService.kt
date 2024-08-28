@@ -26,10 +26,8 @@ interface BehandleHendelseService {
 
 @Service
 @Transactional
-class DefaultBehandleHendelseService(
-    private val stønadService: StønadService,
-    private val persistenceService: PersistenceService,
-) : BehandleHendelseService {
+class DefaultBehandleHendelseService(private val stønadService: StønadService, private val persistenceService: PersistenceService) :
+    BehandleHendelseService {
     override fun behandleHendelse(vedtakHendelse: VedtakHendelse) {
         SECURE_LOGGER.info("Behandler vedtakHendelse: $vedtakHendelse")
 
@@ -164,12 +162,10 @@ class DefaultBehandleHendelseService(
         }
     }
 
-    private fun finnPeriodeTil(til: YearMonth?, periodeListe: List<Periode>, i: Int): YearMonth? {
-        return if (i == periodeListe.size) {
-            // Siste element i listen, til skal ikke justeres
-            til
-        } else {
-            til ?: periodeListe[i].periode.fom
-        }
+    private fun finnPeriodeTil(til: YearMonth?, periodeListe: List<Periode>, i: Int): YearMonth? = if (i == periodeListe.size) {
+        // Siste element i listen, til skal ikke justeres
+        til
+    } else {
+        til ?: periodeListe[i].periode.fom
     }
 }

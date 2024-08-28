@@ -31,15 +31,13 @@ class HendelseCorrelationAspect(private val objectMapper: ObjectMapper) {
         }
     }
 
-    private fun hentSporingFraHendelse(hendelse: String): String? {
-        return try {
-            val jsonNode = objectMapper.readTree(hendelse)
-            val correlationId = jsonNode["sporingsdata"]?.get(CORRELATION_ID)?.asText()
-            if (correlationId.isNullOrEmpty()) null else correlationId
-        } catch (e: Exception) {
-            LOGGER.error("Det skjedde en feil ved konvertering av melding fra hendelse: ", e)
-            null
-        }
+    private fun hentSporingFraHendelse(hendelse: String): String? = try {
+        val jsonNode = objectMapper.readTree(hendelse)
+        val correlationId = jsonNode["sporingsdata"]?.get(CORRELATION_ID)?.asText()
+        if (correlationId.isNullOrEmpty()) null else correlationId
+    } catch (e: Exception) {
+        LOGGER.error("Det skjedde en feil ved konvertering av melding fra hendelse: ", e)
+        null
     }
 
     @After(value = "execution(* no.nav.bidrag.stønad.hendelse.VedtakHendelseListener.*(..))")

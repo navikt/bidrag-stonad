@@ -43,9 +43,7 @@ const val LOKAL_NAIS_PROFILE = "lokal-nais"
 @Import(CorrelationIdFilter::class, UserMdcFilter::class)
 class BidragStønadConfig {
     @Bean
-    fun timedAspect(registry: MeterRegistry): TimedAspect {
-        return TimedAspect(registry)
-    }
+    fun timedAspect(registry: MeterRegistry): TimedAspect = TimedAspect(registry)
 }
 
 val LOGGER = LoggerFactory.getLogger(KafkaConfig::class.java)
@@ -58,23 +56,24 @@ class KafkaConfig {
         KafkaVedtakHendelseListener(jsonMapperService, behandeHendelseService)
 
     @Bean
-    fun vedtakshendelseErrorHandler(): KafkaListenerErrorHandler {
-        return KafkaListenerErrorHandler { message: Message<*>, e: ListenerExecutionFailedException ->
-            val messagePayload: Any =
-                try {
-                    message.payload
-                } catch (re: RuntimeException) {
-                    "Unable to read message payload"
-                }
+    fun vedtakshendelseErrorHandler(): KafkaListenerErrorHandler = KafkaListenerErrorHandler {
+            message: Message<*>,
+            e: ListenerExecutionFailedException,
+        ->
+        val messagePayload: Any =
+            try {
+                message.payload
+            } catch (re: RuntimeException) {
+                "Unable to read message payload"
+            }
 
-            LOGGER.error(
-                "Message {} cause error: {} - {} - headers: {}",
-                messagePayload,
-                e.javaClass.simpleName,
-                e.message,
-                message.headers,
-            )
-            Optional.empty<Any>()
-        }
+        LOGGER.error(
+            "Message {} cause error: {} - {} - headers: {}",
+            messagePayload,
+            e.javaClass.simpleName,
+            e.message,
+            message.headers,
+        )
+        Optional.empty<Any>()
     }
 }

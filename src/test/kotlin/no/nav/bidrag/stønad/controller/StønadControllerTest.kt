@@ -13,6 +13,7 @@ import no.nav.bidrag.stønad.bo.toPeriodeBo
 import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stønad.persistence.repository.StønadRepository
 import no.nav.bidrag.stønad.service.PersistenceService
+import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -127,33 +128,20 @@ class StønadControllerTest {
             Executable { assertThat(response).isNotNull() },
             Executable { assertThat(response.statusCode).isEqualTo(HttpStatus.OK) },
             Executable { assertThat(response.body).isNotNull },
-//            Executable { assertThat(response?.body?.type.toString()).isEqualTo(stønadOpprettet?.type) },
-//            Executable { assertThat(response?.body?.sak).isEqualTo(stønadOpprettet?.sak) },
-//            Executable { assertThat(response?.body?.skyldner).isEqualTo(stønadOpprettet?.skyldner) },
-//            Executable { assertThat(response?.body?.kravhaver).isEqualTo(stonadOpprettet?.kravhaver) },
-//            Executable { assertThat(response?.body?.mottaker).isEqualTo(stonadOpprettet?.mottaker) },
-//            Executable { assertThat(response?.body?.opprettetAv).isEqualTo(stonadOpprettet?.opprettetAv) },
-//            Executable { assertThat(response?.body?.innkrevingstype).isEqualTo(stonadOpprettet?.innkrevingstype) }
         )
         periodeRepository.deleteAll()
         stønadRepository.deleteAll()
     }
 
-    private fun fullUrlForSøkStønad(): String {
-        return UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StønadController.HENT_STØNAD).toUriString()
-    }
+    private fun fullUrlForSøkStønad(): String = UriComponentsBuilder.fromHttpUrl(makeFullContextPath() + StønadController.HENT_STØNAD).toUriString()
 
-    private fun makeFullContextPath(): String {
-        return "http://localhost:$port"
-    }
+    private fun makeFullContextPath(): String = "http://localhost:$port"
 
-    private fun byggStønadRequest(): HttpEntity<OpprettStønadRequestDto> {
-        return initHttpEntity(TestUtil.byggStonadRequest())
-    }
+    private fun byggStønadRequest(): HttpEntity<OpprettStønadRequestDto> = initHttpEntity(TestUtil.byggStonadRequest())
 
-    private fun byggStønadResponse(): HttpEntity<StønadDto> {
-        return initHttpEntity(TestUtil.byggStønadDto())
-    }
+    private fun byggLøpendeBidragssakerRequest(): HttpEntity<LøpendeBidragssakerRequest> = initHttpEntity(TestUtil.byggLøpendeBidragssakerRequest())
+
+    private fun byggStønadResponse(): HttpEntity<StønadDto> = initHttpEntity(TestUtil.byggStønadDto())
 
     private fun <T> initHttpEntity(body: T): HttpEntity<T> {
         val httpHeaders = HttpHeaders()

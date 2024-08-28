@@ -10,7 +10,7 @@ import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries
 import org.springframework.util.backoff.ExponentialBackOff
 
 @Configuration
-class KafkaConfiguration() {
+class KafkaConfiguration {
     @Bean
     fun defaultErrorHandler(@Value("\${KAFKA_MAX_RETRY:-1}") maxRetry: Int): DefaultErrorHandler {
         // Max retry should not be set in production

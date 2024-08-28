@@ -1,5 +1,8 @@
 package no.nav.bidrag.stønad.service
 
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
+import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.OppdatertPeriode
 import no.nav.bidrag.stønad.bo.PeriodeBo
@@ -8,12 +11,16 @@ import no.nav.bidrag.stønad.persistence.entity.toStønadDto
 import no.nav.bidrag.stønad.persistence.entity.toStønadPeriodeDto
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssak
+import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.YearMonth
 
@@ -156,7 +163,33 @@ class StønadService(val persistenceService: PersistenceService) {
         }
     }
 
-    fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {
+    fun finnLøpendeBidragssaker(request: LøpendeBidragssakerRequest): LøpendeBidragssakerResponse {
+        val stønader =
+            persistenceService.finnBidragssakerForSkyldner(request.skyldner.verdi)
+
+        val løpendeBidragssakListe = mutableListOf<LøpendeBidragssak>()
+
+        stønader.forEach { stønad ->
+            val periode =
+                persistenceService.hentPerioderForStønad(stønad.stønadsid)
+                    .filter { it.fom.isBefore(request.dato.plusDays(1)) && (it.til == null || it.til.isAfter(request.dato)) }
+                    .minByOrNull { it.fom }
+            // periode er tom hvis det ikke finnes en periode for stønaden som er aktiv på angitt dato
+            if (periode != null) {
+                løpendeBidragssakListe.add(
+                    LøpendeBidragssak(
+                        sak = Saksnummer(stønad.sak),
+                        type = Stønadstype.valueOf(stønad.type),
+                        kravhaver = Personident(stønad.kravhaver),
+                        løpendeBeløp = periode.beløp ?: BigDecimal.ZERO,
+                    ),
+                )
+            }
+        }
+        return LøpendeBidragssakerResponse(løpendeBidragssakListe)
+    }
+
+    private fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {
         val periodeBoListe = mutableListOf<PeriodeBo>()
         val oppdatertStønadDatoFom = oppdatertStonad.periodeListe.first().periode.fom
         val oppdatertStønadDatoTil = oppdatertStonad.periodeListe.last().periode.til
@@ -164,9 +197,11 @@ class StønadService(val persistenceService: PersistenceService) {
             if (eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!.isAfter(oppdatertStønadDatoFom)) {
                 // Perioden overlapper. Eksisterende periode må settes som ugyldig og ny periode opprettes med korrigert til-dato.
                 periodeBoListe.add(lagNyPeriodeMedEndretTilDato(eksisterendePeriode, oppdatertStønadDatoFom))
-                if (oppdatertStønadDatoTil != null && (
-                        eksisterendePeriode.periode.til == null || eksisterendePeriode.periode.til!!
-                            .isAfter(oppdatertStønadDatoTil)
+                if (oppdatertStønadDatoTil != null &&
+                    (
+                        eksisterendePeriode.periode.til == null ||
+                            eksisterendePeriode.periode.til!!
+                                .isAfter(oppdatertStønadDatoTil)
                         )
                 ) {
                     periodeBoListe.add(lagNyPeriodeMedEndretFomDato(eksisterendePeriode, oppdatertStønadDatoTil))

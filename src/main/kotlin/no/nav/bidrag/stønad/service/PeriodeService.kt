@@ -7,7 +7,5 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class PeriodeService(val persistenceService: PersistenceService) {
-    fun hentPeriode(periodeId: Int): StønadPeriodeDto? {
-        return persistenceService.hentPeriode(periodeId)
-    }
+    fun hentPeriode(periodeId: Int): StønadPeriodeDto? = persistenceService.hentPeriode(periodeId)
 }

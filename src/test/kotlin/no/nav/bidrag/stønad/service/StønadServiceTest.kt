@@ -10,6 +10,7 @@ import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stønad.persistence.repository.StønadRepository
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -1137,6 +1138,143 @@ class StønadServiceTest {
             Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periode.til).isEqualTo(YearMonth.now().plusMonths(1)) },
             Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].periodeGjortUgyldigAvVedtaksid).isNull() },
             Executable { assertThat(funnedeStonaderListe[1].periodeListe[0].beløp).isEqualTo(BigDecimal.valueOf(4477.03)) },
+        )
+    }
+
+    @Test
+    @Suppress("NonAsciiCharacters")
+    fun `skal finne alle løpende bidragssaker for angitt skyldner`() {
+        val periodeListe1 = mutableListOf<OpprettStønadsperiodeRequestDto>()
+        val periodeListe2 = mutableListOf<OpprettStønadsperiodeRequestDto>()
+        val periodeListe3 = mutableListOf<OpprettStønadsperiodeRequestDto>()
+        val periodeListe4 = mutableListOf<OpprettStønadsperiodeRequestDto>()
+
+        periodeListe1.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 7, 1)),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(17.01),
+                valutakode = "NOK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        periodeListe1.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.of(2024, 7, 1), null),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(100.01),
+                valutakode = "NOK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        val opprettStonadRequest1 =
+            OpprettStønadRequestDto(
+                Stønadstype.BIDRAG, Saksnummer("SAK-001"), Personident("Skyldner001"), Personident("Kravhaver001"),
+                Personident("Mottaker001"), 2024, Innkrevingstype.MED_INNKREVING, "R153961", periodeListe1,
+            )
+        stønadService.opprettStonad(opprettStonadRequest1)
+
+        // Oppretter stønad 2, er av type forskudd og skal ikke returneres
+        periodeListe2.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.of(2024, 7, 1), null),
+                vedtaksid = 2,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(998.02),
+                valutakode = "NOK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        val opprettStonadRequest2 =
+            OpprettStønadRequestDto(
+                Stønadstype.FORSKUDD, Saksnummer("SAK-001"), Personident("NAV"), Personident("Kravhaver001"),
+                Personident("Mottaker001"), 2024, Innkrevingstype.MED_INNKREVING, "R153961", periodeListe2,
+            )
+        stønadService.opprettStonad(opprettStonadRequest2)
+
+        // Oppretter stønad 3, ligger på annen sak. Skal hentes.
+        periodeListe3.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.of(2024, 7, 1), null),
+                vedtaksid = 3,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(4477.03),
+                valutakode = "NOK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        val opprettStonadRequest3 =
+            OpprettStønadRequestDto(
+                Stønadstype.BIDRAG, Saksnummer("SAK-002"), Personident("Skyldner001"), Personident("Kravhaver002"),
+                Personident("Mottaker001"), 2024, Innkrevingstype.MED_INNKREVING, "R153961", periodeListe3,
+            )
+        stønadService.opprettStonad(opprettStonadRequest3)
+
+        // Oppretter stønad 4, med perioder tilbake i tid.
+        periodeListe4.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.of(2022, 7, 1), LocalDate.of(2023, 1, 1)),
+                vedtaksid = 4,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(999.06),
+                valutakode = "NOK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        val opprettStonadRequest4 =
+            OpprettStønadRequestDto(
+                Stønadstype.BIDRAG, Saksnummer("SAK-003"), Personident("Skyldner001"), Personident("Kravhaver005"),
+                Personident("Mottaker001"), 2024, Innkrevingstype.MED_INNKREVING, "R153961", periodeListe4,
+            )
+        stønadService.opprettStonad(opprettStonadRequest4)
+
+        // Kjører tester med ulike datoer for å sjekke at riktige saker og løpende beløp hentes ut
+        val respons1 = stønadService.finnLøpendeBidragssaker(LøpendeBidragssakerRequest(Personident("Skyldner001"), LocalDate.of(2024, 8, 1)))
+
+        val respons2 = stønadService.finnLøpendeBidragssaker(
+            LøpendeBidragssakerRequest(Personident("Skyldner001"), LocalDate.of(2024, 6, 17)),
+        )
+
+        val respons3 = stønadService.finnLøpendeBidragssaker(
+            LøpendeBidragssakerRequest(Personident("Skyldner001"), LocalDate.of(2022, 8, 30)),
+        )
+
+        assertAll(
+            Executable { assertThat(respons1.bidragssakerListe).size().isEqualTo(2) },
+            Executable { assertThat(respons1.bidragssakerListe[0].sak.toString()).isEqualTo(Saksnummer("SAK-001").toString()) },
+            Executable { assertThat(respons1.bidragssakerListe[0].type).isEqualTo(Stønadstype.BIDRAG) },
+            Executable { assertThat(respons1.bidragssakerListe[0].kravhaver).isEqualTo(Personident("Kravhaver001")) },
+            Executable { assertThat(respons1.bidragssakerListe[0].løpendeBeløp).isEqualTo(BigDecimal.valueOf(100.01)) },
+
+            Executable { assertThat(respons1.bidragssakerListe[1].sak.toString()).isEqualTo(Saksnummer("SAK-002").toString()) },
+            Executable { assertThat(respons1.bidragssakerListe[1].type).isEqualTo(Stønadstype.BIDRAG) },
+            Executable { assertThat(respons1.bidragssakerListe[1].kravhaver).isEqualTo(Personident("Kravhaver002")) },
+            Executable { assertThat(respons1.bidragssakerListe[1].løpendeBeløp).isEqualTo(BigDecimal.valueOf(4477.03)) },
+
+            Executable { assertThat(respons2.bidragssakerListe).size().isEqualTo(1) },
+            Executable { assertThat(respons2.bidragssakerListe[0].sak.toString()).isEqualTo(Saksnummer("SAK-001").toString()) },
+            Executable { assertThat(respons2.bidragssakerListe[0].type).isEqualTo(Stønadstype.BIDRAG) },
+            Executable { assertThat(respons2.bidragssakerListe[0].kravhaver).isEqualTo(Personident("Kravhaver001")) },
+            Executable { assertThat(respons2.bidragssakerListe[0].løpendeBeløp).isEqualTo(BigDecimal.valueOf(17.01)) },
+
+            Executable { assertThat(respons3.bidragssakerListe).size().isEqualTo(1) },
+            Executable { assertThat(respons3.bidragssakerListe[0].sak.toString()).isEqualTo(Saksnummer("SAK-003").toString()) },
+            Executable { assertThat(respons3.bidragssakerListe[0].type).isEqualTo(Stønadstype.BIDRAG) },
+            Executable { assertThat(respons3.bidragssakerListe[0].kravhaver).isEqualTo(Personident("Kravhaver005")) },
+            Executable { assertThat(respons3.bidragssakerListe[0].løpendeBeløp).isEqualTo(BigDecimal.valueOf(999.06)) },
+
         )
     }
 }
