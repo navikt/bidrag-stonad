@@ -11,9 +11,7 @@ import javax.sql.DataSource
 @Profile("live & !lokal-nais")
 class FlywayConfiguration
 @Autowired
-constructor(
-    @Qualifier("dataSource") dataSource: DataSource?,
-) {
+constructor(@Qualifier("dataSource") dataSource: DataSource?) {
     init {
         Thread.sleep(30000)
         Flyway.configure().dataSource(dataSource).load().migrate()

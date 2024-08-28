@@ -6,6 +6,7 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.PeriodeBo
+import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
@@ -77,6 +78,11 @@ class TestUtil {
                     resultatkode = "KOSTNADSBEREGNET_BIDRAG",
                 ),
             ),
+        )
+
+        fun byggLøpendeBidragssakerRequest() = LøpendeBidragssakerRequest(
+            skyldner = Personident("01010511111"),
+            dato = LocalDate.now(),
         )
 
         fun byggPeriodeDto() = PeriodeBo(

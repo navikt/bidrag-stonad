@@ -12,6 +12,8 @@ import no.nav.bidrag.stønad.SECURE_LOGGER
 import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -47,7 +49,7 @@ class StønadController(private val stønadService: StønadService) {
             ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
         ],
     )
-    fun hentStonad(
+    fun hentStønad(
         @NotNull @RequestBody
         request: HentStønadRequest,
     ): ResponseEntity<StønadDto> {
@@ -77,7 +79,7 @@ class StønadController(private val stønadService: StønadService) {
             ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
         ],
     )
-    fun hentStonadHistorisk(
+    fun hentStønadHistorisk(
         @NotNull @RequestBody
         request: HentStønadHistoriskRequest,
     ): ResponseEntity<StønadDto> {
@@ -117,10 +119,45 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(stønaderFunnet, HttpStatus.OK)
     }
 
+    @PostMapping(HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER)
+    @Operation(
+        security = [SecurityRequirement(name = "bearer-key")],
+        summary = "Finn alle løpende bidragssaker der angitt personident er skyldner." +
+            "Gjelder barnebidrag, oppfostringssbidrag og 18-årsbidrag",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Stønader funnet"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Manglende eller utløpt id-token",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Saksbehandler mangler tilgang til å lese data for aktuelle stønader",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
+        ],
+    )
+    fun hentLøpendeBidragssakerForSkyldner(
+        @NotNull @RequestBody
+        request: LøpendeBidragssakerRequest,
+    ): ResponseEntity<LøpendeBidragssakerResponse> {
+        val respons = stønadService.finnLøpendeBidragssaker(request)
+        LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe.map { it.sak.toString() }}")
+        SECURE_LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe}")
+        return ResponseEntity(respons, HttpStatus.OK)
+    }
+
     companion object {
         const val HENT_STØNAD = "/hent-stonad/"
         const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
+        const val HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-lopende-bidragssaker-for-skyldner/"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
 }

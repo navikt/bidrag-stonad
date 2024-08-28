@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class PersistenceService(
-    val stønadRepository: StønadRepository,
-    val periodeRepository: PeriodeRepository,
-) {
+class PersistenceService(val stønadRepository: StønadRepository, val periodeRepository: PeriodeRepository) {
 
     @Timed
     fun opprettStønad(opprettStønadRequestDto: OpprettStønadRequestDto): Int {
@@ -99,21 +96,17 @@ class PersistenceService(
     }
 
     @Timed
-    fun hentStønad(stonadType: String, skyldner: String, kravhaver: String, sak: String): Stønad? {
-        return stønadRepository.finnStønad(stonadType, skyldner, kravhaver, sak)
-    }
+    fun hentStønad(stonadType: String, skyldner: String, kravhaver: String, sak: String): Stønad? =
+        stønadRepository.finnStønad(stonadType, skyldner, kravhaver, sak)
 
-    fun hentStønaderForSak(sak: String): List<Stønad> {
-        return stønadRepository.finnStønaderForSak(sak)
-    }
+    fun hentStønaderForSak(sak: String): List<Stønad> = stønadRepository.finnStønaderForSak(sak)
 
-    fun hentPerioderForStønad(id: Int): List<Periode> {
-        return periodeRepository.hentPerioderForStonad(id)
-    }
+    @Timed
+    fun finnBidragssakerForSkyldner(skyldner: String): List<Stønad> = stønadRepository.finnBidragssakerForSkyldner(skyldner)
 
-    fun hentPerioderForStønadInkludertUgyldiggjorte(id: Int): List<Periode> {
-        return periodeRepository.hentPerioderForStonadInkludertUgyldiggjorte(id)
-    }
+    fun hentPerioderForStønad(id: Int): List<Periode> = periodeRepository.hentGyldigePerioderForStønad(id)
+
+    fun hentPerioderForStønadInkludertUgyldiggjorte(id: Int): List<Periode> = periodeRepository.hentPerioderForStønadInkludertUgyldiggjorte(id)
 
     fun endreMottaker(stønadsid: Int, nyMottaker: String, opprettetAv: String) {
         SECURE_LOGGER.info("Oppdaterer mottaker for stønadsid: $stønadsid")
@@ -138,7 +131,6 @@ class PersistenceService(
         return periode.toStønadPeriodeDto()
     }
 
-    fun hentPerioderForStønadForAngittTidspunkt(id: Int, gyldigTidspunkt: LocalDateTime): List<Periode> {
-        return periodeRepository.hentGyldigePerioderForStonadForAngittTidspunkt(id, gyldigTidspunkt)
-    }
+    fun hentPerioderForStønadForAngittTidspunkt(id: Int, gyldigTidspunkt: LocalDateTime): List<Periode> =
+        periodeRepository.hentGyldigePerioderForStønadForAngittTidspunkt(id, gyldigTidspunkt)
 }
