@@ -164,15 +164,8 @@ class StønadService(val persistenceService: PersistenceService) {
     }
 
     fun finnLøpendeBidragssaker(request: LøpendeBidragssakerRequest): LøpendeBidragssakerResponse {
-//        val stønader =
-//            persistenceService.finnBidragssakerForSkyldner(request.skyldner.verdi).filter { it.type == Stønadstype.BIDRAG.toString() ||
-//                it.type == Stønadstype.OPPFOSTRINGSBIDRAG.toString() || it.type == Stønadstype.BIDRAG18AAR.toString() }
-
-        val stønader = persistenceService.finnBidragssakerForSkyldner(request.skyldner.verdi)
-            .filter { stønad ->
-                stønad.type in
-                    listOf(Stønadstype.BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG, Stønadstype.BIDRAG18AAR).map { it.toString() }
-            }
+        val stønader =
+            persistenceService.finnBidragssakerForSkyldner(request.skyldner.verdi)
 
         val løpendeBidragssakListe = mutableListOf<LøpendeBidragssak>()
 
