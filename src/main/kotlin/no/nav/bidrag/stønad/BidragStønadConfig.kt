@@ -64,7 +64,7 @@ class KafkaConfig {
             try {
                 message.payload
             } catch (re: RuntimeException) {
-                "Unable to read message payload"
+                "Det er ikke mulig å lese innholdet i meldingen"
             }
 
         LOGGER.error(
