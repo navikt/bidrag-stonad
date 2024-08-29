@@ -68,8 +68,7 @@ class KafkaConfig {
             }
 
         LOGGER.error(
-            "Message {} cause error: {} - {} - headers: {}",
-            messagePayload,
+            "Feil ved behandling av hendelse, se sikker logg for detaljer: {} - {} - headers: {}",
             e.javaClass.simpleName,
             e.message,
             message.headers,
