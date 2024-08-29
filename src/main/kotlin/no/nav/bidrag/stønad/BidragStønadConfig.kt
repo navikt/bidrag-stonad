@@ -73,6 +73,13 @@ class KafkaConfig {
             e.message,
             message.headers,
         )
+        SECURE_LOGGER.error(
+            "Feil ved behandling av hendelse, feil ved les av hendelse: {} exception: {} - {} - headers: {}",
+            messagePayload,
+            e.javaClass.simpleName,
+            e.message,
+            message.headers,
+        )
         Optional.empty<Any>()
     }
 }
