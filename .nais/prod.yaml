@@ -9,6 +9,9 @@ azureAccessInbound:
   - application: bidrag-stonad
     namespace: bidrag
     cluster: prod-gcp
+  - application: bidrag-behandling
+    namespace: bidrag
+    cluster: prod-gcp
 spec:
   replicas:
     min: 2
