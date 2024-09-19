@@ -9,6 +9,11 @@ spec:
   azure:
     application:
       enabled: true
+      allowAllUsers: true
+      claims:
+        extra:
+          - "NAVident"
+          - "azp_name"
   accessPolicy:
     inbound:
       rules:
@@ -57,3 +62,5 @@ spec:
   env:
     - name: TOPIC_VEDTAK
       value: {{ kafka-topic-vedtak }}
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{ spring-profiles }}
