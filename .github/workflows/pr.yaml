@@ -23,6 +23,16 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     needs: build-deploy
 
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to dev-gcp
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yaml
+          VARS: .nais/main.yaml
+          IMAGE: ${{ needs.build-deploy.outputs.image }}
+
   run_cucumber_tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
