@@ -32,6 +32,8 @@ spring:
         producer:
           key-serializer: org.apache.kafka.common.serialization.StringSerializer
           value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      auto-offset-reset: earliest
 # OIDC
 no.nav.security.jwt:
   issuer:
