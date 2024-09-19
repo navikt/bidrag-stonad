@@ -5,6 +5,7 @@ dbname: bidrag-stonad-prod
 kafka:
   pool: nav-prod
 kafka-topic-vedtak: bidrag.vedtak
+spring-profiles: live,nais,database-legacy
 azureAccessInbound:
   - application: bidrag-stonad
     namespace: bidrag

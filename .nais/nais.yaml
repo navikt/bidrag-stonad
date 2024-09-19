@@ -57,3 +57,5 @@ spec:
   env:
     - name: TOPIC_VEDTAK
       value: {{ kafka-topic-vedtak }}
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{ spring-profiles }}
