@@ -16,6 +16,9 @@ azureAccessInbound:
   - application: bidrag-behandling
     namespace: bidrag
     cluster: dev-gcp
+  - application: bidrag-behandling-feature
+    namespace: bidrag
+    cluster: dev-gcp
 spec:
   replicas:
     min: 2
