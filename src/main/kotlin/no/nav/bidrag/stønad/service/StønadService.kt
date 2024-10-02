@@ -173,7 +173,7 @@ class StønadService(val persistenceService: PersistenceService) {
             val periode =
                 persistenceService.hentPerioderForStønad(stønad.stønadsid)
                     .filter { it.fom.isBefore(request.dato.plusDays(1)) && (it.til == null || it.til.isAfter(request.dato)) }
-                    .minByOrNull { it.fom }
+                    .maxByOrNull { it.fom }
             // periode er tom hvis det ikke finnes en periode for stønaden som er aktiv på angitt dato
             if (periode != null) {
                 løpendeBidragssakListe.add(
