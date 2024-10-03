@@ -1,0 +1,48 @@
+name: Deploy q1
+on:
+  push:
+    branches:
+      - 'q1/**'
+      - 'Q1/**'
+
+jobs:
+  build_and_deploy:
+    name: "Build and deploy to q1"
+    permissions:
+      contents: "read"
+      id-token: "write"
+    uses: navikt/bidrag-workflow/.github/workflows/deploy.yaml@main
+    secrets: inherit
+    with:
+      nais_variabler_filnavn: q1.yaml
+
+  run_cucumber_tests:
+    runs-on: ubuntu-latest
+    name: Run cucumber tests
+    needs: build_and_deploy
+    if: ${{ always()  && needs.build_and_deploy.outputs.deploy_suksess == 'true' }}
+
+    env:
+      INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
+      INGRESS_STONAD: https://bidrag-stonad-q1.intern.dev.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak-q1.intern.dev.nav.no
+
+    steps:
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
+               --request POST \
+               --data '{"tags":["@bidrag-stonad-vedtak"],"noContextPathForApps":["bidrag-vedtak"],"ingressesForApps":[
+                   "${{ env.INGRESS_VEDTAK }}@bidrag-vedtak"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
+               --request POST \
+               --data '{"noContextPathForApps":["bidrag-stonad"],"ingressesForApps":[
+                   "${{ env.INGRESS_STONAD }}@tag:bidrag-stonad"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
