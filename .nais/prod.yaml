@@ -7,12 +7,12 @@ kafka:
 kafka-topic-vedtak: bidrag.vedtak
 spring-profiles: live,nais,database-legacy
 azureAccessInbound:
-  - application: bidrag-stonad
-    namespace: bidrag
-    cluster: prod-gcp
   - application: bidrag-behandling
     namespace: bidrag
     cluster: prod-gcp
+  - application: bisys
+    namespace: bidrag
+    cluster: prod-fss
 spec:
   replicas:
     min: 2
