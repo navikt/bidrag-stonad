@@ -182,6 +182,7 @@ class StønadService(val persistenceService: PersistenceService) {
                         type = Stønadstype.valueOf(stønad.type),
                         kravhaver = Personident(stønad.kravhaver),
                         løpendeBeløp = periode.beløp ?: BigDecimal.ZERO,
+                        valutakode = periode.valutakode ?: "NOK",
                     ),
                 )
             }
