@@ -13,6 +13,9 @@ azureAccessInbound:
   - application: bidrag-behandling-q2
     namespace: bidrag
     cluster: dev-gcp
+  - application: bidrag-behandling
+    namespace: bidrag
+    cluster: dev-gcp
   - application: bisys
     namespace: bidrag
     cluster: dev-fss
