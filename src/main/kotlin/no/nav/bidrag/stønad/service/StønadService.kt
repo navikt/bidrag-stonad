@@ -197,14 +197,14 @@ class StønadService(val persistenceService: PersistenceService) {
         val stønader =
             persistenceService.finnAlleStønaderForSkyldner(request.skyldner.verdi)
 
-        val alleBidragssaker = stønader.map { stønad ->
+        val stønaderListe = stønader.map { stønad ->
             SkyldnerStønad(
                 sak = Saksnummer(stønad.sak),
                 type = Stønadstype.valueOf(stønad.type),
                 kravhaver = Personident(stønad.kravhaver),
             )
         }
-        return SkyldnerStønaderResponse(alleBidragssaker)
+        return SkyldnerStønaderResponse(stønaderListe)
     }
 
     private fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {
