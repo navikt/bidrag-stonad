@@ -13,7 +13,9 @@ import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerBidragssakerResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -153,11 +155,46 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
+    @PostMapping(HENT_ALLE_BIDRAGSSAKER_FOR_SKYLDNER)
+    @Operation(
+        security = [SecurityRequirement(name = "bearer-key")],
+        summary = "Finn alle bidragssaker der angitt personident er skyldner." +
+            "Gjelder barnebidrag, oppfostringssbidrag og 18-årsbidrag",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Stønader funnet"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Manglende eller utløpt id-token",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Saksbehandler mangler tilgang til å lese data for aktuelle stønader",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
+        ],
+    )
+    fun hentAlleBidragssakerForSkyldner(
+        @NotNull @RequestBody
+        request: SkyldnerBidragssakerRequest,
+    ): ResponseEntity<SkyldnerBidragssakerResponse> {
+        val respons = stønadService.finnAlleBidragssakerForSkyldner(request)
+        LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe.map { it.sak.toString() }}")
+        SECURE_LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe}")
+        return ResponseEntity(respons, HttpStatus.OK)
+    }
+
     companion object {
         const val HENT_STØNAD = "/hent-stonad/"
         const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
         const val HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-lopende-bidragssaker-for-skyldner"
+        const val HENT_ALLE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-alle-bidragssaker-for-skyldner"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
 }

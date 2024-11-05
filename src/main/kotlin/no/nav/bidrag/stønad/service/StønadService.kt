@@ -3,6 +3,7 @@ package no.nav.bidrag.stønad.service
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
+import no.nav.bidrag.domene.tid.Datoperiode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.bo.OppdatertPeriode
 import no.nav.bidrag.stønad.bo.PeriodeBo
@@ -14,8 +15,12 @@ import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.SkylderBidragssakPeriode
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerBidragssak
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerBidragssakerResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import org.springframework.stereotype.Service
@@ -188,6 +193,29 @@ class StønadService(val persistenceService: PersistenceService) {
             }
         }
         return LøpendeBidragssakerResponse(løpendeBidragssakListe)
+    }
+
+    fun finnAlleBidragssakerForSkyldner(request: SkyldnerBidragssakerRequest): SkyldnerBidragssakerResponse {
+        val stønader =
+            persistenceService.finnBidragssakerForSkyldner(request.skyldner.verdi)
+
+        val alleBidragssaker = stønader.map { stønad ->
+            val periode =
+                persistenceService.hentPerioderForStønad(stønad.stønadsid)
+            SkyldnerBidragssak(
+                sak = Saksnummer(stønad.sak),
+                type = Stønadstype.valueOf(stønad.type),
+                kravhaver = Personident(stønad.kravhaver),
+                perioder = periode.map {
+                    SkylderBidragssakPeriode(
+                        periode = Datoperiode(it.fom, it.til),
+                        beløp = it.beløp ?: BigDecimal.ZERO,
+                        valutakode = it.valutakode ?: "NOK",
+                    )
+                },
+            )
+        }
+        return SkyldnerBidragssakerResponse(alleBidragssaker)
     }
 
     private fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {
