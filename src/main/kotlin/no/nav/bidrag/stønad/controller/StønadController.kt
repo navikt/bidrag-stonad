@@ -13,9 +13,9 @@ import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
-import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerBidragssakerRequest
+import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerStønaderRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
-import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -155,11 +155,10 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
-    @PostMapping(HENT_ALLE_BIDRAGSSAKER_FOR_SKYLDNER)
+    @PostMapping(HENT_ALLE_STONADER_FOR_SKYLDNER)
     @Operation(
         security = [SecurityRequirement(name = "bearer-key")],
-        summary = "Finn alle bidragssaker der angitt personident er skyldner." +
-            "Gjelder barnebidrag, oppfostringssbidrag og 18-årsbidrag",
+        summary = "Finn alle stønader der angitt personident er skyldner.",
     )
     @ApiResponses(
         value = [
@@ -179,13 +178,13 @@ class StønadController(private val stønadService: StønadService) {
             ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
         ],
     )
-    fun hentAlleBidragssakerForSkyldner(
+    fun hentAlleStønaderForSkyldner(
         @NotNull @RequestBody
-        request: SkyldnerBidragssakerRequest,
-    ): ResponseEntity<SkyldnerBidragssakerResponse> {
-        val respons = stønadService.finnAlleBidragssakerForSkyldner(request)
-        LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe.map { it.sak.toString() }}")
-        SECURE_LOGGER.info("Følgende saker ble funnet: ${respons.bidragssakerListe}")
+        request: SkyldnerStønaderRequest,
+    ): ResponseEntity<SkyldnerStønaderResponse> {
+        val respons = stønadService.finnAlleBidragsstønaderForSkyldner(request)
+        LOGGER.info("Følgende stønader ble funnet: ${respons.stønader.map { it.sak.toString() }}")
+        SECURE_LOGGER.info("Følgende stønader ble funnet: ${respons.stønader}")
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
@@ -194,7 +193,7 @@ class StønadController(private val stønadService: StønadService) {
         const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
         const val HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-lopende-bidragssaker-for-skyldner"
-        const val HENT_ALLE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-alle-bidragssaker-for-skyldner"
+        const val HENT_ALLE_STONADER_FOR_SKYLDNER = "/hent-alle-stonader-for-skyldner"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
 }

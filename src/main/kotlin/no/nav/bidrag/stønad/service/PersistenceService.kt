@@ -103,6 +103,7 @@ class PersistenceService(val stønadRepository: StønadRepository, val periodeRe
 
     @Timed
     fun finnBidragssakerForSkyldner(skyldner: String): List<Stønad> = stønadRepository.finnBidragssakerForSkyldner(skyldner)
+    fun finnAlleStønaderForSkyldner(skyldner: String): List<Stønad> = stønadRepository.finnAlleStønaderForSkyldner(skyldner)
 
     fun hentPerioderForStønad(id: Int): List<Periode> = periodeRepository.hentGyldigePerioderForStønad(id)
 
