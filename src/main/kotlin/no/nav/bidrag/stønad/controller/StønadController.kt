@@ -13,7 +13,9 @@ import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerStønaderRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
@@ -153,11 +155,32 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
+    @PostMapping(HENT_ALLE_STONADER_FOR_SKYLDNER)
+    @Operation(
+        security = [SecurityRequirement(name = "bearer-key")],
+        summary = "Finn alle stønader der angitt personident er skyldner.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Stønader funnet"),
+        ],
+    )
+    fun hentAlleStønaderForSkyldner(
+        @NotNull @RequestBody
+        request: SkyldnerStønaderRequest,
+    ): ResponseEntity<SkyldnerStønaderResponse> {
+        val respons = stønadService.finnAlleStønaderForSkyldner(request)
+        LOGGER.info("Følgende stønader ble funnet: ${respons.stønader.map { it.sak.toString() }}")
+        SECURE_LOGGER.info("Følgende stønader ble funnet: ${respons.stønader}")
+        return ResponseEntity(respons, HttpStatus.OK)
+    }
+
     companion object {
         const val HENT_STØNAD = "/hent-stonad/"
         const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
         const val HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-lopende-bidragssaker-for-skyldner"
+        const val HENT_ALLE_STONADER_FOR_SKYLDNER = "/hent-alle-stonader-for-skyldner"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
 }

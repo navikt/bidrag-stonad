@@ -24,7 +24,7 @@
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
     <token-support.version>3.2.0</token-support.version>
     <!-- dependencies -->
-    <bidrag-felles.version>2024.10.10.132518</bidrag-felles.version>
+    <bidrag-felles.version>2024.11.05.152312</bidrag-felles.version>
     <bidrag-tilgangskontroll.version>1.9.21</bidrag-tilgangskontroll.version>
     <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
     <springdoc-openapi-ui.version>2.5.0</springdoc-openapi-ui.version>

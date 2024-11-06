@@ -14,8 +14,11 @@ import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
+import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerStønaderRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønad
+import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import org.springframework.stereotype.Service
@@ -188,6 +191,20 @@ class StønadService(val persistenceService: PersistenceService) {
             }
         }
         return LøpendeBidragssakerResponse(løpendeBidragssakListe)
+    }
+
+    fun finnAlleStønaderForSkyldner(request: SkyldnerStønaderRequest): SkyldnerStønaderResponse {
+        val stønader =
+            persistenceService.finnAlleStønaderForSkyldner(request.skyldner.verdi)
+
+        val stønaderListe = stønader.map { stønad ->
+            SkyldnerStønad(
+                sak = Saksnummer(stønad.sak),
+                type = Stønadstype.valueOf(stønad.type),
+                kravhaver = Personident(stønad.kravhaver),
+            )
+        }
+        return SkyldnerStønaderResponse(stønaderListe)
     }
 
     private fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {

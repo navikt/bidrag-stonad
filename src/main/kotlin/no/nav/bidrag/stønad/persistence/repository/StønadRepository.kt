@@ -33,4 +33,9 @@ interface StønadRepository : CrudRepository<Stønad, Int?> {
         "select st from Stønad st where st.skyldner = :skyldner and st.type in ('BIDRAG', 'BIDRAG18AAR', 'OPPFOSTRINGSBIDRAG') order by st.stønadsid",
     )
     fun finnBidragssakerForSkyldner(skyldner: String): List<Stønad>
+
+    @Query(
+        "select st from Stønad st where st.skyldner = :skyldner order by st.stønadsid",
+    )
+    fun finnAlleStønaderForSkyldner(skyldner: String): List<Stønad>
 }
