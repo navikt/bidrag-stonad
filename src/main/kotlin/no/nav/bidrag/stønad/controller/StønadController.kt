@@ -163,26 +163,13 @@ class StønadController(private val stønadService: StønadService) {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Stønader funnet"),
-            ApiResponse(
-                responseCode = "401",
-                description = "Manglende eller utløpt id-token",
-                content = [Content(schema = Schema(hidden = true))],
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Saksbehandler mangler tilgang til å lese data for aktuelle stønader",
-                content = [Content(schema = Schema(hidden = true))],
-            ),
-            ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
-            ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
-            ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
         ],
     )
     fun hentAlleStønaderForSkyldner(
         @NotNull @RequestBody
         request: SkyldnerStønaderRequest,
     ): ResponseEntity<SkyldnerStønaderResponse> {
-        val respons = stønadService.finnAlleBidragsstønaderForSkyldner(request)
+        val respons = stønadService.finnAlleStønaderForSkyldner(request)
         LOGGER.info("Følgende stønader ble funnet: ${respons.stønader.map { it.sak.toString() }}")
         SECURE_LOGGER.info("Følgende stønader ble funnet: ${respons.stønader}")
         return ResponseEntity(respons, HttpStatus.OK)

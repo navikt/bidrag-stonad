@@ -193,7 +193,7 @@ class StønadService(val persistenceService: PersistenceService) {
         return LøpendeBidragssakerResponse(løpendeBidragssakListe)
     }
 
-    fun finnAlleBidragsstønaderForSkyldner(request: SkyldnerStønaderRequest): SkyldnerStønaderResponse {
+    fun finnAlleStønaderForSkyldner(request: SkyldnerStønaderRequest): SkyldnerStønaderResponse {
         val stønader =
             persistenceService.finnAlleStønaderForSkyldner(request.skyldner.verdi)
 
