@@ -207,6 +207,33 @@ class StønadService(val persistenceService: PersistenceService) {
         return SkyldnerStønaderResponse(stønaderListe)
     }
 
+    // Henter stønad ut fra unik nøkkel for stønad
+    fun hentStønadMedPeriodebeløp(request: HentStønadRequest): StønadMedPeriodeBeløpResponse? {
+        val stønad =
+            persistenceService.hentStønad(
+                request.type.toString(),
+                request.skyldner.verdi,
+                request.kravhaver.verdi,
+                request.sak.toString(),
+            )
+
+        if (stønad != null) {
+            val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
+            return StønadMedPeriodeBeløpResponse(
+                førsteIndeksreguleringsår = stønad.førsteIndeksreguleringsår,
+                periodeBeløpListe = periodeListe.map { periode ->
+                    PeriodeBeløp(
+                        periode = ÅrMånedsperiode(periode.fom, periode.til),
+                        beløp = periode.beløp,
+                        valutakode = periode.valutakode,
+                    )
+                },
+            )
+        } else {
+            return null
+        }
+    }
+
     private fun finnOverlappPeriode(eksisterendePeriode: PeriodeBo, oppdatertStonad: OpprettStønadRequestDto): OppdatertPeriode {
         val periodeBoListe = mutableListOf<PeriodeBo>()
         val oppdatertStønadDatoFom = oppdatertStonad.periodeListe.first().periode.fom
@@ -270,3 +297,7 @@ class StønadService(val persistenceService: PersistenceService) {
         )
     }
 }
+
+data class StønadMedPeriodeBeløpResponse(val førsteIndeksreguleringsår: Int?, val periodeBeløpListe: List<PeriodeBeløp> = emptyList())
+
+data class PeriodeBeløp(val periode: ÅrMånedsperiode, val beløp: BigDecimal?, val valutakode: String?)

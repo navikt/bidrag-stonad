@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.constraints.NotNull
 import no.nav.bidrag.stønad.SECURE_LOGGER
+import no.nav.bidrag.stønad.service.StønadMedPeriodeBeløpResponse
 import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
@@ -155,7 +156,7 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
-    @PostMapping(HENT_ALLE_STONADER_FOR_SKYLDNER)
+    @PostMapping(HENT_ALLE_STØNADER_FOR_SKYLDNER)
     @Operation(
         security = [SecurityRequirement(name = "bearer-key")],
         summary = "Finn alle stønader der angitt personident er skyldner.",
@@ -175,12 +176,43 @@ class StønadController(private val stønadService: StønadService) {
         return ResponseEntity(respons, HttpStatus.OK)
     }
 
+    @PostMapping(HENT_STØNAD_PERIODEBELØP)
+    @Operation(security = [SecurityRequirement(name = "bearer-key")], summary = "Finn alle data for en stønad med historikk for perioder")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Stønad funnet"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Manglende eller utløpt id-token",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Saksbehandler mangler tilgang til å lese data for aktuell stønad",
+                content = [Content(schema = Schema(hidden = true))],
+            ),
+            ApiResponse(responseCode = "404", description = "Stønad ikke funnet", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "500", description = "Serverfeil", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "503", description = "Tjeneste utilgjengelig", content = [Content(schema = Schema(hidden = true))]),
+        ],
+    )
+    fun hentStønadMedPeriodebeløp(
+        @NotNull @RequestBody
+        request: HentStønadRequest,
+    ): ResponseEntity<StønadMedPeriodeBeløpResponse> {
+        val stønadFunnet = stønadService.hentStønadMedPeriodebeløp(request)
+        LOGGER.info("Stønad ble hentet")
+        SECURE_LOGGER.info("Følgende stønad ble funnet: $stønadFunnet")
+        return ResponseEntity(stønadFunnet, HttpStatus.OK)
+    }
+
     companion object {
         const val HENT_STØNAD = "/hent-stonad/"
         const val HENT_STØNAD_HISTORISK = "/hent-stonad-historisk/"
         const val HENT_STØNADER_FOR_SAK = "/hent-stonader-for-sak/{sak}"
         const val HENT_LØPENDE_BIDRAGSSAKER_FOR_SKYLDNER = "/hent-lopende-bidragssaker-for-skyldner"
-        const val HENT_ALLE_STONADER_FOR_SKYLDNER = "/hent-alle-stonader-for-skyldner"
+        const val HENT_ALLE_STØNADER_FOR_SKYLDNER = "/hent-alle-stonader-for-skyldner"
+        const val HENT_STØNAD_PERIODEBELØP = "/hent-stonad-periodebeløp/"
         private val LOGGER = LoggerFactory.getLogger(StønadController::class.java)
     }
 }

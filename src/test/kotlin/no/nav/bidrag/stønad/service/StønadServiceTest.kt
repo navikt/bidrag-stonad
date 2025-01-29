@@ -1284,4 +1284,98 @@ class StønadServiceTest {
 
         )
     }
+
+    @Test
+    // Returnerer stønad og alle perioder med beløp som ikke er markert som ugyldige
+    @Suppress("NonAsciiCharacters")
+    fun `skal finne alle gyldige periodebeløp for en stønad`() {
+        // Oppretter ny stønad
+        val periodeListe = mutableListOf<OpprettStønadsperiodeRequestDto>()
+        periodeListe.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.parse("2021-02-01"), LocalDate.parse("2021-03-01")),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(17.01),
+                valutakode = "SEK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        periodeListe.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01")),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = 1,
+                beløp = BigDecimal.valueOf(17.02),
+                valutakode = "SEK",
+                resultatkode = "Alles gut",
+            ),
+        )
+        periodeListe.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.parse("2021-03-01"), LocalDate.parse("2021-04-01")),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(5000.02),
+                valutakode = "SEK",
+                resultatkode = "Ny periode lagt til",
+            ),
+        )
+        periodeListe.add(
+            OpprettStønadsperiodeRequestDto(
+                ÅrMånedsperiode(LocalDate.parse("2021-04-01"), LocalDate.parse("2021-05-01")),
+                vedtaksid = 1,
+                gyldigFra = LocalDateTime.now(),
+                gyldigTil = null,
+                periodeGjortUgyldigAvVedtaksid = null,
+                beløp = BigDecimal.valueOf(17.03),
+                valutakode = "SEK",
+                resultatkode = "Alles gut",
+            ),
+        )
+
+        val opprettStønadRequest =
+            OpprettStønadRequestDto(
+                Stønadstype.BIDRAG, Saksnummer("SAK-001"), Personident("Skyldner123"),
+                Personident("Kravhaver123"), Personident("MottakerId123"), 2024, Innkrevingstype.MED_INNKREVING, "R153961",
+                periodeListe,
+            )
+
+        stønadService.opprettStonad(opprettStønadRequest)
+
+        val opprettetStonad =
+            stønadService.hentStønadMedPeriodebeløp(
+                HentStønadRequest(
+                    opprettStønadRequest.type,
+                    opprettStønadRequest.sak,
+                    opprettStønadRequest.skyldner,
+                    opprettStønadRequest.kravhaver,
+                ),
+            )
+
+        assertAll(
+            Executable { assertThat(opprettetStonad).isNotNull() },
+            Executable { assertThat(opprettetStonad!!.førsteIndeksreguleringsår).isEqualTo(2024) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe.size).isEqualTo(3) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[0].periode.fom).isEqualTo(YearMonth.parse("2021-02")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[0].periode.til).isEqualTo(YearMonth.parse("2021-03")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[0].beløp).isEqualTo(BigDecimal.valueOf(17.01)) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[0].valutakode).isEqualTo("SEK") },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[1].periode.fom).isEqualTo(YearMonth.parse("2021-03")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[1].periode.til).isEqualTo(YearMonth.parse("2021-04")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[1].beløp).isEqualTo(BigDecimal.valueOf(5000.02)) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[1].valutakode).isEqualTo("SEK") },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[2].periode.fom).isEqualTo(YearMonth.parse("2021-04")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[2].periode.til).isEqualTo(YearMonth.parse("2021-05")) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[2].beløp).isEqualTo(BigDecimal.valueOf(17.03)) },
+            Executable { assertThat(opprettetStonad!!.periodeBeløpListe[2].valutakode).isEqualTo("SEK") },
+
+        )
+    }
 }
