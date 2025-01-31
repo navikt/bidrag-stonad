@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.constraints.NotNull
 import no.nav.bidrag.stønad.SECURE_LOGGER
-import no.nav.bidrag.stønad.service.StønadMedPeriodeBeløpResponse
 import no.nav.bidrag.stønad.service.StønadService
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
@@ -18,6 +17,7 @@ import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerStønaderReques
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
 import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StønadMedPeriodeBeløpResponse
 import no.nav.security.token.support.core.api.Protected
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

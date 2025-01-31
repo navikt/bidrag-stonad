@@ -1076,7 +1076,7 @@ class StønadServiceTest {
         // Oppretter stønad 2, ligger på en annen sak og skal ikke hentes
         periodeListe2.add(
             OpprettStønadsperiodeRequestDto(
-                ÅrMånedsperiode(LocalDate.now(), LocalDate.now().plusDays(30)),
+                ÅrMånedsperiode(LocalDate.now(), LocalDate.now().plusMonths(1)),
                 vedtaksid = 2,
                 gyldigFra = LocalDateTime.now(),
                 gyldigTil = null,
@@ -1096,7 +1096,7 @@ class StønadServiceTest {
         // Oppretter stønad 3, ligger på samme sak og skal hentes
         periodeListe3.add(
             OpprettStønadsperiodeRequestDto(
-                ÅrMånedsperiode(LocalDate.now(), LocalDate.now().plusDays(30)),
+                ÅrMånedsperiode(LocalDate.now(), LocalDate.now().plusMonths(1)),
                 vedtaksid = 3,
                 gyldigFra = LocalDateTime.now(),
                 gyldigTil = null,
