@@ -13,10 +13,10 @@ import no.nav.bidrag.stønad.bo.toPeriodeBo
 import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
 import no.nav.bidrag.stønad.persistence.repository.StønadRepository
 import no.nav.bidrag.stønad.service.PersistenceService
-import no.nav.bidrag.stønad.service.StønadMedPeriodeBeløpResponse
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StønadMedPeriodeBeløpResponse
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll

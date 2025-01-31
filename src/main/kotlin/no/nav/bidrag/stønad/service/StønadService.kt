@@ -17,9 +17,11 @@ import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeR
 import no.nav.bidrag.transport.behandling.stonad.request.SkyldnerStønaderRequest
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.stonad.response.LøpendeBidragssakerResponse
+import no.nav.bidrag.transport.behandling.stonad.response.PeriodeBeløp
 import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønad
 import no.nav.bidrag.transport.behandling.stonad.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
+import no.nav.bidrag.transport.behandling.stonad.response.StønadMedPeriodeBeløpResponse
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -297,7 +299,3 @@ class StønadService(val persistenceService: PersistenceService) {
         )
     }
 }
-
-data class StønadMedPeriodeBeløpResponse(val førsteIndeksreguleringsår: Int?, val periodeBeløpListe: List<PeriodeBeløp> = emptyList())
-
-data class PeriodeBeløp(val periode: ÅrMånedsperiode, val beløp: BigDecimal?, val valutakode: String?)
