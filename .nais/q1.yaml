@@ -16,6 +16,9 @@ azureAccessInbound:
   - application: bisys
     namespace: bidrag
     cluster: dev-fss
+  - application: bidrag-automatisk-jobb-q1
+    namespace: bidrag
+    cluster: dev-gcp
 spec:
   replicas:
     min: 1
