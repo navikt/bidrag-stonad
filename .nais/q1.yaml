@@ -25,11 +25,10 @@ spec:
     max: 1
   resources:
     limits:
-      cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 512Mi
   gcp:
     sqlInstances:
       tier: db-f1-micro
