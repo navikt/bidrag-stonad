@@ -20,7 +20,7 @@ data class Stønad(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stønadsid")
-    val stønadsid: Int = 0,
+    val stønadsid: Int? = null,
     @Column(nullable = false, name = "type")
     val type: String = "",
     @Column(nullable = false, name = "sak")
@@ -50,7 +50,7 @@ fun OpprettStønadRequestDto.toStønadEntity() = with(::Stønad) {
     callBy(
         parameters.associateWith { parameter ->
             when (parameter.name) {
-                Stønad::stønadsid.name -> 0
+                Stønad::stønadsid.name -> null
                 Stønad::type.name -> type.toString()
                 Stønad::sak.name -> sak.toString()
                 Stønad::skyldner.name -> skyldner.verdi

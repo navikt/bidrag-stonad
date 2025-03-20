@@ -25,7 +25,7 @@ class PersistenceService(val stønadRepository: StønadRepository, val periodeRe
     fun opprettStønad(opprettStønadRequestDto: OpprettStønadRequestDto): Int {
         val nyStønad = opprettStønadRequestDto.toStønadEntity()
         val stønad = stønadRepository.save(nyStønad)
-        return stønad.stønadsid
+        return stønad.stønadsid!!
     }
 
     @Timed
