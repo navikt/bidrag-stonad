@@ -1,6 +1,6 @@
 package no.nav.bidrag.vedtak.exception
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import org.slf4j.LoggerFactory
 import org.springframework.core.convert.ConversionFailedException
 import org.springframework.http.HttpHeaders
@@ -40,7 +40,7 @@ class RestExceptionHandler {
     )
     fun handleInvalidValueExceptions(exception: Exception): ResponseEntity<*> {
         val cause = exception.cause
-        val valideringsFeil = if (cause is MissingKotlinParameterException) createMissingKotlinParameterViolation(cause) else null
+        val valideringsFeil = if (cause is MismatchedInputException) createMissingKotlinParameterViolation(cause) else null
         LOGGER.error("Forespørselen inneholder ugyldig verdi: ${valideringsFeil ?: "ukjent feil"}", exception)
 
         return ResponseEntity
@@ -49,7 +49,7 @@ class RestExceptionHandler {
             .build<Any>()
     }
 
-    private fun createMissingKotlinParameterViolation(ex: MissingKotlinParameterException): String {
+    private fun createMissingKotlinParameterViolation(ex: MismatchedInputException): String {
         val errorFieldRegex = Regex("\\.([^.]*)\\[\\\"(.*)\"\\]\$")
         val paths =
             ex.path.map { errorFieldRegex.find(it.description)!! }.map {
