@@ -23,11 +23,13 @@ import org.springframework.kafka.listener.KafkaListenerErrorHandler
 import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.messaging.Message
 import java.util.*
+import no.nav.bidrag.commons.security.api.EnableSecurityConfiguration
 
 const val LIVE_PROFILE = "live"
 const val LOKAL_NAIS_PROFILE = "lokal-nais"
 
 @Configuration
+@EnableSecurityConfiguration
 @OpenAPIDefinition(
     info = Info(title = "bidrag-stonad", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")],
