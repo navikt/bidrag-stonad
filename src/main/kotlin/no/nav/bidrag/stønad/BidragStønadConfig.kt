@@ -8,9 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import no.nav.bidrag.commons.web.CorrelationIdFilter
-import no.nav.bidrag.commons.web.DefaultCorsFilter
 import no.nav.bidrag.commons.web.UserMdcFilter
-import no.nav.bidrag.commons.web.config.RestOperationsAzure
 import no.nav.bidrag.stønad.hendelse.KafkaVedtakHendelseListener
 import no.nav.bidrag.stønad.service.BehandleHendelseService
 import no.nav.bidrag.stønad.service.JsonMapperService
@@ -42,7 +40,7 @@ const val LOKAL_NAIS_PROFILE = "lokal-nais"
     type = SecuritySchemeType.HTTP,
 )
 @EnableAspectJAutoProxy
-@Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class, RestOperationsAzure::class)
+@Import(CorrelationIdFilter::class, UserMdcFilter::class)
 class BidragStønadConfig {
     @Bean
     fun timedAspect(registry: MeterRegistry): TimedAspect = TimedAspect(registry)
