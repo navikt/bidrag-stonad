@@ -72,7 +72,7 @@ class StønadService(val persistenceService: PersistenceService) {
             )
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
-            val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
+            val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid!!)
             periodeListe.forEach { periode ->
                 stønadPeriodeDtoListe.add(periode.toStønadPeriodeDto())
             }
@@ -87,7 +87,7 @@ class StønadService(val persistenceService: PersistenceService) {
         if (stønad != null) {
             val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe =
-                persistenceService.hentPerioderForStønadInkludertUgyldiggjorte(stønad.stønadsid)
+                persistenceService.hentPerioderForStønadInkludertUgyldiggjorte(stønad.stønadsid!!)
             periodeListe.forEach { periode ->
                 stønadPeriodeDtoListe.add(periode.toStønadPeriodeDto())
             }
@@ -108,7 +108,7 @@ class StønadService(val persistenceService: PersistenceService) {
         if (stonad != null) {
             val stonadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
             val periodeListe =
-                persistenceService.hentPerioderForStønadForAngittTidspunkt(stonad.stønadsid, request.gyldigTidspunkt)
+                persistenceService.hentPerioderForStønadForAngittTidspunkt(stonad.stønadsid!!, request.gyldigTidspunkt)
             periodeListe.forEach { periode ->
                 stonadPeriodeDtoListe.add(periode.toStønadPeriodeDto())
             }
@@ -125,7 +125,7 @@ class StønadService(val persistenceService: PersistenceService) {
             val stønadsendringDtoListe = mutableListOf<StønadDto>()
             stønadListe.forEach { stønad ->
                 val stønadPeriodeDtoListe = mutableListOf<StønadPeriodeDto>()
-                val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
+                val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid!!)
                 periodeListe.forEach { periode ->
                     stønadPeriodeDtoListe.add(periode.toStønadPeriodeDto())
                 }
@@ -176,7 +176,7 @@ class StønadService(val persistenceService: PersistenceService) {
 
         stønader.forEach { stønad ->
             val periode =
-                persistenceService.hentPerioderForStønad(stønad.stønadsid)
+                persistenceService.hentPerioderForStønad(stønad.stønadsid!!)
                     .filter { it.fom.isBefore(request.dato.plusDays(1)) && (it.til == null || it.til.isAfter(request.dato)) }
                     .maxByOrNull { it.fom }
             // periode er tom hvis det ikke finnes en periode for stønaden som er aktiv på angitt dato
@@ -220,7 +220,7 @@ class StønadService(val persistenceService: PersistenceService) {
             )
 
         if (stønad != null) {
-            val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid)
+            val periodeListe = persistenceService.hentPerioderForStønad(stønad.stønadsid!!)
             return StønadMedPeriodeBeløpResponse(
                 førsteIndeksreguleringsår = stønad.førsteIndeksreguleringsår,
                 periodeBeløpListe = periodeListe.map { periode ->

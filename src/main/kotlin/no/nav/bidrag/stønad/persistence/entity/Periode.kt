@@ -20,7 +20,7 @@ data class Periode(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "periodeid")
-    val periodeid: Int = 0,
+    val periodeid: Int? = null,
     @Column(nullable = false, name = "fom")
     val fom: LocalDate = LocalDate.now(),
     @Column(nullable = true, name = "til")

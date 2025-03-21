@@ -13,11 +13,11 @@ import kotlin.reflect.full.memberProperties
 
 data class PeriodeBo(
     @Schema(description = "Periodeid")
-    val periodeid: Int = 0,
+    val periodeid: Int? = null,
     @Schema(description = "Periode med fra-og-med-dato og til-dato med format ÅÅÅÅ-MM")
     val periode: ÅrMånedsperiode = ÅrMånedsperiode(YearMonth.now(), YearMonth.now()),
     @Schema(description = "Stønadsid")
-    val stønadsid: Int = 0,
+    val stønadsid: Int? = null,
     @Schema(description = "Vedtaksid")
     val vedtaksid: Int = 0,
     @Schema(description = "Perioden er gyldig fra angitt tidspunkt (vedtakstidspunkt)")
@@ -39,8 +39,8 @@ fun OpprettStønadsperiodeRequestDto.toPeriodeBo() = with(::PeriodeBo) {
     callBy(
         parameters.associateWith { parameter ->
             when (parameter.name) {
-                PeriodeBo::periodeid.name -> 0
-                PeriodeBo::stønadsid.name -> 0
+                PeriodeBo::periodeid.name -> null
+                PeriodeBo::stønadsid.name -> null
                 else -> propertiesByName[parameter.name]?.get(this@toPeriodeBo)
             }
         },
