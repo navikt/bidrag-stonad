@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
-@EnableJpaRepositories
 class BidragStønad
 
 const val ISSUER = "aad"

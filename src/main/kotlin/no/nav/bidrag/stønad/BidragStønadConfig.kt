@@ -24,7 +24,7 @@ import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.messaging.Message
 import java.util.*
 
-const val LIVE_PROFILE = "live"
+const val LIVE_PROFILE = "nais"
 const val LOKAL_NAIS_PROFILE = "lokal-nais"
 
 @Configuration
