@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
-interface StønadRepository : CrudRepository<Stønad, Int?> {
+interface StonadRepository : CrudRepository<Stønad, Int?> {
     @Query(
         "select st from Stønad st where st.type = :stønadstype and st.skyldner = :skyldner and st.kravhaver = :kravhaver and st.sak = :sak",
     )

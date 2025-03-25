@@ -11,7 +11,7 @@ import no.nav.bidrag.stønad.persistence.entity.toPeriodeEntity
 import no.nav.bidrag.stønad.persistence.entity.toStønadEntity
 import no.nav.bidrag.stønad.persistence.entity.toStønadPeriodeDto
 import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stønad.persistence.repository.StønadRepository
+import no.nav.bidrag.stønad.persistence.repository.StonadRepository
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadsperiodeRequestDto
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class PersistenceService(val stønadRepository: StønadRepository, val periodeRepository: PeriodeRepository) {
+class PersistenceService(val stønadRepository: StonadRepository, val periodeRepository: PeriodeRepository) {
 
     @Timed
     fun opprettStønad(opprettStønadRequestDto: OpprettStønadRequestDto): Int {

@@ -7,7 +7,7 @@ import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.stønad.BidragStønadTest
 import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stønad.persistence.repository.StønadRepository
+import no.nav.bidrag.stønad.persistence.repository.StonadRepository
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.stonad.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
@@ -42,7 +42,7 @@ class StønadServiceTest {
     private lateinit var periodeRepository: PeriodeRepository
 
     @Autowired
-    private lateinit var stønadRepository: StønadRepository
+    private lateinit var stønadRepository: StonadRepository
 
     @Autowired
     private lateinit var stønadService: StønadService

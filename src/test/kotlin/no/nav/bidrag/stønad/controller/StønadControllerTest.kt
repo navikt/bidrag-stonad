@@ -11,7 +11,7 @@ import no.nav.bidrag.stønad.BidragStønadTest.Companion.TEST_PROFILE
 import no.nav.bidrag.stønad.TestUtil
 import no.nav.bidrag.stønad.bo.toPeriodeBo
 import no.nav.bidrag.stønad.persistence.repository.PeriodeRepository
-import no.nav.bidrag.stønad.persistence.repository.StønadRepository
+import no.nav.bidrag.stønad.persistence.repository.StonadRepository
 import no.nav.bidrag.stønad.service.PersistenceService
 import no.nav.bidrag.transport.behandling.stonad.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.stonad.request.OpprettStønadRequestDto
@@ -51,7 +51,7 @@ class StønadControllerTest {
     private lateinit var periodeRepository: PeriodeRepository
 
     @Autowired
-    private lateinit var stønadRepository: StønadRepository
+    private lateinit var stønadRepository: StonadRepository
 
     @Autowired
     private lateinit var persistenceService: PersistenceService
