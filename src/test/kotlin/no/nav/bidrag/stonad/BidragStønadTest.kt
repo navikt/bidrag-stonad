@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles
 @ComponentScan(
     excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragStønad::class, BidragStønadLocal::class])],
 )
-@EntityScan("no.nav.bidrag.stønad")
+@EntityScan("no.nav.bidrag.stonad")
 class BidragStønadTest {
     companion object {
         const val TEST_PROFILE = "test"
