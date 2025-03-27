@@ -12,11 +12,11 @@ management:
     web:
       exposure:
         include: "*"
-springdoc.packages-to-scan: no.nav.bidrag.stønad.controller
+springdoc.packages-to-scan: no.nav.bidrag.stonad.controller
 
 ---
 spring:
-  config.activate.on-profile: "live"
+  config.activate.on-profile: "nais"
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS}
     properties:
