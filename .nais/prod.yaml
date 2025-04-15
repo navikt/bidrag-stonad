@@ -24,8 +24,8 @@ spec:
     limits:
       memory: 2048Mi
     requests:
-      cpu: 50m
-      memory: 512Mi
+      cpu: 260m
+      memory: 900Mi
   gcp:
     sqlInstances:
       tier: db-custom-1-3840
