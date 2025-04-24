@@ -13,7 +13,8 @@ management:
       exposure:
         include: "*"
 springdoc.packages-to-scan: no.nav.bidrag.stonad.controller
-
+management.metrics.distribution.percentiles-histogram.http.server.requests: true
+management.metrics.distribution.percentiles-histogram.http.client.requests: true
 ---
 spring:
   config.activate.on-profile: "nais"
