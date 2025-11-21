@@ -1,3 +1,5 @@
+# Erstattet av bidrag-beløpshistorikk. https://github.com/navikt/bidrag-belopshistorikk
+
 # Bidrag-stønad
 
 ![](https://github.com/navikt/bidrag-stonad/workflows/continuous%20integration/badge.svg)
